@@ -1,0 +1,30 @@
+{
+  "name": "tablaturi-bg-angularjs",
+  "version": "1.0.0",
+  "description": "Tablaturi BG angularJS app",
+  "main": "index.php",
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-debug": "^2.1.2",
+    "gulp-notify": "^2.2.0",
+    "gulp-replace": "^0.5.4",
+    "gulp-sass": "^2.2.0",
+    "gulp-sourcemaps": "^1.6.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gryp17/Tablaturi-bg-AngularJS.git"
+  },
+  "author": "Plamen Ivanov, Hristina Hristova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gryp17/Tablaturi-bg-AngularJS/issues"
+  },
+  "homepage": "https://github.com/gryp17/Tablaturi-bg-AngularJS#readme"
+}
