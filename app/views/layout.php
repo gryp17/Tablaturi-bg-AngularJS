@@ -13,6 +13,7 @@
         <div id="main-wrapper" class="container-fluid">
             <div class="row">
                 <section id="content-wrapper">
+                    <img src="static/img/logo-tablaturi-bg.png"/>
                     <div ng-view=""></div>
                 </section>
             </div>
