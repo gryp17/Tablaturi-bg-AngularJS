@@ -3,7 +3,7 @@
 class API extends Controller {
 
 	public function index() {
-		
+	
 	}
 
 	private $response_type;
