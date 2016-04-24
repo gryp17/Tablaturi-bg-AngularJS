@@ -25,11 +25,14 @@ class API extends Controller {
 			'limit' => 'int',
 			'offset' => 'int'
 		),
+		'getArticlesByDate' => array(
+			'date' => 'date',
+			'limit' => 'int',
+			'offset' => 'int'
+		),
+		/*
 		'getArticlesBySearch' => array(
 			'search_val' => '+'
-		),
-		'getArticlesByDate' => array(
-			'date' => 'date'
 		),
 		'getLatestArticleDate' => array(),
 		'getArticle' => array(
@@ -37,7 +40,7 @@ class API extends Controller {
 		),
 		'addArticleView' => array(
 			'id' => 'int'
-		)
+		)*/
 	);
 
 	/**
@@ -74,7 +77,7 @@ class API extends Controller {
 		#check if the API call contains all the required params
 		if (isset($params['url'])) {
 			$function = array_pop(explode('/', $params['url']));
-
+			
 			foreach ($this->required_params[$function] as $param => $type) {
 				#check if the param exists
 				if (!isset($params[$param])) {
@@ -151,31 +154,39 @@ class API extends Controller {
 		}
 	}
 
-
-	##### example #####
-	
 	/**
-	 * Increments the article views
-	 * 
-	 * Required params:
-	 * @param int id
+	 * Returns all articles
 	 */
-	/*
-	public function addArticleView() {
+	public function getArticles() {
 		$required_role = Controller::PUBLIC_ACCESS;
-
+		
 		if ($this->checkPermission($required_role) == true) {
 
 			$params = $this->getRequestParams();
 
 			$articles_model = $this->load_model('Articles_model');
-			$articles_model->addArticleView($params['id']);
-			$this->sendResponse(1);
+			$data = $articles_model->getArticles($params['limit'], $params['offset']);
+			$this->sendResponse(1, $data);
 		} else {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}
-	} 
+	}
+	
+	/**
+	 * Returns all articles that match the specified date
 	 */
-	
-	
+	public function getArticlesByDate() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		
+		if ($this->checkPermission($required_role) == true) {
+
+			$params = $this->getRequestParams();
+
+			$articles_model = $this->load_model('Articles_model');
+			$data = $articles_model->getArticlesByDate($params['date'], $params['limit'], $params['offset']);
+			$this->sendResponse(1, $data);
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
 }

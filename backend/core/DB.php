@@ -12,6 +12,7 @@ class DB {
 			$user = Config::DB_USER;
 			$password = Config::DB_PASS;
 			$this->connection = new PDO($dsn, $user, $password, $opc);
+			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		} catch (Exception $e) {
 			die($e->getMessage());
 		}
