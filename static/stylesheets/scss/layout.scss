@@ -1,7 +1,85 @@
-@import "_bootstrap"; //import bootstrap manually because why not?!!!!
+@import "_bootstrap";
+
+$red: #F84241;
+$blue: #465A65;
 
 body{
-	background-color: gray;
+	background: url('../img/background.jpg') fixed no-repeat;
+}
+
+#main-wrapper {
+	width: 1000px;
+	margin: auto;
+	background-color: #fff;
+	border-left: 1px solid #ADADAD;
+	border-right: 1px solid #ADADAD;
+	
+	header {
+		> .main-navigation {
+			height: 50px;
+			background-color: $red;
+		}
+
+		> .inner-header {
+			background-color: #D7D7D7;
+			text-align: center;
+		}
+	}
+	
+	.search-bar {
+		position: relative;
+		height: 55px;
+		margin-left: -15px;
+		margin-right: -15px;
+		background-color: $blue;
+
+		&:before, &:after {
+			content: "";
+			position: absolute;
+			z-index: -1;
+			width: 0; 
+			height: 0;
+			bottom: -20px;
+			border-left: 20px solid transparent;
+			border-right: 20px solid transparent;
+			border-top: 20px solid darken($blue, 10%);
+		}
+
+		&:after {
+			right: 0;
+		}
+	}
+	
+	> #content-wrapper {
+		display: inline-block;
+		width: 738px;
+		height: 800px;
+		margin-top: 5px;
+		background: red;
+		vertical-align: top;
+	}
+	
+	> .left-ads, .right-ads {
+		width: 120px;
+		height: 800px;
+		display: inline-block;
+		margin: 5px;
+		background-color: #000;
+		vertical-align: top;
+	}
+	
+	> .bottom-ad {
+		height: 90px;
+		margin-left: 5px;
+		margin-right: 5px;
+		background-color: blue;
+	}
+	
+	> footer {
+		height: 50px;
+		margin-top: 5px;
+		background-color: $red;
+	}
 }
 
 //partials
