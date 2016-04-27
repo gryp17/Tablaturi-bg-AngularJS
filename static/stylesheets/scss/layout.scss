@@ -5,6 +5,8 @@ $blue: #465A65;
 
 body{
 	background: url('../img/background.jpg') fixed no-repeat;
+	color: $blue;
+	font-family: 'Open Sans', sans-serif;
 }
 
 #main-wrapper {
@@ -13,19 +15,64 @@ body{
 	background-color: #fff;
 	border-left: 1px solid #ADADAD;
 	border-right: 1px solid #ADADAD;
-	
+
 	header {
-		> .main-navigation {
+		.main-navigation {
 			height: 50px;
 			background-color: $red;
 		}
 
-		> .inner-header {
+		.inner-header {
+			position: relative;
 			background-color: #D7D7D7;
 			text-align: center;
+
+			.social-icons {
+				position: absolute;
+				bottom: 10px;
+				left: 10px;
+
+				a {
+					&:hover, &:focus{
+						text-decoration: none;
+					}
+
+					img {
+						width: 35px;
+					}
+				}
+			}
+			
+			.authentication{
+				position: absolute;
+				right: 10px;
+				bottom: 10px;
+				
+				a {
+					margin-right: 10px;
+					text-decoration: underline;
+					font-size: 16px;
+					color: $blue;
+				}
+				
+				input[type=button]{
+					padding-left: 40px;
+					padding-right: 40px;
+				}
+			}
+			
+			.stats{
+				position: absolute;
+				right: 10px;
+				top: 10px;
+				
+				span{
+					font-weight: bold;
+				}
+			}
 		}
 	}
-	
+
 	.search-bar {
 		position: relative;
 		height: 55px;
@@ -49,38 +96,40 @@ body{
 			right: 0;
 		}
 	}
-	
+
 	> #content-wrapper {
 		display: inline-block;
+		margin: 5px -4px 0px -4px;
 		width: 738px;
 		height: 800px;
-		margin-top: 5px;
 		background: red;
 		vertical-align: top;
 	}
-	
+
 	> .left-ads, .right-ads {
+		display: inline-block;
 		width: 120px;
 		height: 800px;
-		display: inline-block;
 		margin: 5px;
-		background-color: #000;
 		vertical-align: top;
 	}
-	
+
 	> .bottom-ad {
 		height: 90px;
 		margin-left: 5px;
 		margin-right: 5px;
 		background-color: blue;
 	}
-	
+
 	> footer {
 		height: 50px;
 		margin-top: 5px;
 		background-color: $red;
 	}
 }
+
+//ui-kit
+@import "_ui-kit";
 
 //partials
 @import "partials/_home";
