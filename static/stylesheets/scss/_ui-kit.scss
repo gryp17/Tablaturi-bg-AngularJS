@@ -4,14 +4,25 @@
 	color: #fff;
 	transition: all 0.4s ease-in-out;
 	border: 1px solid transparent;
+	
+	&:focus{
+		color: #fff;
+		outline: none;
+	}
 
 	&.btn-red{
 		background-color: $red;
-
+		
 		&:hover{
 			color: #fff;
 			background-color: darken($red, 15%);
 		}
 	}
+}
 
+.text-control{
+	background-color: $gray;
+	color: $blue;
+	border: solid 1px $blue;
+	padding: 7px 10px;
 }

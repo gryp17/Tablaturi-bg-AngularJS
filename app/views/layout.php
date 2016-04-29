@@ -22,7 +22,7 @@
                      data-ad-client="ca-pub-0878746760349023"
                      data-ad-slot="9165853768"></ins>
                 <script>
-					(adsbygoogle = window.adsbygoogle || []).push({});
+			(adsbygoogle = window.adsbygoogle || []).push({});
                 </script>
 			</div>
 
@@ -37,19 +37,20 @@
                      data-ad-client="ca-pub-0878746760349023"
                      data-ad-slot="4596053365"></ins>
                 <script>
-					(adsbygoogle = window.adsbygoogle || []).push({});
+			(adsbygoogle = window.adsbygoogle || []).push({});
                 </script>
 			</div>
 
 			<div class="bottom-ad">
 				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-				<!-- bottom-ad -->
+				<!-- angular-bottom-ad -->
 				<ins class="adsbygoogle"
-					 style="display:inline-block;width:728px;height:90px"
+					 style="display:block"
 					 data-ad-client="ca-pub-0878746760349023"
-					 data-ad-slot="6010250962"></ins>
+					 data-ad-slot="4493479761"
+					 data-ad-format="auto"></ins>
 				<script>
-					(adsbygoogle = window.adsbygoogle || []).push({});
+							(adsbygoogle = window.adsbygoogle || []).push({});
 				</script>
 			</div>
 			<?php include "footer.php" ?>
