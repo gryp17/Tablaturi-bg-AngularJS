@@ -7,9 +7,10 @@ app.directive("article", function($filter) {
 		    articleData: "="
 		},
 		link: function(scope, element, attrs) {
-			scope.articleData.date = new Date(scope.articleData.date);
-			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
+			var date = scope.articleData.date.split(/[- :]/);
+			scope.articleData.date = new Date(date[0], date[1]-1, date[2], date[3], date[4], date[5]);
 			
+			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
 			var limit = 210 - scope.articleData.title.length;			
 			scope.articleData.content = $filter("limitTo")(sanitizedContent, limit) + '...';
 		}
