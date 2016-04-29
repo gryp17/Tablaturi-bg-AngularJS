@@ -53,7 +53,7 @@ gulp.task("styles-min", function() {
 gulp.task('move-icons', function() {
 	return gulp.src([
 		'./bower_components/bootstrap-sass/assets/fonts/**/*',
-	]).pipe(gulp.dest('static/stylesheets/fonts/'));
+	]).pipe(gulp.dest('static/fonts/'));
 });
 
 //scripts task

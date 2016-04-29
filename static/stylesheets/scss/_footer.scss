@@ -1,0 +1,26 @@
+> footer {
+	height: 50px;
+	margin-top: 5px;
+	padding: 0px 50px;
+	background-color: $red;
+	line-height: 50px;
+	
+	.item{
+		display: inline-block;
+		margin: 0px 25px;
+		
+		a{
+			color: #fff;
+			
+			&:hover{
+				text-decoration: underline;
+			}
+		}
+	}
+	
+	.copyright{
+		float: right;
+		color: #fff;
+	}
+	
+}

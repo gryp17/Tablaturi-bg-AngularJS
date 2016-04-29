@@ -14,45 +14,15 @@
 			<?php include "header.php" ?>
 			<?php include "search.php" ?>
 
-			<div class="left-ads">
-				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- left-ad -->
-                <ins class="adsbygoogle"
-                     style="display:inline-block;width:120px;height:600px"
-                     data-ad-client="ca-pub-0878746760349023"
-                     data-ad-slot="9165853768"></ins>
-                <script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-			</div>
+			<div class="left-ads"></div>
 
 			<section id="content-wrapper" ng-view="">
 			</section>
 
-			<div class="right-ads">
-				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- right-ad -->
-                <ins class="adsbygoogle"
-                     style="display:inline-block;width:120px;height:600px"
-                     data-ad-client="ca-pub-0878746760349023"
-                     data-ad-slot="4596053365"></ins>
-                <script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-			</div>
+			<div class="right-ads"></div>
 
-			<div class="bottom-ad">
-				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-				<!-- angular-bottom-ad -->
-				<ins class="adsbygoogle"
-					 style="display:block"
-					 data-ad-client="ca-pub-0878746760349023"
-					 data-ad-slot="4493479761"
-					 data-ad-format="auto"></ins>
-				<script>
-							(adsbygoogle = window.adsbygoogle || []).push({});
-				</script>
-			</div>
+			<div class="bottom-ad"></div>
+			
 			<?php include "footer.php" ?>
         </div>
     </body>

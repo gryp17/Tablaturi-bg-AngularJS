@@ -371,20 +371,6 @@ app.config(['$routeProvider',
 
 "use strict";
 
-var layoutController = function($rootScope, $scope, $routeParams, $http) {
-	console.log("layout controller");
-};
-
-layoutController.$inject = [
-	"$rootScope",
-	"$scope",
-	"$routeParams",
-	"$http"
-];
-
-app.controller("layoutController", layoutController);
-"use strict";
-
 var homeController = function($rootScope, $scope, $routeParams, $http) {
 	console.log("home controller");
 
@@ -423,3 +409,21 @@ homeController.$inject = [
 ];
 
 app.controller("homeController", homeController);
+"use strict";
+
+var layoutController = function($rootScope, $scope, $routeParams, $http) {
+	console.log("layout controller");
+	
+	$scope.currentYear = (new Date()).getFullYear();
+	console.log($scope.currentYear);
+	
+};
+
+layoutController.$inject = [
+	"$rootScope",
+	"$scope",
+	"$routeParams",
+	"$http"
+];
+
+app.controller("layoutController", layoutController);

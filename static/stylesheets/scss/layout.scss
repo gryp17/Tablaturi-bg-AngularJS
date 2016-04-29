@@ -82,14 +82,14 @@ body{
 		display: inline-block;
 		margin: 5px -4px 0px -4px;
 		width: 738px;
-		height: 800px;
+		min-height: 600px;
 		vertical-align: top;
 	}
 
 	.left-ads, .right-ads {
 		display: inline-block;
 		width: 120px;
-		height: 800px;
+		min-height: 600px;
 		margin: 5px;
 		vertical-align: top;
 		background-color: gray;
@@ -102,11 +102,8 @@ body{
 		background-color: blue;
 	}
 
-	> footer {
-		height: 50px;
-		margin-top: 5px;
-		background-color: $red;
-	}
+	@import "_footer";
+
 }
 
 //ui-kit
