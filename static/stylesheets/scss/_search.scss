@@ -4,6 +4,7 @@
 	margin-right: -15px;
 	padding: 10px 0px;
 	background-color: $blue;
+	text-align: center;
 
 	&:before, &:after {
 		content: "";
@@ -17,7 +18,31 @@
 		border-top: 20px solid darken($blue, 10%);
 	}
 
+	&:before{
+		left: 0;
+	}
+	
 	&:after {
 		right: 0;
+	}
+	
+	.text-control{
+		width: 300px;
+	}
+	
+	.custom-dropdown{
+		select{
+			width: 190px;
+		}
+	}
+	
+	.btn {
+		width: 150px;
+		margin-top: 1px;
+		vertical-align: top;
+	}
+	
+	.btn, .text-control, .custom-dropdown{
+		margin: 0px 5px;
 	}
 }
