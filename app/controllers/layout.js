@@ -1,18 +1,12 @@
 "use strict";
 
-var layoutController = function($rootScope, $scope, $routeParams, $http) {
-	console.log("layout controller");
+app.controller("layoutController", function($rootScope, $scope, $routeParams, $timeout) {
 	
 	$scope.currentYear = (new Date()).getFullYear();
-	console.log($scope.currentYear);
 	
-};
-
-layoutController.$inject = [
-	"$rootScope",
-	"$scope",
-	"$routeParams",
-	"$http"
-];
-
-app.controller("layoutController", layoutController);
+	//chrome ng-view hack
+	$timeout(function (){
+		$("#content-wrapper, .left-ads, .right-ads").css("visibility", "visible");
+	}, 500);
+	
+});

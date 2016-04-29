@@ -1,0 +1,47 @@
+.news-article {
+	margin-bottom: 20px;
+	color: #fff;
+
+	.image {
+		position: relative;
+		height: 200px;
+		width: 100%;
+		background-size: cover;
+
+		.date {
+			position: absolute;
+			width: 100%;
+			top: 0;
+			padding: 7px 10px;
+			text-align: right;
+			font-size: 12px;
+			background-color: rgba(248, 66, 65, .7);
+		}
+	}
+
+	.content {
+		position: relative;
+		min-height: 210px;
+		padding: 10px 15px;
+		background-color: $blue;
+
+		h3 {
+			margin: 0;
+			font-size: 15px;
+			font-weight: 600;
+		}
+
+		.short {
+			margin-top: 15px;
+		}
+
+		.btn {
+			position: absolute;
+			right: 10px;
+			bottom: 10px;
+			margin-top: 10px;
+			padding: 5px 10px;
+			font-size: 14px;
+		}
+	}
+}

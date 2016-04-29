@@ -8,6 +8,8 @@ var autoprefixer = require("gulp-autoprefixer");
 var sourcemaps = require("gulp-sourcemaps");
 var replace = require("gulp-replace");
 var debug = require("gulp-debug");
+var notify = require("gulp-notify");
+var uglify = require("gulp-uglify");
 
 var AutoPrefixerOptions = {
 	browsers: ["> 10%", "last 3 versions"],
@@ -42,11 +44,14 @@ gulp.task("styles-min", function() {
 		includePaths: [
 			"./bower_components/bootstrap-sass/assets/stylesheets"
 		]
-	}))
-			.pipe(autoprefixer(AutoPrefixerOptions))
-			.pipe(concat("./style.min.css"))
-			.pipe(replace("\n", ""))
-			.pipe(gulp.dest(cssDestination));
+	})
+	.on('error', notify.onError(function (e) {
+		return e;
+	})))
+	.pipe(autoprefixer(AutoPrefixerOptions))
+	.pipe(concat("./style.min.css"))
+	.pipe(replace("\n", ""))
+	.pipe(gulp.dest(cssDestination));
 });
 
 //icons task
@@ -66,8 +71,11 @@ gulp.task('scripts', function() {
 		"./bower_components/angular-sanitize/angular-sanitize.min.js",
 		jsAppSource
 	])
-			.pipe(concat('app.js'))
-			.pipe(gulp.dest(jsDestination));
+		.pipe(concat('app.js'))
+		.pipe(uglify({
+			mangle: false
+		}))
+		.pipe(gulp.dest(jsDestination));
 });
 
 //watch task

@@ -79,14 +79,20 @@ body{
 	@import "_search";
 
 	#content-wrapper {
+		visibility: hidden;
 		display: inline-block;
 		margin: 5px -4px 0px -4px;
+		padding: 20px;
 		width: 738px;
 		min-height: 600px;
 		vertical-align: top;
+		
+		//partials
+		@import "partials/_home";
 	}
 
 	.left-ads, .right-ads {
+		visibility: hidden;
 		display: inline-block;
 		width: 120px;
 		min-height: 600px;
@@ -109,5 +115,5 @@ body{
 //ui-kit
 @import "_ui-kit";
 
-//partials
-@import "partials/_home";
+//directives
+@import "_articles";
