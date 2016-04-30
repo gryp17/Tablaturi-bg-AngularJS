@@ -19,7 +19,7 @@
 			<a href="#home">Линкове</a>
 		</div>
 		<div class="item">
-			<a href="#home">Контакти</a>
+			<a href="#contact-us">Контакти</a>
 		</div>
 	</div>
 
@@ -35,7 +35,7 @@
 
 		<div class="authentication">
 			<a href="#signup">Регистрация</a>
-			<input class="btn btn-red" type="button" value="Вход"/>
+			<input class="btn btn-red" type="button" value="Вход" data-toggle="modal" data-target="#login-modal"/>
 		</div>
 
 		<div ng-show="stats" class="stats">

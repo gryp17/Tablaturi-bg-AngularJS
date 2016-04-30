@@ -1,0 +1,32 @@
+#login-modal{
+	.modal-dialog{
+		width: 500px;
+		margin-top: 200px;
+
+		.modal-body{
+			
+			.text-control{
+				display: block;
+				width: 100%;
+				margin-bottom: 25px;
+			}
+			
+			label{
+				cursor: pointer;
+			}
+			
+			a{
+				color: $blue;
+				text-decoration: underline;
+				font-size: 13px;
+			}
+			
+			.btn{
+				display: block;
+				margin: auto;
+				margin-top: 20px;
+				width: 200px;
+			}
+		}
+	}
+}

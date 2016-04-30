@@ -5,7 +5,7 @@
 	transition: all 0.4s ease-in-out;
 	border: 1px solid transparent;
 
-	&:focus{
+	&:focus, &:active:focus{
 		color: #fff;
 		outline: none;
 	}
@@ -23,14 +23,14 @@
 .text-control{
 	background-color: $gray;
 	color: $blue;
-	border: solid 1px $blue;
+	border: solid 1px transparent;
 	padding: 8px 10px;
+	outline: none;
 }
 
 .custom-dropdown{
 	position: relative;
 	margin-bottom: 0px;
-	font-weight: normal;
 	
     &:after {
         content: '\e259';
@@ -52,6 +52,30 @@
 		-webkit-appearance: none;
 		-moz-appearance: none;
 		-o-appearance: none;
+		outline: none;
 	}
 
+}
+
+.custom-modal{
+	
+	.modal-content{
+		border-radius: 0px;
+		
+		.modal-header{
+			color: #fff;
+			background-color: $red;
+			border-bottom: solid 2px $blue;
+			
+			.close{
+				margin-top: 2px;
+				color: #fff;
+				opacity: 1;
+			}
+		}
+		
+		.modal-body{
+			padding: 20px;
+		}
+	}
 }
