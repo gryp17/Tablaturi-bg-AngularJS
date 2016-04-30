@@ -8,7 +8,7 @@ body{
 	background: url('../img/background.jpg') fixed no-repeat;
 	color: $blue;
 	font-family: 'Open Sans', sans-serif;
-	
+
 	a:hover, a:focus{
 		text-decoration: none;
 		outline: none;
@@ -22,60 +22,7 @@ body{
 	border-left: 1px solid #ADADAD;
 	border-right: 1px solid #ADADAD;
 
-	header {
-		@import "_navigation";
-
-		.inner-header {
-			position: relative;
-			background-color: #D7D7D7;
-			text-align: center;
-
-			.social-icons {
-				position: absolute;
-				bottom: 10px;
-				left: 10px;
-
-				a {
-					&:hover, &:focus{
-						text-decoration: none;
-					}
-
-					img {
-						width: 35px;
-					}
-				}
-			}
-			
-			.authentication{
-				position: absolute;
-				right: 10px;
-				bottom: 10px;
-				
-				a {
-					margin-right: 10px;
-					text-decoration: underline;
-					font-size: 16px;
-					color: $blue;
-				}
-				
-				input[type=button]{
-					padding-left: 40px;
-					padding-right: 40px;
-				}
-			}
-			
-			.stats{
-				position: absolute;
-				right: 10px;
-				top: 10px;
-				
-				span{
-					font-weight: bold;
-				}
-			}
-		}
-	}
-
+	@import "_header";
 	@import "_search";
 
 	#content-wrapper {
@@ -86,7 +33,7 @@ body{
 		width: 738px;
 		min-height: 600px;
 		vertical-align: top;
-		
+
 		//partials
 		@import "partials/_home";
 	}
@@ -116,4 +63,4 @@ body{
 @import "_ui-kit";
 
 //directives
-@import "_articles";
+@import "directives/_article";

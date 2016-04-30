@@ -8,7 +8,7 @@ class App {
 
 	public function __construct() {
 		$url = $this->parseUrl();
-
+		
 		#check if the controller exists
 		if (file_exists("backend/controllers/$url[0].php")) {
 			$this->controller = $url[0];

@@ -38,12 +38,12 @@
 			<input class="btn btn-red" type="button" value="Вход"/>
 		</div>
 
-		<div class="stats">
+		<div ng-show="stats" class="stats">
 			<div>
-				<span>52132</span> GuitarPro таблатури
+				<span>{{stats.gp}}</span> GuitarPro таблатури
 			</div>
 			<div>
-				<span>192451</span> Текстови таблатури
+				<span>{{stats.text}}</span> Текстови таблатури
 			</div>
 		</div>
 
