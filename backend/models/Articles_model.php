@@ -23,6 +23,8 @@ class Articles_model {
 		$query->execute($params);
 
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			//convert the date to miliseconds timestamp
+			$row["date"] = strtotime($row["date"]) * 1000;
 			$data[] = $row;
 		}
 
@@ -45,6 +47,8 @@ class Articles_model {
 		$query->execute($params);
 
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			//convert the date to miliseconds timestamp
+			$row["date"] = strtotime($row["date"]) * 1000;
 			$data[] = $row;
 		}
 
