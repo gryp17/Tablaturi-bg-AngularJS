@@ -5,10 +5,13 @@
 
 		.modal-body{
 			
-			.text-control{
-				display: block;
-				width: 100%;
+			.field-box {
 				margin-bottom: 25px;
+				
+				.text-control{
+					display: block;
+					width: 100%;
+				}
 			}
 			
 			label{

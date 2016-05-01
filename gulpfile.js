@@ -72,9 +72,9 @@ gulp.task('scripts', function() {
 		jsAppSource
 	])
 		.pipe(concat('app.js'))
-		.pipe(uglify({
-			mangle: false
-		}))
+		//.pipe(uglify({
+		//	mangle: false
+		//}))
 		.pipe(gulp.dest(jsDestination));
 });
 

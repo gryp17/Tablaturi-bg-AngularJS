@@ -80,6 +80,7 @@
         </div>
 
 		<?php include "_login.php" ?>
+		<?php include "_signup.php" ?>
 		
 		<script type="text/javascript" src="static/scripts/app.js"></script>
     </body>

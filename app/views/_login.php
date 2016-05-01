@@ -6,10 +6,13 @@
 				<h4 class="modal-title">Вход:</h4>
 			</div>
 			<div class="modal-body">
-				
-				<input class="text-control" type="text" placeholder="Потребителско име"/>
-				
-				<input class="text-control" type="password" placeholder="Парола"/>
+				<div class="field-box error">
+					<input class="text-control" type="text" placeholder="Потребителско име"/>
+					<span class="error-msg">Аз съм error!</span>
+				</div>
+				<div class="field-box">
+					<input class="text-control" type="password" placeholder="Парола"/>
+				</div>
 				
 				<div class="row">
 					<div class="col-xs-6">

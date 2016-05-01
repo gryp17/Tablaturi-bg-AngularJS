@@ -34,7 +34,7 @@
 		</div>
 
 		<div class="authentication">
-			<a href="#signup">Регистрация</a>
+			<a data-toggle="modal" href="#signup-modal" target="_self">Регистрация</a>
 			<input class="btn btn-red" type="button" value="Вход" data-toggle="modal" data-target="#login-modal"/>
 		</div>
 

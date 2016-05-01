@@ -79,3 +79,26 @@
 		}
 	}
 }
+
+
+
+.field-box {
+	position: relative;
+	
+	&.error {
+		.text-control {
+			border-color: $red;
+		}
+
+		.error-msg {
+			display: inline;
+		}
+	}
+	
+	.error-msg {
+		display: none;
+		position: absolute;
+		font-size: 12px;
+		color: $red;
+	}
+}
