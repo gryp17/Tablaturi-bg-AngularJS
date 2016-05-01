@@ -376,9 +376,14 @@ app.config(['$routeProvider', function($routeProvider) {
 	}]);
 
 
-app.run(function($rootScope, $location, $http, LoadingService) {
+app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 
 	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+
+		//pages that require login
+		var securePages = [
+			"/profile/:id"
+		];
 
 		//static pages that don't need loading indicator
 		var staticPages = [
@@ -393,10 +398,30 @@ app.run(function($rootScope, $location, $http, LoadingService) {
 		}else{
 			LoadingService.showLoadingPlaceholder();
 		}
+		
+		$rootScope.checkingLoginStatus = true;
 
-		//TODO: authentication
+		//authentication check
+		UserService.isLoggedIn().success(function (result){
+			$rootScope.checkingLoginStatus = false;
+			
+			if(result.data.logged_in === true){
+				$rootScope.loggedInUser = result.data.user;
+			}else{
+				$rootScope.loggedInUser = undefined;
+				
+				if (next.$$route) {
+					var nextUrl = next.$$route.originalPath;
+					//if the user is trying to open a secure page and is not logged in - redirect to the home page
+					if(securePages.indexOf(nextUrl) > -1){
+						$location.path("/home");
+					}
+				}	
+			}
+		});
+		
+		/*
 		$rootScope.authenticated = false;
-
 		//call the backend to check if the session is set...
 		if (false) {
 			$rootScope.authenticated = true;
@@ -409,13 +434,11 @@ app.run(function($rootScope, $location, $http, LoadingService) {
 				console.log(nextUrl);
 				//$location.path("/home");
 			}
-		}
+		}*/
 
 	});
 
 });
-
-"use strict";
 
 app.controller("articleController", function($scope, ArticleService, LoadingService) {
 
@@ -424,8 +447,6 @@ app.controller("articleController", function($scope, ArticleService, LoadingServ
 	LoadingService.doneLoading();
 
 });
-"use strict";
-
 app.controller("contactusController", function($scope, LoadingService) {
 
 	console.log("contact us controller");
@@ -433,8 +454,6 @@ app.controller("contactusController", function($scope, LoadingService) {
 	//$("#content-wrapper > section").css("visibility", "visible");
 
 });
-"use strict";
-
 app.controller("homeController", function($scope, ArticleService, LoadingService) {
 
 	ArticleService.getArticles(6, 0).success(function(result) {
@@ -447,24 +466,7 @@ app.controller("homeController", function($scope, ArticleService, LoadingService
 		}
 	});
 
-
-
-	//get articles by date
-//	$http({
-//		method: 'POST',
-//		url: 'API/getArticlesByDate',
-//		data: {
-//			date: "2014-08-30",
-//			limit: 5,
-//			offset: 0
-//		}
-//	}).then(function(response) {
-//		console.log(response);
-//	});
-
 });
-"use strict";
-
 app.controller("layoutController", function($scope, $timeout, TabService) {
 	
 	$scope.currentYear = (new Date()).getFullYear();
@@ -478,15 +480,23 @@ app.controller("layoutController", function($scope, $timeout, TabService) {
 	});
 	
 });
-"use strict";
-
-app.controller("loginController", function($scope) {
+app.controller("loginController", function($scope, $window, UserService, ValidationService) {
 	
-	console.log("login controller");
+	$scope.login = function (username, password){
+		UserService.login(username, password).success(function (result){
+			if(result.status === 0){
+				if(result.error){
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			}else{
+				//on successfull login reload the page
+				$window.location.reload();
+			}
+		});
+	};
 	
 });
-"use strict";
-
 app.controller("signupController", function($scope) {
 	
 	console.log("sign up controller");
@@ -505,6 +515,45 @@ app.directive("article", function($filter) {
 			var limit = 210 - scope.articleData.title.length;			
 			scope.articleData.content = $filter("limitTo")(sanitizedContent, limit) + '...';
 		}
+	};
+});
+app.directive("validation", function() {
+	return {
+		restrict: "C",
+		link: function(scope, element, attrs) {
+			element.on("focus", function (){
+				element.parent(".field-box").removeClass("error");
+			});
+		}
+	};
+});
+app.filter("errors", function () {
+	return function (errorCode) {
+
+		var errors = {
+			invalid_login: "Грешно име или парола",
+			empty_field: "Празно поле",
+			invalid_int: "Невалидно число",
+			invalid_date: "Невалидна дата",
+			invalid_email: "Невалиден имейл",
+			weak_password: "Паролата не е над 6 символа или не съдържа поне едно число"
+		};
+		
+		if(angular.isUndefined(errors[errorCode])){
+			//max-\d+ rule
+			if(/exceeds_characters_(\d+)/.exec(errorCode)){
+				var results = /exceeds_characters_(\d+)/.exec(errorCode);
+				return "Полето надвишава "+results[1]+" символа";
+			}
+			
+			//min-\d+ rule
+			if(/below_characters_(\d+)/.exec(errorCode)){
+				var results = /below_characters_(\d+)/.exec(errorCode);
+				return "Полето е под "+results[1]+" символа";
+			}
+		}
+
+		return errors[errorCode];
 	};
 });
 app.factory('LoadingService', function() {
@@ -553,6 +602,16 @@ app.factory('LoadingService', function() {
 		}
 	};
 });
+app.factory('ValidationService', function($filter) {
+	return {
+		showError: function(field, errorCode) {
+			var errorMessage = $filter("errors")(errorCode);
+			var fieldBox = $("input[name='" + field + "']").parent(".field-box");
+			fieldBox.find(".error-msg").html(errorMessage);
+			fieldBox.addClass("error");
+		}
+	};
+});
 app.factory('ArticleService', function($http) {
 	return {
 		getArticles: function(limit, offset) {
@@ -573,6 +632,26 @@ app.factory('TabService', function($http) {
 			return $http({
 				method: 'GET',
 				url: 'Tab/getTabsCount'
+			});
+		}
+	};
+});
+app.factory('UserService', function($http) {
+	return {
+		login: function(username, password) {
+			return $http({
+				method: 'POST',
+				url: 'User/login',
+				data: {
+					username: username,
+					password: password
+				}
+			});
+		},
+		isLoggedIn: function (){
+			return $http({
+				method: 'POST',
+				url: 'User/isLoggedIn'
 			});
 		}
 	};

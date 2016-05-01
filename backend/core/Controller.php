@@ -27,6 +27,8 @@ class Controller {
 	public function getRequestParams() {
 		$params = array();
 
+		$_POST = is_array($_POST) ? $_POST : array();
+		
 		#merge the request and post params
 		$request_data = array_merge($_REQUEST, $_POST);
 
@@ -50,29 +52,42 @@ class Controller {
 			$this->response_type = 'json';
 		}
 
-		#check if the API call contains all the required params
-		if (isset($params['url'])) {
-			$function = array_pop(explode('/', $params['url']));
-
-			if (isset($this->required_params[$function])) {
-				foreach ($this->required_params[$function] as $param => $type) {
-					#check if the param exists
-					if (!isset($params[$param])) {
-						$this->sendResponse(0, "Missing $param parameter.");
-					}
-
-					#check if the param meets the requirements
-					if ($this->checkParam($params[$param], $type) == false) {
-						$this->sendResponse(0, "Invalid $param parameter.");
-					}
-				}
-			}
-		} else {
+		if (!isset($params['url'])) {
 			$this->sendResponse(0, "Invalid request.");
 		}
+		
+		#validate all required params
+		$this->validateParams($params);
 
 		return $params;
 	}
+	
+	/**
+	 * Validates all required parameters for the called function
+	 * @param array $params
+	 */
+	private function validateParams($params){
+		$function = array_pop(explode('/', $params['url']));
+		
+		if (isset($this->required_params[$function])) {
+			foreach ($this->required_params[$function] as $param_name => $rules) {
+				$value = isset($params[$param_name]) ? $params[$param_name] : "";
+				$rules = split(",", $rules);
+				
+				foreach($rules as $rule){
+					$rule = trim($rule);
+					$rule = strtolower($rule);
+					
+					#check the value with each rule and send the error message if necessary
+					$result = Validator::checkParam($param_name, $value, $rule);
+					if($result !== true){
+						$this->sendResponse(0, $result);
+					}
+				}
+			}
+		}
+	}
+	
 
 	/**
 	 * Checks if the user has the required permissions
@@ -81,7 +96,7 @@ class Controller {
 	 */
 	public function checkPermission($required_role) {
 		$result = false;
-		session_start();
+		#session_start();
 
 		switch ($required_role) {
 			case self::PUBLIC_ACCESS:
@@ -104,6 +119,7 @@ class Controller {
 	 * @param string $type
 	 * @return boolean
 	 */
+	/*
 	private function checkParam($value, $type) {
 		$result = true;
 
@@ -116,7 +132,7 @@ class Controller {
 				break;
 			#valid date
 			case 'date':
-				if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+				if (!preg_match('/^\d{4}-\d{2}-\d{2}\s\d{2}\:\d{2}\:\d{2}$/', $value)) {
 					$result = false;
 				}
 				break;
@@ -129,8 +145,8 @@ class Controller {
 		}
 
 		return $result;
-	}
-
+	}*/
+	
 	/**
 	 * Outputs the AJAX response
 	 * @param int $status

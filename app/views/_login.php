@@ -6,12 +6,13 @@
 				<h4 class="modal-title">Вход:</h4>
 			</div>
 			<div class="modal-body">
-				<div class="field-box error">
-					<input class="text-control" type="text" placeholder="Потребителско име"/>
-					<span class="error-msg">Аз съм error!</span>
+				<div class="field-box">
+					<input class="text-control validation" type="text" ng-model="username" name="username" placeholder="Потребителско име"/>
+					<span class="error-msg"></span>
 				</div>
 				<div class="field-box">
-					<input class="text-control" type="password" placeholder="Парола"/>
+					<input class="text-control validation" type="password" ng-model="password" name="password" placeholder="Парола"/>
+					<span class="error-msg"></span>
 				</div>
 				
 				<div class="row">
@@ -26,7 +27,7 @@
 					</div>
 				</div>
 
-				<input class="btn btn-red" type="button" value="Влез"/>
+				<input class="btn btn-red" type="button" value="Влез" ng-click="login(username, password)"/>
 				
 			</div>
 		</div>

@@ -33,17 +33,25 @@
 			</a>
 		</div>
 
-		<div class="authentication">
+		<div ng-if="!loggedInUser && checkingLoginStatus === false" class="authentication">
 			<a data-toggle="modal" href="#signup-modal" target="_self">Регистрация</a>
 			<input class="btn btn-red" type="button" value="Вход" data-toggle="modal" data-target="#login-modal"/>
+		</div>
+		
+		<div ng-if="loggedInUser" class="welcome-panel">
+			Добре
+			<span ng-if="loggedInUser.gender === 'M'">дошъл</span>
+			<span ng-if="loggedInUser.gender === 'F'">дошла</span>
+			<a title="Моят профил" href="#profile/{{loggedInUser.ID}}" ng-bind="loggedInUser.username"></a>
+			<input class="btn btn-red" type="button" value="Изход"/>
 		</div>
 
 		<div ng-show="stats" class="stats">
 			<div>
-				<span>{{stats.gp}}</span> GuitarPro таблатури
+				<span ng-bind="stats.gp"></span> GuitarPro таблатури
 			</div>
 			<div>
-				<span>{{stats.text}}</span> Текстови таблатури
+				<span ng-bind="stats.text"></span> Текстови таблатури
 			</div>
 		</div>
 

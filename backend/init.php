@@ -2,8 +2,11 @@
 
 require_once 'config/Config.php';
 require_once 'core/App.php';
+require_once 'core/Validator.php';
 require_once 'core/Controller.php';
 require_once 'core/DB.php';
+
+session_start();
 
 #angularJS ajax POST hack...
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST)) {

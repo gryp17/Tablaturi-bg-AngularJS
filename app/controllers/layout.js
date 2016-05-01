@@ -1,5 +1,3 @@
-"use strict";
-
 app.controller("layoutController", function($scope, $timeout, TabService) {
 	
 	$scope.currentYear = (new Date()).getFullYear();

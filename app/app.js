@@ -20,9 +20,14 @@ app.config(['$routeProvider', function($routeProvider) {
 	}]);
 
 
-app.run(function($rootScope, $location, $http, LoadingService) {
+app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 
 	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+
+		//pages that require login
+		var securePages = [
+			"/profile/:id"
+		];
 
 		//static pages that don't need loading indicator
 		var staticPages = [
@@ -37,10 +42,30 @@ app.run(function($rootScope, $location, $http, LoadingService) {
 		}else{
 			LoadingService.showLoadingPlaceholder();
 		}
+		
+		$rootScope.checkingLoginStatus = true;
 
-		//TODO: authentication
+		//authentication check
+		UserService.isLoggedIn().success(function (result){
+			$rootScope.checkingLoginStatus = false;
+			
+			if(result.data.logged_in === true){
+				$rootScope.loggedInUser = result.data.user;
+			}else{
+				$rootScope.loggedInUser = undefined;
+				
+				if (next.$$route) {
+					var nextUrl = next.$$route.originalPath;
+					//if the user is trying to open a secure page and is not logged in - redirect to the home page
+					if(securePages.indexOf(nextUrl) > -1){
+						$location.path("/home");
+					}
+				}	
+			}
+		});
+		
+		/*
 		$rootScope.authenticated = false;
-
 		//call the backend to check if the session is set...
 		if (false) {
 			$rootScope.authenticated = true;
@@ -53,7 +78,7 @@ app.run(function($rootScope, $location, $http, LoadingService) {
 				console.log(nextUrl);
 				//$location.path("/home");
 			}
-		}
+		}*/
 
 	});
 
