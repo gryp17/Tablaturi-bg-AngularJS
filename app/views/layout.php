@@ -66,9 +66,10 @@
 					</rect>
 					</svg>
 				</div>
-
-				<section ng-view="">
-				</section>
+				<div id="view-wrapper">
+					<section ng-view="">
+					</section>
+				</div>
 			</div>
 
 			<div class="right-ads">right</div>

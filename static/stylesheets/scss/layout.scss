@@ -13,11 +13,11 @@ body{
 		text-decoration: none;
 		outline: none;
 	}
-	
+
 	label{
 		font-weight: normal;
 	}
-	
+
 }
 
 #main-wrapper {
@@ -37,28 +37,29 @@ body{
 		width: 738px;
 		min-height: 600px;
 		vertical-align: top;
-		
-		> section{
-			visibility: hidden; //chrome ng-view hack
-		}
-		
+
 		.loading-placeholder{
 			display: none;
 			margin: auto;
 			text-align: center;
-			
+
 			> svg{
 				width: 100px;
 				height: 100px;
-				
+
 				rect{
 					fill: $red;
 				}
 			}
 		}
-		
-		//partials
-		@import "partials/_home";
+
+		#view-wrapper{
+			visibility: hidden; //chrome ng-view hack
+
+			//partials
+			@import "partials/_home";
+		}
+
 	}
 
 	.left-ads, .right-ads {

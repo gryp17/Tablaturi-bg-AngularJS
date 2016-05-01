@@ -1,6 +1,6 @@
 app.factory('LoadingService', function() {
 	
-	var contentElement = "#content-wrapper > section";
+	var contentElement = "#view-wrapper";
 	var loadingElement = "#content-wrapper > .loading-placeholder";
 	
 	return {

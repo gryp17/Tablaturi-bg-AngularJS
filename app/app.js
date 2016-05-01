@@ -33,11 +33,6 @@ app.run(function($rootScope, $location, $http, LoadingService) {
 			//if the page that is about to be loaded is not in the static pages list...
 			if(staticPages.indexOf(next.$$route.originalPath) < 0){
 				LoadingService.startLoading();
-			}else{
-				//hax
-				setTimeout(function (){
-					LoadingService.showContent();
-				}, 100);
 			}
 		}else{
 			LoadingService.showLoadingPlaceholder();
