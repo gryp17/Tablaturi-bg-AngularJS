@@ -60,6 +60,22 @@ class User extends Controller {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}
 	}
+	
+	/**
+	 * Logs out the user
+	 */
+	public function logout() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		if ($this->checkPermission($required_role) == true) {
+
+			$params = $this->getRequestParams();
+			session_destroy();
+			unset($_SESSION["user"]);
+			$this->sendResponse(1, true);
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
 
 	/**
 	 * Checks if the user session is set

@@ -1,4 +1,4 @@
-app.controller("loginController", function($scope, $window, UserService, ValidationService) {
+app.controller("loginController", function($scope, $rootScope, $window, UserService, ValidationService) {
 	
 	$scope.login = function (username, password){
 		UserService.login(username, password).success(function (result){
@@ -8,8 +8,9 @@ app.controller("loginController", function($scope, $window, UserService, Validat
 					ValidationService.showError(result.error.field, result.error.error_code);
 				}
 			}else{
-				//on successfull login reload the page
-				$window.location.reload();
+				//$window.location.reload();
+				$rootScope.loggedInUser = result.data;
+				$("#login-modal").modal("hide");
 			}
 		});
 	};

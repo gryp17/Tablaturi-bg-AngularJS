@@ -4,6 +4,10 @@ $red: #F84241;
 $blue: #465A65;
 $gray: #E4E4E4;
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+
 body{
 	background: url('../img/background.jpg') fixed no-repeat;
 	color: $blue;

@@ -10,6 +10,12 @@ app.factory('UserService', function($http) {
 				}
 			});
 		},
+		logout: function (){
+			return $http({
+				method: 'POST',
+				url: 'User/logout'
+			});
+		},
 		isLoggedIn: function (){
 			return $http({
 				method: 'POST',

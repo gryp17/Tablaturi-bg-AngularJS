@@ -58,7 +58,7 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 					var nextUrl = next.$$route.originalPath;
 					//if the user is trying to open a secure page and is not logged in - redirect to the home page
 					if(securePages.indexOf(nextUrl) > -1){
-						$location.path("/home");
+						$location.path("/");
 					}
 				}	
 			}

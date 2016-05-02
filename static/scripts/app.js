@@ -414,7 +414,7 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 					var nextUrl = next.$$route.originalPath;
 					//if the user is trying to open a secure page and is not logged in - redirect to the home page
 					if(securePages.indexOf(nextUrl) > -1){
-						$location.path("/home");
+						$location.path("/");
 					}
 				}	
 			}
@@ -467,7 +467,7 @@ app.controller("homeController", function($scope, ArticleService, LoadingService
 	});
 
 });
-app.controller("layoutController", function($scope, $timeout, TabService) {
+app.controller("layoutController", function($scope, $rootScope, $location, TabService, UserService) {
 	
 	$scope.currentYear = (new Date()).getFullYear();
 	
@@ -479,8 +479,22 @@ app.controller("layoutController", function($scope, $timeout, TabService) {
 		}	
 	});
 	
+	/**
+	 * Callback function that is called when the logout button is pressed.
+	 * Unsets the loggedInUser and redirects to the home page
+	 */
+	$scope.logout = function (){
+		UserService.logout().success(function (result){
+			if(result.data){
+				$rootScope.loggedInUser = undefined;
+				$location.path("/");
+			}
+		});
+	};
+	
+	
 });
-app.controller("loginController", function($scope, $window, UserService, ValidationService) {
+app.controller("loginController", function($scope, $rootScope, $window, UserService, ValidationService) {
 	
 	$scope.login = function (username, password){
 		UserService.login(username, password).success(function (result){
@@ -490,8 +504,9 @@ app.controller("loginController", function($scope, $window, UserService, Validat
 					ValidationService.showError(result.error.field, result.error.error_code);
 				}
 			}else{
-				//on successfull login reload the page
-				$window.location.reload();
+				//$window.location.reload();
+				$rootScope.loggedInUser = result.data;
+				$("#login-modal").modal("hide");
 			}
 		});
 	};
@@ -646,6 +661,12 @@ app.factory('UserService', function($http) {
 					username: username,
 					password: password
 				}
+			});
+		},
+		logout: function (){
+			return $http({
+				method: 'POST',
+				url: 'User/logout'
 			});
 		},
 		isLoggedIn: function (){

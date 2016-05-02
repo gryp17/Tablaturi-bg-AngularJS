@@ -43,7 +43,7 @@
 			<span ng-if="loggedInUser.gender === 'M'">дошъл</span>
 			<span ng-if="loggedInUser.gender === 'F'">дошла</span>
 			<a title="Моят профил" href="#profile/{{loggedInUser.ID}}" ng-bind="loggedInUser.username"></a>
-			<input class="btn btn-red" type="button" value="Изход"/>
+			<input class="btn btn-red" type="button" value="Изход" ng-click="logout()"/>
 		</div>
 
 		<div ng-show="stats" class="stats">

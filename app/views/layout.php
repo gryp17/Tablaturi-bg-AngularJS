@@ -5,9 +5,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600' rel='stylesheet' type='text/css'>
-        <link href="static/stylesheets/style.min.css" rel="stylesheet" type="text/css"/>	
+        <link href="static/stylesheets/style.min.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body>
+    <body class="ng-cloak" ng-cloak>
         <div id="main-wrapper">
 
 			<?php include "_header.php" ?>
