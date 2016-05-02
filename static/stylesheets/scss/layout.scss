@@ -59,9 +59,12 @@ body{
 
 		#view-wrapper{
 			visibility: hidden; //chrome ng-view hack
-
-			//partials
-			@import "partials/_home";
+			
+			section {
+				//partials
+				@import "partials/_home";
+				@import "partials/_copyright";
+			}
 		}
 
 	}

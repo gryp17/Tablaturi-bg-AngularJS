@@ -6,6 +6,6 @@
 		</div>
 	</div>
 	<div class="view-all">
-		<a href="#news">Виж всички новини</a>
+		<a class="red-link" href="#news">Виж всички новини</a>
 	</div>
 </div>

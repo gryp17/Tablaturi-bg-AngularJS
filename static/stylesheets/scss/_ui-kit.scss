@@ -102,3 +102,15 @@
 		color: $red;
 	}
 }
+
+a {
+	&.red-link {
+		color: $red;
+		font-weight: 600;
+		text-decoration: underline;
+		
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

@@ -13,6 +13,8 @@ app.config(['$routeProvider', function($routeProvider) {
 		}).when('/contact-us', {
 			templateUrl: 'app/views/partials/contact-us.php',
 			controller: "contactusController"
+		}).when('/copyright', {
+			templateUrl: 'app/views/partials/copyright.php'
 		}).otherwise({
 			templateUrl: 'app/views/partials/home.php',
 			controller: "homeController"
@@ -31,13 +33,16 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 
 		//static pages that don't need loading indicator
 		var staticPages = [
-			"/contact-us"
+			"/contact-us",
+			"/copyright"
 		];
 		
 		if (next.$$route) {
 			//if the page that is about to be loaded is not in the static pages list...
 			if(staticPages.indexOf(next.$$route.originalPath) < 0){
 				LoadingService.startLoading();
+			} else {
+				LoadingService.doneLoading();
 			}
 		}else{
 			LoadingService.showLoadingPlaceholder();

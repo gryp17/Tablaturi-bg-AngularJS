@@ -1,4 +1,4 @@
-.home{
+> .home{
 	.title {
 		margin-top: 0;
 		font-size: 17px;
@@ -6,13 +6,5 @@
 	
 	.view-all {
 		text-align: center;
-		
-		a {
-			color: $blue;
-			
-			&:hover {
-				text-decoration: underline;
-			}
-		}
 	}
 }
