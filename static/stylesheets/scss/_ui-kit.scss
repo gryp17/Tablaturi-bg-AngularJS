@@ -31,7 +31,7 @@
 .custom-dropdown{
 	position: relative;
 	margin-bottom: 0px;
-	
+
     &:after {
         content: '\e259';
 		font-family: 'Glyphicons Halflings';
@@ -58,22 +58,22 @@
 }
 
 .custom-modal{
-	
+
 	.modal-content{
 		border-radius: 0px;
-		
+
 		.modal-header{
 			color: #fff;
 			background-color: $red;
 			border-bottom: solid 2px $blue;
-			
+
 			.close{
 				margin-top: 2px;
 				color: #fff;
 				opacity: 1;
 			}
 		}
-		
+
 		.modal-body{
 			padding: 20px;
 		}
@@ -84,7 +84,7 @@
 
 .field-box {
 	position: relative;
-	
+
 	&.error {
 		.text-control {
 			border-color: $red;
@@ -94,7 +94,7 @@
 			display: inline;
 		}
 	}
-	
+
 	.error-msg {
 		display: none;
 		position: absolute;
@@ -108,9 +108,82 @@ a {
 		color: $red;
 		font-weight: 600;
 		text-decoration: underline;
-		
+
 		&:hover {
 			text-decoration: underline;
 		}
+	}
+}
+
+.ui-datepicker{
+	border-radius: 0px;
+	font-weight: bold;
+	
+	.ui-corner-all{
+		border-radius: 0px;
+	}
+	
+	.ui-datepicker-prev, .ui-datepicker-next{
+		border: none;
+		cursor: pointer;
+		
+		span{
+			background-image: url('../../img/arrow.png');
+			background-size: 16px;
+			background-position: 0 0;
+		}
+	}
+	
+	.ui-datepicker-prev{
+		&:hover {
+			left: 2px;
+			top: 2px;
+			border: none;
+			background: transparent;
+		}
+		
+		span{
+			transform: rotate(180deg);
+		}
+	}
+	
+	.ui-datepicker-next {
+		&:hover {
+			right: 2px;
+			top: 2px;
+			border: none;
+			background: transparent;
+		}
+	}
+	
+	.ui-widget-header{
+		background: $red;
+	}
+	
+	.ui-datepicker-calendar {
+		th {
+			font-weight: normal;
+			color: $blue;
+		}
+		
+		td {
+			min-width: 35px;
+			
+			a, span {
+				padding: 2px 4px;
+				font-weight: normal;
+				color: $blue;
+				
+				&.ui-state-active {
+					background: lighten($red, 20%);
+					border-color: $red;
+				}
+			}
+		}
+	}
+	
+	select{
+		color: $blue;
+		font-weight: normal;
 	}
 }

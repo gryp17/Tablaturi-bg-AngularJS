@@ -18,9 +18,10 @@
   ],
   "dependencies": {
     "jquery": "~2.1.4",
-	"bootstrap-sass": "3.3.6",
-	"angular": "1.5.x",
-	"angular-route": "1.5.x",
-	"angular-sanitize": "1.5.x"
+    "bootstrap-sass": "3.3.6",
+    "angular": "1.5.x",
+    "angular-route": "1.5.x",
+    "angular-sanitize": "1.5.x",
+    "jquery-ui": "1.9.2"
   }
 }

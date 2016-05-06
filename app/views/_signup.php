@@ -21,7 +21,7 @@
 					<input class="text-control" type="password" placeholder="Повтори парола"/>
 				</div>
 				<div class="field-box">
-					<input class="text-control" type="password" placeholder="Рождена дата"/>
+					<input id="signup-datepicker" readonly class="text-control" type="text" placeholder="Рождена дата"/>
 				</div>
 				<div class="field-box">
 					<div class="gender">
