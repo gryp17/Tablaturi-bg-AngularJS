@@ -1,11 +1,11 @@
-<div class="home">
+<div class="articles">
 	<h2 class="title">Новини:</h2>
 	<div class="row">
 		<div class="col-xs-6" ng-repeat="article in articles">
 			<div article article-data="article"></div>
 		</div>
 	</div>
-	<div class="view-all">
-		<a class="red-link" href="#articles">Виж всички новини</a>
+	<div class="view-more">
+		<button ng-click="offset = offset + 6; loadArticles(limit, offset)" class="btn btn-red">Покажи още новини</button>
 	</div>
 </div>

@@ -4,7 +4,7 @@
 			<a href="#home">Начало</a>
 		</div>
 		<div class="item">
-			<a href="#home">Новини</a>
+			<a href="#articles">Новини</a>
 		</div>
 		<div class="item">
 			<a href="#home">Таблатури</a>
