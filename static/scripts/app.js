@@ -505,9 +505,10 @@ app.controller("layoutController", function($scope, $rootScope, $location, TabSe
 	
 });
 app.controller("loginController", function($scope, $rootScope, $window, UserService, ValidationService) {
+	$scope.loginData = {};
 	
-	$scope.login = function (username, password){
-		UserService.login(username, password).success(function (result){
+	$scope.login = function (){
+		UserService.login($scope.loginData).success(function (result){
 			if(result.status === 0){
 				if(result.error){
 					//show the error
@@ -522,7 +523,62 @@ app.controller("loginController", function($scope, $rootScope, $window, UserServ
 	};
 	
 });
-app.controller("signupController", function($scope) {
+app.controller("signupController", function($scope, UserService, ValidationService) {
+	$scope.userData = {
+		signup_gender: "M"
+	};
+
+	$scope.signupSuccess = false;
+
+	/**
+	 * Generates new captcha image
+	 */
+	$scope.generateCaptcha = function() {
+		UserService.generateCaptcha().success(function(result) {
+			$scope.captchaImage = result.data;
+		});
+	};
+
+	/**
+	 * Sends all the userData to the backend
+	 */
+	$scope.signup = function() {
+		UserService.signup($scope.userData).success(function(result) {
+			if (result.status === 0) {
+				if (result.error) {
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			} else {
+				$scope.signupSuccess = true;
+			}
+		});
+	};
+
+	/**
+	 * Resets the form
+	 * @returns {undefined}
+	 */
+	$scope.resetForm = function() {
+		$scope.userData = {
+			signup_gender: "M"
+		};
+		
+		$scope.signupSuccess = false;
+		
+		$("#signup-modal .field-box").removeClass("error");
+		$("#signup-modal .error-msg").html("");
+	};
+	
+	/**
+	 * On modal close reset the form
+	 */
+	$("#signup-modal").on("hidden.bs.modal", function (){
+		$scope.resetForm();
+		$scope.$apply();
+	});
+
+	$scope.generateCaptcha();
 
 	$("#signup-datepicker").datepicker({
 		changeMonth: true,
@@ -532,18 +588,18 @@ app.controller("signupController", function($scope) {
 		monthNamesShort: ["Януари", "Февруари", "Март", "Април", "Май", "Юни", "Юли", "Август", "Септември", "Октомври", "Ноември", "Декември"],
 		dayNamesMin: ["Нед", "Пон", "Вт", "Ср ", "Чет", "Пет", "Съб"],
 		firstDay: 1,
-		dateFormat: "dd-mm-yy"
+		dateFormat: "yy-mm-dd"
 	});
-	
-	
+
 	//jquery-ui/bootstrap datepicker hack
 	var enforceModalFocusFn = $.fn.modal.Constructor.prototype.enforceFocus;
-	$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+	$.fn.modal.Constructor.prototype.enforceFocus = function() {
+	};
 	$("#signup-modal").on('hidden', function() {
 		$.fn.modal.Constructor.prototype.enforceFocus = enforceModalFocusFn;
 	});
 	//$("#signup-modal").modal({ backdrop : false });
-	
+
 });
 app.directive("article", function($filter) {
 	return {
@@ -564,8 +620,8 @@ app.directive("validation", function() {
 	return {
 		restrict: "C",
 		link: function(scope, element, attrs) {
-			element.on("focus", function (){
-				element.parent(".field-box").removeClass("error");
+			element.on("focus click", function (){
+				element.closest(".field-box").removeClass("error");
 			});
 		}
 	};
@@ -579,7 +635,12 @@ app.filter("errors", function () {
 			invalid_int: "Невалидно число",
 			invalid_date: "Невалидна дата",
 			invalid_email: "Невалиден имейл",
-			weak_password: "Паролата не е над 6 символа или не съдържа поне едно число"
+			weak_password: "Паролата не е над 6 символа или не съдържа поне едно число и буква",
+			no_match: "Полетата не съвпадат",
+			username_in_use: "Потребителското име е заето",
+			email_in_use: "Имейлът е зает",
+			not_in_list: "Невалидно поле",
+			invalid_captcha: "Captcha-та не съвпада"
 		};
 		
 		if(angular.isUndefined(errors[errorCode])){
@@ -649,7 +710,7 @@ app.factory('ValidationService', function($filter) {
 	return {
 		showError: function(field, errorCode) {
 			var errorMessage = $filter("errors")(errorCode);
-			var fieldBox = $("input[name='" + field + "']").parent(".field-box");
+			var fieldBox = $("input[name='" + field + "'], textarea[name='" + field + "'], select[name='" + field + "']").closest(".field-box");
 			fieldBox.find(".error-msg").html(errorMessage);
 			fieldBox.addClass("error");
 		}
@@ -681,14 +742,11 @@ app.factory('TabService', function($http) {
 });
 app.factory('UserService', function($http) {
 	return {
-		login: function(username, password) {
+		login: function(loginData) {
 			return $http({
 				method: 'POST',
 				url: 'User/login',
-				data: {
-					username: username,
-					password: password
-				}
+				data: loginData
 			});
 		},
 		logout: function (){
@@ -701,6 +759,19 @@ app.factory('UserService', function($http) {
 			return $http({
 				method: 'POST',
 				url: 'User/isLoggedIn'
+			});
+		},
+		generateCaptcha: function (){
+			return $http({
+				method: 'POST',
+				url: 'User/generateCaptcha'
+			});
+		},
+		signup: function (userData){
+			return $http({
+				method: 'POST',
+				url: 'User/signup',
+				data: userData
 			});
 		}
 	};

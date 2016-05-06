@@ -12,30 +12,18 @@ class User extends Controller {
 	 */
 	public $required_params = array(
 		"login" => array(
-			"username" => "required",
-			"password" => "required"
+			"login_username" => "required",
+			"login_password" => "required"
 		),
-			/*
-			  'getArticles' => array(
-			  'limit' => 'int',
-			  'offset' => 'int'
-			  ),
-			  'getArticlesByDate' => array(
-			  'date' => 'date',
-			  'limit' => 'int',
-			  'offset' => 'int'
-			  ), */
-			/*
-			  'getArticlesBySearch' => array(
-			  'search_val' => '+'
-			  ),
-			  'getLatestArticleDate' => array(),
-			  'getArticle' => array(
-			  'id' => 'int'
-			  ),
-			  'addArticleView' => array(
-			  'id' => 'int'
-			  ) */
+		"signup" => array(
+			"signup_username" => "min-6, max-20, valid-characters, unique[username]",
+			"signup_email" => "valid-email, unique[email]",
+			"signup_password" => "min-6, max-20, strong-password",
+			"signup_repeat_password" => "matches[signup_password]",
+			"signup_birthday" => "date",
+			"signup_gender" => "in[M;F]",
+			"signup_captcha" => "matches-captcha"
+		)
 	);
 
 	/**
@@ -48,10 +36,10 @@ class User extends Controller {
 			$params = $this->getRequestParams();
 
 			$user_model = $this->load_model("User_model");
-			$data = $user_model->checkLogin($params["username"], $params["password"]);
+			$data = $user_model->checkLogin($params["login_username"], $params["login_password"]);
 
 			if ($data === false) {
-				$this->sendResponse(0, array("field" => "password", "error_code" => "invalid_login"));
+				$this->sendResponse(0, array("field" => "login_password", "error_code" => "invalid_login"));
 			} else {
 				$_SESSION["user"] = $data;
 				$this->sendResponse(1, $data);
@@ -91,6 +79,44 @@ class User extends Controller {
 			} else {
 				$this->sendResponse(1, array("logged_in" => false));
 			}
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+	
+	/**
+	 * Generates new captcha image
+	 */
+	public function generateCaptcha() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		if ($this->checkPermission($required_role) == true) {
+			$params = $this->getRequestParams();
+			
+			#captcha code
+			$_SESSION['captcha'] = simple_php_captcha();
+			#img source fix
+			$captchaImage = preg_replace("/.*?\/backend/", "backend", $_SESSION["captcha"]["image_src"]);
+			
+			$this->sendResponse(1, $captchaImage);
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+	
+	/**
+	 * New user signup
+	 */
+	public function signup() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		if ($this->checkPermission($required_role) == true) {
+			
+			$params = $this->getRequestParams();
+			
+			$user_model = $this->load_model("User_model");
+			$user_model->insertUser($params["signup_username"], $params["signup_password"], $params["signup_email"], $params["signup_birthday"], $params["signup_gender"], null, "user");
+			#TODO: sendConfirmationEmail($name, $email);
+			
+			$this->sendResponse(1, true);
 		} else {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}

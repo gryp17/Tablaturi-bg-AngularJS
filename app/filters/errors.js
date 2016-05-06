@@ -7,7 +7,12 @@ app.filter("errors", function () {
 			invalid_int: "Невалидно число",
 			invalid_date: "Невалидна дата",
 			invalid_email: "Невалиден имейл",
-			weak_password: "Паролата не е над 6 символа или не съдържа поне едно число"
+			weak_password: "Паролата не е над 6 символа или не съдържа поне едно число и буква",
+			no_match: "Полетата не съвпадат",
+			username_in_use: "Потребителското име е заето",
+			email_in_use: "Имейлът е зает",
+			not_in_list: "Невалидно поле",
+			invalid_captcha: "Captcha-та не съвпада"
 		};
 		
 		if(angular.isUndefined(errors[errorCode])){

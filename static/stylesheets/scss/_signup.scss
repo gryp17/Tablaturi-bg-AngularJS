@@ -47,13 +47,21 @@
 			}
 		}
 
-
-
 		.btn{
 			display: block;
 			margin: auto;
 			margin-top: 20px;
 			width: 200px;
+		}
+		
+		.success {
+			display: block;
+			margin: auto;
+		}
+		
+		.success-msg {
+			margin-top: 20px;
+			text-align: center;
 		}
 	}
 }

@@ -1,7 +1,8 @@
 app.controller("loginController", function($scope, $rootScope, $window, UserService, ValidationService) {
+	$scope.loginData = {};
 	
-	$scope.login = function (username, password){
-		UserService.login(username, password).success(function (result){
+	$scope.login = function (){
+		UserService.login($scope.loginData).success(function (result){
 			if(result.status === 0){
 				if(result.error){
 					//show the error

@@ -1,13 +1,10 @@
 app.factory('UserService', function($http) {
 	return {
-		login: function(username, password) {
+		login: function(loginData) {
 			return $http({
 				method: 'POST',
 				url: 'User/login',
-				data: {
-					username: username,
-					password: password
-				}
+				data: loginData
 			});
 		},
 		logout: function (){
@@ -20,6 +17,19 @@ app.factory('UserService', function($http) {
 			return $http({
 				method: 'POST',
 				url: 'User/isLoggedIn'
+			});
+		},
+		generateCaptcha: function (){
+			return $http({
+				method: 'POST',
+				url: 'User/generateCaptcha'
+			});
+		},
+		signup: function (userData){
+			return $http({
+				method: 'POST',
+				url: 'User/signup',
+				data: userData
 			});
 		}
 	};

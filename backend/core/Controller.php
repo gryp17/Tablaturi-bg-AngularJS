@@ -76,10 +76,9 @@ class Controller {
 				
 				foreach($rules as $rule){
 					$rule = trim($rule);
-					$rule = strtolower($rule);
 					
 					#check the value with each rule and send the error message if necessary
-					$result = Validator::checkParam($param_name, $value, $rule);
+					$result = Validator::checkParam($param_name, $value, $rule, $params);
 					if($result !== true){
 						$this->sendResponse(0, $result);
 					}

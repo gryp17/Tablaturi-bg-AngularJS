@@ -7,11 +7,11 @@
 			</div>
 			<div class="modal-body">
 				<div class="field-box">
-					<input class="text-control validation" type="text" ng-model="username" name="username" placeholder="Потребителско име"/>
+					<input class="text-control validation" type="text" ng-model="loginData.login_username" name="login_username" placeholder="Потребителско име"/>
 					<span class="error-msg"></span>
 				</div>
 				<div class="field-box">
-					<input class="text-control validation" type="password" ng-model="password" name="password" placeholder="Парола"/>
+					<input class="text-control validation" type="password" ng-model="loginData.login_password" name="login_password" placeholder="Парола"/>
 					<span class="error-msg"></span>
 				</div>
 				
@@ -27,7 +27,7 @@
 					</div>
 				</div>
 
-				<input class="btn btn-red" type="button" value="Влез" ng-click="login(username, password)"/>
+				<input class="btn btn-red" type="button" value="Влез" ng-click="login()"/>
 				
 			</div>
 		</div>
