@@ -10,13 +10,13 @@
 			<a href="#home">Таблатури</a>
 		</div>
 		<div class="item">
-			<a href="#home">Guitar Pro</a>
+			<a href="#guitar-pro">Guitar Pro</a>
 		</div>
 		<div class="item">
 			<a href="#home">Качи таблатура</a>
 		</div>
 		<div class="item">
-			<a href="#home">Линкове</a>
+			<a href="#usefull-stuff">Полезно</a>
 		</div>
 		<div class="item">
 			<a href="#contact-us">Контакти</a>

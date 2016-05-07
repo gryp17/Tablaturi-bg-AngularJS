@@ -1,0 +1,36 @@
+> .guitar-pro {
+	.title {
+		margin-top: 0;
+		font-size: 17px;
+		text-align: center;
+	}
+	
+	.content {
+		img {
+			margin-top: -20px;
+			margin-right: 20px;
+			width: 300px;
+			float: left;
+		}
+		
+		p {
+			margin-top: 40px;
+			text-align: justify;
+			
+			span {
+				font-weight: 600;
+			}
+		}
+		
+		#guitar-pro-carousel {
+			margin-top: 70px;
+			
+			.item {
+				img {
+					height: 469px;
+					width: 100%;
+				}
+			}
+		}
+	}
+}

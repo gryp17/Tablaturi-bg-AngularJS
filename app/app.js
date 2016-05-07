@@ -13,6 +13,8 @@ app.config(['$routeProvider', function($routeProvider) {
 		}).when('/article/:id', {
 			templateUrl: 'app/views/partials/article.php',
 			controller: 'articleController'
+		}).when('/guitar-pro', {
+			templateUrl: 'app/views/partials/guitar-pro.php'
 		}).when('/contact-us', {
 			templateUrl: 'app/views/partials/contact-us.php',
 			controller: 'contactusController'
@@ -37,6 +39,7 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 		//static pages that don't need loading indicator
 		var staticPages = [
 			'/contact-us',
+			'/guitar-pro',
 			'/copyright'
 		];
 		
