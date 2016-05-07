@@ -1,6 +1,6 @@
-app.controller("articleController", function($scope, ArticleService, LoadingService) {
+app.controller('articleController', function($scope, ArticleService, LoadingService) {
 
-	console.log("article controller");
+	console.log('article controller');
 	
 	LoadingService.doneLoading();
 

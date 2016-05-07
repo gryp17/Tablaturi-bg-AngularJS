@@ -1,4 +1,4 @@
-app.controller("articlesController", function ($scope, ArticleService, LoadingService) {
+app.controller('articlesController', function ($scope, ArticleService, LoadingService) {
 
 	$scope.limit = 6;
 	$scope.offset = 0;

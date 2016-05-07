@@ -1,7 +1,7 @@
 app.factory('LoadingService', function() {
 	
-	var contentElement = "#view-wrapper";
-	var loadingElement = "#content-wrapper > .loading-placeholder";
+	var contentElement = '#view-wrapper';
+	var loadingElement = '#content-wrapper > .loading-placeholder';
 	
 	return {
 		/**
@@ -20,13 +20,13 @@ app.factory('LoadingService', function() {
 		 * Shows the ng-view content
 		 */
 		showContent: function (){
-			$(contentElement).css("visibility", "visible");
+			$(contentElement).css('visibility', 'visible');
 		},
 		/**
 		 * Hides the ng-view content
 		 */
 		hideContent: function (){
-			$(contentElement).css("visibility", "hidden");
+			$(contentElement).css('visibility', 'hidden');
 		},
 		/**
 		 * Hides the ng-view content and shows the loading placeholder

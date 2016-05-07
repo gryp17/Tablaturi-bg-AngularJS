@@ -1,4 +1,4 @@
-app.controller("loginController", function($scope, $rootScope, $window, UserService, ValidationService) {
+app.controller('loginController', function($scope, $rootScope, $window, UserService, ValidationService) {
 	$scope.loginData = {};
 	
 	$scope.login = function (){
@@ -11,7 +11,7 @@ app.controller("loginController", function($scope, $rootScope, $window, UserServ
 			}else{
 				//$window.location.reload();
 				$rootScope.loggedInUser = result.data;
-				$("#login-modal").modal("hide");
+				$('#login-modal').modal('hide');
 			}
 		});
 	};

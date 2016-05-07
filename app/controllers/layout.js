@@ -1,4 +1,4 @@
-app.controller("layoutController", function($scope, $rootScope, $location, TabService, UserService) {
+app.controller('layoutController', function($scope, $rootScope, $location, TabService, UserService) {
 	
 	$scope.currentYear = (new Date()).getFullYear();
 	
@@ -18,7 +18,7 @@ app.controller("layoutController", function($scope, $rootScope, $location, TabSe
 		UserService.logout().success(function (result){
 			if(result.data){
 				$rootScope.loggedInUser = undefined;
-				$location.path("/");
+				$location.path('/');
 			}
 		});
 	};

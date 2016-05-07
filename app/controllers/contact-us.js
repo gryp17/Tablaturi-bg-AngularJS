@@ -1,7 +1,7 @@
-app.controller("contactusController", function($scope, LoadingService) {
+app.controller('contactusController', function($scope, LoadingService) {
 
-	console.log("contact us controller");
+	console.log('contact us controller');
 	//LoadingService.doneLoading();
-	//$("#content-wrapper > section").css("visibility", "visible");
+	//$('#content-wrapper > section').css('visibility', 'visible');
 
 });

@@ -31,7 +31,7 @@ class Tab extends Controller {
 
 			$params = $this->getRequestParams();
 			
-			$tab_model = $this->load_model("Tab_model");
+			$tab_model = $this->load_model('Tab_model');
 			$data = $tab_model->getTabsCount();
 			$this->sendResponse(1, $data);
 		} else {

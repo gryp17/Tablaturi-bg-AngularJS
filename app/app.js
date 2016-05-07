@@ -1,43 +1,43 @@
-"use strict";
+'use strict';
 
-var app = angular.module("tablaturi-bg", ['ngRoute', 'ngSanitize']);
+var app = angular.module('tablaturi-bg', ['ngRoute', 'ngSanitize']);
 
 app.config(['$routeProvider', function($routeProvider) {
 
-		$routeProvider.when("/home", {
-			templateUrl: "app/views/partials/home.php",
-			controller: "homeController"
-		}).when("/articles", {
-			templateUrl: "app/views/partials/articles.php",
-			controller: "articlesController"
+		$routeProvider.when('/home', {
+			templateUrl: 'app/views/partials/home.php',
+			controller: 'homeController'
+		}).when('/articles', {
+			templateUrl: 'app/views/partials/articles.php',
+			controller: 'articlesController'
 		}).when('/article/:id', {
 			templateUrl: 'app/views/partials/article.php',
-			controller: "articleController"
+			controller: 'articleController'
 		}).when('/contact-us', {
 			templateUrl: 'app/views/partials/contact-us.php',
-			controller: "contactusController"
+			controller: 'contactusController'
 		}).when('/copyright', {
 			templateUrl: 'app/views/partials/copyright.php'
 		}).otherwise({
 			templateUrl: 'app/views/partials/home.php',
-			controller: "homeController"
+			controller: 'homeController'
 		});
 	}]);
 
 
 app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 
-	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+	$rootScope.$on('$routeChangeStart', function(event, next, current) {
 
 		//pages that require login
 		var securePages = [
-			"/profile/:id"
+			'/profile/:id'
 		];
 
 		//static pages that don't need loading indicator
 		var staticPages = [
-			"/contact-us",
-			"/copyright"
+			'/contact-us',
+			'/copyright'
 		];
 		
 		if (next.$$route) {
@@ -66,7 +66,7 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 					var nextUrl = next.$$route.originalPath;
 					//if the user is trying to open a secure page and is not logged in - redirect to the home page
 					if(securePages.indexOf(nextUrl) > -1){
-						$location.path("/");
+						$location.path('/');
 					}
 				}	
 			}
@@ -78,13 +78,13 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 		if (false) {
 			$rootScope.authenticated = true;
 			//get the logged user data and save it in the $rootScope...
-			//$rootScope.user = "plamen";
-			console.log("authenticated")
+			//$rootScope.user = 'plamen';
+			console.log('authenticated')
 		} else {
 			if (next.$$route) {
 				var nextUrl = next.$$route.originalPath;
 				console.log(nextUrl);
-				//$location.path("/home");
+				//$location.path('/home');
 			}
 		}*/
 

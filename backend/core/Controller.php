@@ -46,14 +46,14 @@ class Controller {
 				$this->response_type = $params['format'];
 			} else {
 				$this->response_type = 'json';
-				$this->sendResponse(0, "Invalid output format. Available formats: " . implode(', ', $this->response_types));
+				$this->sendResponse(0, 'Invalid output format. Available formats: ' . implode(', ', $this->response_types));
 			}
 		} else {
 			$this->response_type = 'json';
 		}
 
 		if (!isset($params['url'])) {
-			$this->sendResponse(0, "Invalid request.");
+			$this->sendResponse(0, 'Invalid request.');
 		}
 		
 		#validate all required params
@@ -71,8 +71,8 @@ class Controller {
 		
 		if (isset($this->required_params[$function])) {
 			foreach ($this->required_params[$function] as $param_name => $rules) {
-				$value = isset($params[$param_name]) ? $params[$param_name] : "";
-				$rules = split(",", $rules);
+				$value = isset($params[$param_name]) ? $params[$param_name] : '';
+				$rules = split(',', $rules);
 				
 				foreach($rules as $rule){
 					$rule = trim($rule);

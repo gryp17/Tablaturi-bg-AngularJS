@@ -7,7 +7,7 @@ class Main extends Controller {
 		#$api_model = $this->load_model('API_model', true);
 		#echo $api_model->getArticles();
 
-		$this->load_view("layout", "");
+		$this->load_view('layout', '');
 	}
 
 }

@@ -359,46 +359,46 @@ H=h("script,style"),t=e.extend({},z,q,k,u),y=h("background,cite,href,longdesc,sr
 '="'+m[c]+'" ');else m={};!e.isDefined(h)||"target"in m||p.push('target="',h,'" ');p.push('href="',a.replace(/"/g,"&quot;"),'">');k(b);p.push("</a>")}if(null==f||""===f)return f;if(!g(f))throw d("notstring",f);for(var r=f,p=[],s,n;f=r.match(c);)s=f[0],f[2]||f[4]||(s=(f[3]?"http://":"mailto:")+s),n=f.index,k(r.substr(0,n)),q(s,f[0].replace(b,"")),r=r.substring(n+f[0].length);k(r);return a(p.join(""))}}])})(window,window.angular);
 //# sourceMappingURL=angular-sanitize.min.js.map
 
-"use strict";
+'use strict';
 
-var app = angular.module("tablaturi-bg", ['ngRoute', 'ngSanitize']);
+var app = angular.module('tablaturi-bg', ['ngRoute', 'ngSanitize']);
 
 app.config(['$routeProvider', function($routeProvider) {
 
-		$routeProvider.when("/home", {
-			templateUrl: "app/views/partials/home.php",
-			controller: "homeController"
-		}).when("/articles", {
-			templateUrl: "app/views/partials/articles.php",
-			controller: "articlesController"
+		$routeProvider.when('/home', {
+			templateUrl: 'app/views/partials/home.php',
+			controller: 'homeController'
+		}).when('/articles', {
+			templateUrl: 'app/views/partials/articles.php',
+			controller: 'articlesController'
 		}).when('/article/:id', {
 			templateUrl: 'app/views/partials/article.php',
-			controller: "articleController"
+			controller: 'articleController'
 		}).when('/contact-us', {
 			templateUrl: 'app/views/partials/contact-us.php',
-			controller: "contactusController"
+			controller: 'contactusController'
 		}).when('/copyright', {
 			templateUrl: 'app/views/partials/copyright.php'
 		}).otherwise({
 			templateUrl: 'app/views/partials/home.php',
-			controller: "homeController"
+			controller: 'homeController'
 		});
 	}]);
 
 
 app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 
-	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+	$rootScope.$on('$routeChangeStart', function(event, next, current) {
 
 		//pages that require login
 		var securePages = [
-			"/profile/:id"
+			'/profile/:id'
 		];
 
 		//static pages that don't need loading indicator
 		var staticPages = [
-			"/contact-us",
-			"/copyright"
+			'/contact-us',
+			'/copyright'
 		];
 		
 		if (next.$$route) {
@@ -427,7 +427,7 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 					var nextUrl = next.$$route.originalPath;
 					//if the user is trying to open a secure page and is not logged in - redirect to the home page
 					if(securePages.indexOf(nextUrl) > -1){
-						$location.path("/");
+						$location.path('/');
 					}
 				}	
 			}
@@ -439,13 +439,13 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 		if (false) {
 			$rootScope.authenticated = true;
 			//get the logged user data and save it in the $rootScope...
-			//$rootScope.user = "plamen";
-			console.log("authenticated")
+			//$rootScope.user = 'plamen';
+			console.log('authenticated')
 		} else {
 			if (next.$$route) {
 				var nextUrl = next.$$route.originalPath;
 				console.log(nextUrl);
-				//$location.path("/home");
+				//$location.path('/home');
 			}
 		}*/
 
@@ -453,14 +453,14 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 
 });
 
-app.controller("articleController", function($scope, ArticleService, LoadingService) {
+app.controller('articleController', function($scope, ArticleService, LoadingService) {
 
-	console.log("article controller");
+	console.log('article controller');
 	
 	LoadingService.doneLoading();
 
 });
-app.controller("articlesController", function ($scope, ArticleService, LoadingService) {
+app.controller('articlesController', function ($scope, ArticleService, LoadingService) {
 
 	$scope.limit = 6;
 	$scope.offset = 0;
@@ -491,14 +491,14 @@ app.controller("articlesController", function ($scope, ArticleService, LoadingSe
 	$scope.loadArticles($scope.limit, $scope.offset);
 
 });
-app.controller("contactusController", function($scope, LoadingService) {
+app.controller('contactusController', function($scope, LoadingService) {
 
-	console.log("contact us controller");
+	console.log('contact us controller');
 	//LoadingService.doneLoading();
-	//$("#content-wrapper > section").css("visibility", "visible");
+	//$('#content-wrapper > section').css('visibility', 'visible');
 
 });
-app.controller("homeController", function($scope, ArticleService, LoadingService) {
+app.controller('homeController', function($scope, ArticleService, LoadingService) {
 
 	ArticleService.getArticles(6, 0).success(function(result) {
 		if (result.error) {
@@ -511,7 +511,7 @@ app.controller("homeController", function($scope, ArticleService, LoadingService
 	});
 
 });
-app.controller("layoutController", function($scope, $rootScope, $location, TabService, UserService) {
+app.controller('layoutController', function($scope, $rootScope, $location, TabService, UserService) {
 	
 	$scope.currentYear = (new Date()).getFullYear();
 	
@@ -531,14 +531,14 @@ app.controller("layoutController", function($scope, $rootScope, $location, TabSe
 		UserService.logout().success(function (result){
 			if(result.data){
 				$rootScope.loggedInUser = undefined;
-				$location.path("/");
+				$location.path('/');
 			}
 		});
 	};
 	
 	
 });
-app.controller("loginController", function($scope, $rootScope, $window, UserService, ValidationService) {
+app.controller('loginController', function($scope, $rootScope, $window, UserService, ValidationService) {
 	$scope.loginData = {};
 	
 	$scope.login = function (){
@@ -551,15 +551,15 @@ app.controller("loginController", function($scope, $rootScope, $window, UserServ
 			}else{
 				//$window.location.reload();
 				$rootScope.loggedInUser = result.data;
-				$("#login-modal").modal("hide");
+				$('#login-modal').modal('hide');
 			}
 		});
 	};
 	
 });
-app.controller("signupController", function($scope, UserService, ValidationService) {
+app.controller('signupController', function($scope, UserService, ValidationService) {
 	$scope.userData = {
-		signup_gender: "M"
+		signup_gender: 'M'
 	};
 
 	$scope.signupSuccess = false;
@@ -595,99 +595,99 @@ app.controller("signupController", function($scope, UserService, ValidationServi
 	 */
 	$scope.resetForm = function() {
 		$scope.userData = {
-			signup_gender: "M"
+			signup_gender: 'M'
 		};
 		
 		$scope.signupSuccess = false;
 		
-		$("#signup-modal .field-box").removeClass("error");
-		$("#signup-modal .error-msg").html("");
+		$('#signup-modal .field-box').removeClass('error');
+		$('#signup-modal .error-msg').html('');
 	};
 	
 	/**
 	 * On modal close reset the form
 	 */
-	$("#signup-modal").on("hidden.bs.modal", function (){
+	$('#signup-modal').on('hidden.bs.modal', function (){
 		$scope.resetForm();
 		$scope.$apply();
 	});
 
 	$scope.generateCaptcha();
 
-	$("#signup-datepicker").datepicker({
+	$('#signup-datepicker').datepicker({
 		changeMonth: true,
 		changeYear: true,
-		yearRange: "1940:" + new Date().getFullYear(),
-		maxDate: "-1D",
-		monthNamesShort: ["Януари", "Февруари", "Март", "Април", "Май", "Юни", "Юли", "Август", "Септември", "Октомври", "Ноември", "Декември"],
-		dayNamesMin: ["Нед", "Пон", "Вт", "Ср ", "Чет", "Пет", "Съб"],
+		yearRange: '1940:' + new Date().getFullYear(),
+		maxDate: '-1D',
+		monthNamesShort: ['Януари', 'Февруари', 'Март', 'Април', 'Май', 'Юни', 'Юли', 'Август', 'Септември', 'Октомври', 'Ноември', 'Декември'],
+		dayNamesMin: ['Нед', 'Пон', 'Вт', 'Ср ', 'Чет', 'Пет', 'Съб'],
 		firstDay: 1,
-		dateFormat: "yy-mm-dd"
+		dateFormat: 'yy-mm-dd'
 	});
 
 	//jquery-ui/bootstrap datepicker hack
 	var enforceModalFocusFn = $.fn.modal.Constructor.prototype.enforceFocus;
 	$.fn.modal.Constructor.prototype.enforceFocus = function() {
 	};
-	$("#signup-modal").on('hidden', function() {
+	$('#signup-modal').on('hidden', function() {
 		$.fn.modal.Constructor.prototype.enforceFocus = enforceModalFocusFn;
 	});
-	//$("#signup-modal").modal({ backdrop : false });
+	//$('#signup-modal').modal({ backdrop : false });
 
 });
-app.directive("article", function($filter) {
+app.directive('article', function($filter) {
 	return {
-		restrict: "A",
-		templateUrl: "app/views/directives/article.php",
+		restrict: 'A',
+		templateUrl: 'app/views/directives/article.php',
 		replace: true,
 		scope: {
-		    articleData: "="
+		    articleData: '='
 		},
 		link: function(scope, element, attrs) {
 			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
 			var limit = 210 - scope.articleData.title.length;			
-			scope.articleData.content = $filter("limitTo")(sanitizedContent, limit) + '...';
+			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
 		}
 	};
 });
-app.directive("validation", function() {
+app.directive('validation', function() {
 	return {
-		restrict: "C",
+		restrict: 'C',
 		link: function(scope, element, attrs) {
-			element.on("focus click", function (){
-				element.closest(".field-box").removeClass("error");
+			element.on('focus click', function (){
+				element.closest('.field-box').removeClass('error');
 			});
 		}
 	};
 });
-app.filter("errors", function () {
+app.filter('errors', function () {
 	return function (errorCode) {
 
 		var errors = {
-			invalid_login: "Грешно име или парола",
-			empty_field: "Празно поле",
-			invalid_int: "Невалидно число",
-			invalid_date: "Невалидна дата",
-			invalid_email: "Невалиден имейл",
-			weak_password: "Паролата не е над 6 символа или не съдържа поне едно число и буква",
-			no_match: "Полетата не съвпадат",
-			username_in_use: "Потребителското име е заето",
-			email_in_use: "Имейлът е зает",
-			not_in_list: "Невалидно поле",
-			invalid_captcha: "Captcha-та не съвпада"
+			invalid_login: 'Грешно име или парола',
+			empty_field: 'Празно поле',
+			invalid_int: 'Невалидно число',
+			invalid_date: 'Невалидна дата',
+			invalid_email: 'Невалиден имейл',
+			weak_password: 'Паролата не е над 6 символа или не съдържа поне едно число и буква',
+			no_match: 'Полетата не съвпадат',
+			username_in_use: 'Потребителското име е заето',
+			email_in_use: 'Имейлът е зает',
+			not_in_list: 'Невалидно поле',
+			invalid_captcha: 'Captcha-та не съвпада'
 		};
 		
 		if(angular.isUndefined(errors[errorCode])){
 			//max-\d+ rule
 			if(/exceeds_characters_(\d+)/.exec(errorCode)){
 				var results = /exceeds_characters_(\d+)/.exec(errorCode);
-				return "Полето надвишава "+results[1]+" символа";
+				return 'Полето надвишава '+results[1]+' символа';
 			}
 			
 			//min-\d+ rule
 			if(/below_characters_(\d+)/.exec(errorCode)){
 				var results = /below_characters_(\d+)/.exec(errorCode);
-				return "Полето е под "+results[1]+" символа";
+				return 'Полето е под '+results[1]+' символа';
 			}
 		}
 
@@ -696,8 +696,8 @@ app.filter("errors", function () {
 });
 app.factory('LoadingService', function() {
 	
-	var contentElement = "#view-wrapper";
-	var loadingElement = "#content-wrapper > .loading-placeholder";
+	var contentElement = '#view-wrapper';
+	var loadingElement = '#content-wrapper > .loading-placeholder';
 	
 	return {
 		/**
@@ -716,13 +716,13 @@ app.factory('LoadingService', function() {
 		 * Shows the ng-view content
 		 */
 		showContent: function (){
-			$(contentElement).css("visibility", "visible");
+			$(contentElement).css('visibility', 'visible');
 		},
 		/**
 		 * Hides the ng-view content
 		 */
 		hideContent: function (){
-			$(contentElement).css("visibility", "hidden");
+			$(contentElement).css('visibility', 'hidden');
 		},
 		/**
 		 * Hides the ng-view content and shows the loading placeholder
@@ -743,10 +743,10 @@ app.factory('LoadingService', function() {
 app.factory('ValidationService', function($filter) {
 	return {
 		showError: function(field, errorCode) {
-			var errorMessage = $filter("errors")(errorCode);
-			var fieldBox = $("input[name='" + field + "'], textarea[name='" + field + "'], select[name='" + field + "']").closest(".field-box");
-			fieldBox.find(".error-msg").html(errorMessage);
-			fieldBox.addClass("error");
+			var errorMessage = $filter('errors')(errorCode);
+			var fieldBox = $('input[name="' + field + '"], textarea[name="' + field + '"], select[name="' + field + '"]').closest('.field-box');
+			fieldBox.find('.error-msg').html(errorMessage);
+			fieldBox.addClass('error');
 		}
 	};
 });

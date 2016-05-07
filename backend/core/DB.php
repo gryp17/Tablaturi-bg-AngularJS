@@ -7,7 +7,7 @@ class DB {
 
 	private function __construct() {
 		try {
-			$opc = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
+			$opc = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8');
 			$dsn = 'mysql:host=' . Config::DB_HOST . ';dbname=' . Config::DB_NAME;
 			$user = Config::DB_USER;
 			$password = Config::DB_PASS;

@@ -1,6 +1,6 @@
-app.controller("signupController", function($scope, UserService, ValidationService) {
+app.controller('signupController', function($scope, UserService, ValidationService) {
 	$scope.userData = {
-		signup_gender: "M"
+		signup_gender: 'M'
 	};
 
 	$scope.signupSuccess = false;
@@ -36,43 +36,43 @@ app.controller("signupController", function($scope, UserService, ValidationServi
 	 */
 	$scope.resetForm = function() {
 		$scope.userData = {
-			signup_gender: "M"
+			signup_gender: 'M'
 		};
 		
 		$scope.signupSuccess = false;
 		
-		$("#signup-modal .field-box").removeClass("error");
-		$("#signup-modal .error-msg").html("");
+		$('#signup-modal .field-box').removeClass('error');
+		$('#signup-modal .error-msg').html('');
 	};
 	
 	/**
 	 * On modal close reset the form
 	 */
-	$("#signup-modal").on("hidden.bs.modal", function (){
+	$('#signup-modal').on('hidden.bs.modal', function (){
 		$scope.resetForm();
 		$scope.$apply();
 	});
 
 	$scope.generateCaptcha();
 
-	$("#signup-datepicker").datepicker({
+	$('#signup-datepicker').datepicker({
 		changeMonth: true,
 		changeYear: true,
-		yearRange: "1940:" + new Date().getFullYear(),
-		maxDate: "-1D",
-		monthNamesShort: ["Януари", "Февруари", "Март", "Април", "Май", "Юни", "Юли", "Август", "Септември", "Октомври", "Ноември", "Декември"],
-		dayNamesMin: ["Нед", "Пон", "Вт", "Ср ", "Чет", "Пет", "Съб"],
+		yearRange: '1940:' + new Date().getFullYear(),
+		maxDate: '-1D',
+		monthNamesShort: ['Януари', 'Февруари', 'Март', 'Април', 'Май', 'Юни', 'Юли', 'Август', 'Септември', 'Октомври', 'Ноември', 'Декември'],
+		dayNamesMin: ['Нед', 'Пон', 'Вт', 'Ср ', 'Чет', 'Пет', 'Съб'],
 		firstDay: 1,
-		dateFormat: "yy-mm-dd"
+		dateFormat: 'yy-mm-dd'
 	});
 
 	//jquery-ui/bootstrap datepicker hack
 	var enforceModalFocusFn = $.fn.modal.Constructor.prototype.enforceFocus;
 	$.fn.modal.Constructor.prototype.enforceFocus = function() {
 	};
-	$("#signup-modal").on('hidden', function() {
+	$('#signup-modal').on('hidden', function() {
 		$.fn.modal.Constructor.prototype.enforceFocus = enforceModalFocusFn;
 	});
-	//$("#signup-modal").modal({ backdrop : false });
+	//$('#signup-modal').modal({ backdrop : false });
 
 });
