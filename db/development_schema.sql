@@ -110,12 +110,14 @@ CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 create table article(
     ID int AUTO_INCREMENT,
+	author_ID int,
     title varchar(250),
     summary varchar(500),
     content mediumtext,
     date datetime,
     picture varchar(500),
     views int,
+	constraint fk_article_author foreign key(author_ID) references user(ID),
     constraint pk_article primary key(ID)
 )
 CHARACTER SET utf8 COLLATE utf8_general_ci;
