@@ -3,7 +3,7 @@
 class Article extends Controller {
 
 	public function index() {
-	
+		
 	}
 
 	/**
@@ -20,27 +20,17 @@ class Article extends Controller {
 			'limit' => 'int',
 			'offset' => 'int'
 		),
-		/*
-		'getArticlesBySearch' => array(
-			'search_val' => '+'
-		),
-		'getLatestArticleDate' => array(),
 		'getArticle' => array(
 			'id' => 'int'
-		),
-		'addArticleView' => array(
-			'id' => 'int'
-		)*/
+		)
 	);
-
-
 
 	/**
 	 * Returns all articles
 	 */
 	public function getArticles() {
 		$required_role = Controller::PUBLIC_ACCESS;
-		
+
 		if ($this->checkPermission($required_role) == true) {
 
 			$params = $this->getRequestParams();
@@ -52,13 +42,13 @@ class Article extends Controller {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}
 	}
-	
+
 	/**
 	 * Returns all articles that match the specified date
 	 */
 	public function getArticlesByDate() {
 		$required_role = Controller::PUBLIC_ACCESS;
-		
+
 		if ($this->checkPermission($required_role) == true) {
 
 			$params = $this->getRequestParams();
@@ -71,4 +61,28 @@ class Article extends Controller {
 		}
 	}
 	
+	/**
+	 * Returns single article data matching the provided ID
+	 */
+	public function getArticle() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		
+		if ($this->checkPermission($required_role) == true) {
+
+			$params = $this->getRequestParams();
+
+			$article_model = $this->load_model('Article_model');
+			$data = $article_model->getArticle($params['id']);
+			
+			#if the article exists increment the views
+			if($data !== null){
+				$article_model->addArticleView($params['id']);
+			}
+			
+			$this->sendResponse(1, $data);
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+
 }

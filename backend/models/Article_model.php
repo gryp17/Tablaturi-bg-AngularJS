@@ -54,5 +54,35 @@ class Article_model {
 
 		return $data;
 	}
+	
+	/**
+	 * Returns a single article matching the provided ID
+	 * @param int $id
+	 * @return array
+	 */
+	public function getArticle($id){
+		$query = $this->connection->prepare('SELECT article.ID, article.author_ID, user.username, article.title, article.summary, article.content, article.date, article.picture, article.views '
+				. 'FROM article, user '
+				. 'WHERE article.author_ID = user.ID AND article.ID = :id');
+		$query->execute(array('id' => $id));
+		
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+			//convert the date to miliseconds timestamp
+			$row['date'] = strtotime($row['date']) * 1000;
+            return $row;
+        } else {
+            return null;
+        }
+	}
+	
+	/**
+	 * Increments the article views
+	 * @param int $id
+	 */
+	public function addArticleView($id){
+		$query = $this->connection->prepare('UPDATE article SET views = views + 1 WHERE ID = :id');
+		$query->execute(array('id' => $id));
+	}
 
 }

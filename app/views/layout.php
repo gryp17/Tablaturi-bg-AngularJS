@@ -4,7 +4,19 @@
         <title>Tablaturi-BG</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600' rel='stylesheet' type='text/css'>
+		<meta name="keywords" content="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano" >
+        <meta property="og:url" content="http://tablaturi-bg.com/#/article/{{shareId}}"/>
+        <meta property="og:site_name" content="Tablaturi-bg.com" />
+		
+		<meta name="description" content="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи." /> 
+        <meta name="dc.language" CONTENT="BG">
+        <meta name="dc.source" CONTENT="http://www.tablaturi-bg.com">
+        <meta name="dc.title" CONTENT="Най-големият български сайт за таблатури">
+        <meta name="dc.keywords" CONTENT="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano">
+        <meta name="dc.description" CONTENT="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи.">
+        <meta name="geo.placename" content="Bulgaria" />
+		
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600" rel="stylesheet" type="text/css">
         <link href="static/stylesheets/css/style.min.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="ng-cloak" ng-cloak>
@@ -83,5 +95,7 @@
 		<?php include "_signup.php" ?>
 		
 		<script type="text/javascript" src="static/scripts/app.js"></script>
+		<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+		<script type="text/javascript">stLight.options({publisher: "d810d696-98a7-44a2-abcf-4604f3730c9f", doNotHash: true, doNotCopy: true, hashAddressBar: false});</script>
     </body>
 </html>

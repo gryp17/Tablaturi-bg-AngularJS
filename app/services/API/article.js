@@ -9,6 +9,15 @@ app.factory('ArticleService', function($http) {
 					offset: offset
 				}
 			});
+		},
+		getArticle: function(id) {
+			return $http({
+				method: 'POST',
+				url: 'Article/getArticle',
+				data: {
+					id: id
+				}
+			});
 		}
 	};
 });
