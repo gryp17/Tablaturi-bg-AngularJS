@@ -28,9 +28,6 @@ class Tab extends Controller {
 		$required_role = Controller::PUBLIC_ACCESS;
 		
 		if ($this->checkPermission($required_role) == true) {
-
-			$params = $this->getRequestParams();
-			
 			$tab_model = $this->load_model('Tab_model');
 			$data = $tab_model->getTabsCount();
 			$this->sendResponse(1, $data);

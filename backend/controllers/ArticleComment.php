@@ -15,6 +15,10 @@ class ArticleComment extends Controller {
 			'article_id' => 'int',
 			'limit' => 'int',
 			'offset' => 'int'
+		),
+		'addArticleComment' => array(
+			'article_id' => 'int',
+			'content' => 'required, max-500'
 		)
 	);
 
@@ -36,5 +40,31 @@ class ArticleComment extends Controller {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}
 	}
+	
+	/**
+	 * Adds new article comment
+	 */
+	public function addArticleComment() {
+		$required_role = Controller::LOGGED_IN_USER;
+		
+		if ($this->checkPermission($required_role) == true) {
+
+			$params = $this->getRequestParams();
+
+			$article_comment_model = $this->load_model('Article_comment_model');
+			$result = $article_comment_model->addArticleComment($params['article_id'], $_SESSION['user']['ID'], $this->sanitize($params['content']));
+			
+			if($result === true){
+				$this->sendResponse(1, $result);
+			}else{
+				$this->sendResponse(0, Controller::DB_ERROR);
+			}
+
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+	
+	
 
 }

@@ -36,6 +36,23 @@ class Article_comment_model {
 		
 		return $data;
 	}
+	
+	/**
+	 * Adds new article comment
+	 * @param int $article_id
+	 * @param int $author_id
+	 * @param string $content
+	 * @return boolean
+	 */
+	public function addArticleComment($article_id, $author_id, $content){
+		$query = $this->connection->prepare('INSERT INTO article_comment (article_ID, author_ID, content, date) VALUES (:article_id, :author_id, :content, now())');
+		$params = array('article_id' => $article_id, 'author_id' => $author_id, 'content' => $content);
+		if($query->execute($params)){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 
 }

@@ -1,14 +1,36 @@
-app.controller('articleController', function($scope, $routeParams, $location, $sce, $q, $filter, ArticleService, ArticleCommentService, LoadingService) {
+app.controller('articleController', function($scope, $rootScope, $routeParams, $location, $sce, $q, $filter, ArticleService, ArticleCommentService, LoadingService, ValidationService) {
 	$scope.limit = 6;
 	$scope.offset = 0;
 
 	if(angular.isUndefined($routeParams.id)){
 		$location.path('/');
+	} else {
+		$scope.articleId = $routeParams.id;
 	}
+	
+	$scope.addComment = function(){
+		ArticleCommentService.addArticleComment($scope.articleId, $scope.commentContent).success(function(result) {
+			if(result.status === 0){
+				if(result.error){
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			}else{
+				$scope.commentContent = '';
+				$scope.getArticleComments(6, 0);
+			}
+		});
+	};
+	
+	$scope.getArticleComments = function(limit, offset) {
+		ArticleCommentService.getArticleComments($scope.articleId, limit, offset).success(function(result) {
+			$scope.articleComments = result.data;
+		});
+	};
 
 	$q.all([
-		ArticleService.getArticle($routeParams.id),
-		ArticleCommentService.getArticleComments($routeParams.id, $scope.limit, $scope.offset)
+		ArticleService.getArticle($scope.articleId),
+		ArticleCommentService.getArticleComments($scope.articleId, $scope.limit, $scope.offset)
 	]).then(function (result){
 		
 		if(angular.isUndefined(result[0].data.data)){
@@ -26,12 +48,10 @@ app.controller('articleController', function($scope, $routeParams, $location, $s
 			//article comments
 			$scope.articleComments = result[1].data.data;
 
-			console.log($scope.articleComments);
-
 			LoadingService.doneLoading();
 		}
-		
-
 	});
-
+	
+	
+	
 });

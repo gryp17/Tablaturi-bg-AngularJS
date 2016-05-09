@@ -1,9 +1,4 @@
 > .article {
-
-	a {
-		@extend .red-link;
-	}
-
 	.article-wrapper {
 		border-top: 2px solid lighten($red, 10%);
 		padding-bottom: 10px;
@@ -43,6 +38,10 @@
 		.content {
 			margin-top: 20px;
 			text-align: justify;
+			
+			a {
+				@extend .red-link;
+			}
 		}
 
 		.share{
@@ -107,6 +106,46 @@
 				.content{
 					margin-top: 30px;
 				}
+			}
+		}
+	}
+	
+	.add-comment-wrapper {			
+		margin-top: 20px;
+		
+		.comment-login {		
+			text-align: center;
+		}
+		
+		.add-comment {			
+			.field-box {
+				display: inline-block;
+				vertical-align: top;
+				
+				textarea {
+					width: 500px;
+					resize: vertical;
+				}
+				
+				.error-msg {
+					bottom: -20px;
+					right: 0;
+				}
+			}
+			
+			.emoticons {
+				display: inline-block;
+				width: 160px;
+				margin-left: 20px;
+				
+				.emoticon {
+					cursor: pointer;
+					margin: 3px 1px;
+				}
+			}
+			
+			.btn {
+				margin-top: 20px;
 			}
 		}
 	}

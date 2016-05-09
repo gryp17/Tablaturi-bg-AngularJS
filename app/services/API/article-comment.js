@@ -10,6 +10,16 @@ app.factory('ArticleCommentService', function($http) {
 					offset: offset
 				}
 			});
+		},
+		addArticleComment: function(articleId, content) {
+			return $http({
+				method: 'POST',
+				url: 'ArticleComment/addArticleComment',
+				data: {
+					article_id: articleId,
+					content: content
+				}
+			});
 		}
 	};
 });

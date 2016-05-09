@@ -7,17 +7,9 @@ class Controller {
 	const LOGGED_IN_USER = 2;
 	const ADMIN_USER = 3;
 	const ACCESS_DENIED = 'Access denied!';
+	const DB_ERROR = 'Query failed!';
 
 	public $required_params;
-	public $response_type;
-
-	/**
-	 * List of available response types
-	 * TODO: add more types
-	 */
-	public $response_types = array(
-		'json'
-	);
 
 	/**
 	 * Returns all REQUEST and POST parameters
@@ -28,7 +20,7 @@ class Controller {
 		$params = array();
 
 		$_POST = is_array($_POST) ? $_POST : array();
-		
+
 		#merge the request and post params
 		$request_data = array_merge($_REQUEST, $_POST);
 
@@ -39,54 +31,40 @@ class Controller {
 			$params[$key] = $value;
 		}
 
-		#get the response_format
-		if (isset($params['format'])) {
-			#if the format is not valid set the default one (json)
-			if (in_array($params['format'], $this->response_types)) {
-				$this->response_type = $params['format'];
-			} else {
-				$this->response_type = 'json';
-				$this->sendResponse(0, 'Invalid output format. Available formats: ' . implode(', ', $this->response_types));
-			}
-		} else {
-			$this->response_type = 'json';
-		}
-
 		if (!isset($params['url'])) {
 			$this->sendResponse(0, 'Invalid request.');
 		}
-		
+
 		#validate all required params
 		$this->validateParams($params);
 
 		return $params;
 	}
-	
+
 	/**
 	 * Validates all required parameters for the called function
 	 * @param array $params
 	 */
-	private function validateParams($params){
+	private function validateParams($params) {
 		$function = array_pop(explode('/', $params['url']));
-		
+
 		if (isset($this->required_params[$function])) {
 			foreach ($this->required_params[$function] as $param_name => $rules) {
 				$value = isset($params[$param_name]) ? $params[$param_name] : '';
 				$rules = split(',', $rules);
-				
-				foreach($rules as $rule){
+
+				foreach ($rules as $rule) {
 					$rule = trim($rule);
-					
+
 					#check the value with each rule and send the error message if necessary
 					$result = Validator::checkParam($param_name, $value, $rule, $params);
-					if($result !== true){
+					if ($result !== true) {
 						$this->sendResponse(0, $result);
 					}
 				}
 			}
 		}
 	}
-	
 
 	/**
 	 * Checks if the user has the required permissions
@@ -95,14 +73,15 @@ class Controller {
 	 */
 	public function checkPermission($required_role) {
 		$result = false;
-		#session_start();
 
 		switch ($required_role) {
 			case self::PUBLIC_ACCESS:
 				$result = true;
 				break;
 			case self::LOGGED_IN_USER:
-				#TODO: check if the user is logged in
+				if (isset($_SESSION['user'])) {
+					$result = true;
+				}
 				break;
 			case self::ADMIN_USER:
 				#TODO: check if the user is logged in and is admin
@@ -112,40 +91,6 @@ class Controller {
 		return $result;
 	}
 
-	/**
-	 * Checks if the passed parameter value meets the type requirements
-	 * @param string $value
-	 * @param string $type
-	 * @return boolean
-	 */
-	/*
-	private function checkParam($value, $type) {
-		$result = true;
-
-		switch ($type) {
-			#valid integer
-			case 'int':
-				if (!ctype_digit($value)) {
-					$result = false;
-				}
-				break;
-			#valid date
-			case 'date':
-				if (!preg_match('/^\d{4}-\d{2}-\d{2}\s\d{2}\:\d{2}\:\d{2}$/', $value)) {
-					$result = false;
-				}
-				break;
-			#not an empty string
-			case '+':
-				if (strlen($value) == 0) {
-					$result = false;
-				}
-				break;
-		}
-
-		return $result;
-	}*/
-	
 	/**
 	 * Outputs the AJAX response
 	 * @param int $status
@@ -162,13 +107,8 @@ class Controller {
 			$response['error'] = $data;
 		}
 
-		switch ($this->response_type) {
-			case 'json':
-				header('Content-Type: application/json');
-				die(json_encode($response));
-				break;
-			#TODO: add more types
-		}
+		header('Content-Type: application/json');
+		die(json_encode($response));
 	}
 
 	/**
@@ -190,6 +130,19 @@ class Controller {
 	 */
 	public function load_view($view, $data = array()) {
 		require_once "app/views/$view.php";
+	}
+	
+	/**
+	 * Sanitizes the provided data
+	 * @param string $data
+	 * @return string
+	 */
+	public function sanitize($data, $strip_tags = false){
+		if($strip_tags){
+			$data = strip_tags($data);
+		}
+		$data = htmlentities($data, ENT_QUOTES);
+		return $data;
 	}
 
 }

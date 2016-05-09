@@ -71,9 +71,6 @@ class User extends Controller {
 	public function isLoggedIn() {
 		$required_role = Controller::PUBLIC_ACCESS;
 		if ($this->checkPermission($required_role) == true) {
-
-			$params = $this->getRequestParams();
-
 			if (isset($_SESSION['user'])) {
 				$this->sendResponse(1, array('logged_in' => true, 'user' => $_SESSION['user']));
 			} else {
