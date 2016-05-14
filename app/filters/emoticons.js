@@ -26,6 +26,11 @@ app.filter('emoticons', function() {
 				img: 'stickingout.png'
 			},
 			{
+				regexp: /8-\)/,
+				title: '8-)',
+				img: 'hot.png'
+			},
+			{
 				regexp: /\|-\(/,
 				title: '|-(',
 				img: 'ambivalent.png'

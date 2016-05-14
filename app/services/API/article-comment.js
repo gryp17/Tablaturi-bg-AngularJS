@@ -11,6 +11,15 @@ app.factory('ArticleCommentService', function($http) {
 				}
 			});
 		},
+		getTotalArticleComments: function(articleId) {
+			return $http({
+				method: 'POST',
+				url: 'ArticleComment/getTotalArticleComments',
+				data: {
+					article_id: articleId
+				}
+			});
+		},
 		addArticleComment: function(articleId, content) {
 			return $http({
 				method: 'POST',

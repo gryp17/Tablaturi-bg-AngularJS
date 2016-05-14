@@ -79,7 +79,7 @@
 					</svg>
 				</div>
 				<div id="view-wrapper">
-					<section ng-view="">
+					<section ng-view="" autoscroll="true">
 					</section>
 				</div>
 			</div>

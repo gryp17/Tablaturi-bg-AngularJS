@@ -466,6 +466,9 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 		$scope.articleId = $routeParams.id;
 	}
 	
+	/**
+	 * Add new comment
+	 */
 	$scope.addComment = function(){
 		ArticleCommentService.addArticleComment($scope.articleId, $scope.commentContent).success(function(result) {
 			if(result.status === 0){
@@ -476,10 +479,19 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 			}else{
 				$scope.commentContent = '';
 				$scope.getArticleComments(6, 0);
+				
+				//scroll to the latest comment
+				var offset = $(".comments-wrapper").offset().top;
+				$("html, body").animate({scrollTop: offset}, 500);
 			}
 		});
 	};
 	
+	/**
+	 * Fetches the article comments and renders them in the page
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
 	$scope.getArticleComments = function(limit, offset) {
 		ArticleCommentService.getArticleComments($scope.articleId, limit, offset).success(function(result) {
 			$scope.articleComments = result.data;
@@ -488,7 +500,8 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 
 	$q.all([
 		ArticleService.getArticle($scope.articleId),
-		ArticleCommentService.getArticleComments($scope.articleId, $scope.limit, $scope.offset)
+		ArticleCommentService.getArticleComments($scope.articleId, $scope.limit, $scope.offset),
+		ArticleCommentService.getTotalArticleComments($scope.articleId)
 	]).then(function (result){
 		
 		if(angular.isUndefined(result[0].data.data)){
@@ -505,6 +518,9 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 			
 			//article comments
 			$scope.articleComments = result[1].data.data;
+			
+			//total number of article comments
+			$scope.totalArticleComments = result[2].data.data;
 
 			LoadingService.doneLoading();
 		}
@@ -593,6 +609,12 @@ app.controller('layoutController', function($scope, $rootScope, $location, TabSe
 });
 app.controller('loginController', function($scope, $rootScope, $window, UserService, ValidationService) {
 	$scope.loginData = {};
+	
+	$scope.handleKeyPress = function ($event){
+		if ($event.which === 13){
+			$scope.login();
+		}
+	};
 	
 	$scope.login = function (){
 		UserService.login($scope.loginData).success(function (result){
@@ -688,7 +710,63 @@ app.controller('signupController', function($scope, UserService, ValidationServi
 	//$('#signup-modal').modal({ backdrop : false });
 
 });
-app.directive('article', function($filter) {
+app.factory('LoadingService', function() {
+	
+	var contentElement = '#view-wrapper';
+	var loadingElement = '#content-wrapper > .loading-placeholder';
+	
+	return {
+		/**
+		 * Shows the loading placeholder
+		 */
+		showLoadingPlaceholder: function (){
+			$(loadingElement).fadeIn(0);
+		},
+		/**
+		 * Hides the loading placeholder
+		 */
+		hideLoadingPlaceholder: function (){
+			$(loadingElement).fadeOut(0);
+		},
+		/**
+		 * Shows the ng-view content
+		 */
+		showContent: function (){
+			$(contentElement).css('visibility', 'visible');
+		},
+		/**
+		 * Hides the ng-view content
+		 */
+		hideContent: function (){
+			$(contentElement).css('visibility', 'hidden');
+		},
+		/**
+		 * Hides the ng-view content and shows the loading placeholder
+		 */
+		startLoading: function() {
+			this.hideContent();
+			this.showLoadingPlaceholder();
+		},
+		/**
+		 * Hides the loading placeholder and shows the ng-view content
+		 */
+		doneLoading: function() {
+			this.hideLoadingPlaceholder();
+			this.showContent();
+		}
+	};
+});
+app.factory('ValidationService', function($filter) {
+	return {
+		showError: function(field, errorCode) {
+			var errorMessage = $filter('errors')(errorCode);
+			var fieldBox = $('input[name="' + field + '"], textarea[name="' + field + '"], select[name="' + field + '"]').closest('.field-box');
+			fieldBox.find('.error-msg').html(errorMessage);
+			fieldBox.addClass('error');
+		}
+	};
+});
+app.directive('article', function($filter, $location) {
 	return {
 		restrict: 'A',
 		templateUrl: 'app/views/directives/article.php',
@@ -700,6 +778,15 @@ app.directive('article', function($filter) {
 			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
 			var limit = 210 - scope.articleData.title.length;			
 			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
+			
+			/**
+			 * Redirects to the article page
+			 * @param {int} articleId
+			 */
+			scope.open = function (articleId){
+				$location.path('article/'+articleId);
+			};
+			
 		}
 	};
 });
@@ -721,11 +808,108 @@ app.directive('clickableEmoticon', function() {
 		}
 	};
 });
+app.directive('pagination', function() {
+	return {
+		restrict: 'C',
+		templateUrl: 'app/views/directives/pagination.php',
+		replace: true,
+		scope: {
+			limit: '=',
+			offset: '=',
+			totalItems: '=',
+			range: '=',
+			callback: '&'
+		},
+		link: function(scope, element, attrs) {
+			
+			//initialize the pagination when scope.totalItems is set
+			scope.$watch('totalItems', function (){
+				if(angular.isDefined(scope.totalItems)){					
+					scope.currentPage = 1;
+					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
+					scope.generatePages();
+				}
+			});
+			
+			/**
+			 * Calculates the number of visible pages (it's a magic)
+			 */
+			scope.generatePages = function (){
+				scope.pages = [];
+				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
+					if ((i > 0) && (i <= scope.totalPages)) {
+						scope.pages.push(i);
+					}
+				}
+			};
+			
+			/**
+			 * Changes the current page
+			 * @param {int} page
+			 */
+			scope.goTo = function(page){
+				scope.currentPage = page;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the first page as current page
+			 */
+			scope.goToFirst = function (){
+				scope.currentPage = 1;
+				scope.generatePages();
+				scope.getPageData();
+				
+			};
+			
+			/**
+			 * Sets the last page as current page
+			 */
+			scope.goToLast = function (){
+				scope.currentPage = scope.totalPages;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the previous page as current page
+			 */
+			scope.goToPrevious = function (){
+				if(scope.currentPage > 1){
+					scope.currentPage = scope.currentPage - 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Sets the next page as current page
+			 */
+			scope.goToNext = function (){
+				if(scope.currentPage < scope.totalPages){
+					scope.currentPage = scope.currentPage + 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Calls the specified callback with the new offset
+			 */
+			scope.getPageData = function (){
+				scope.offset = (scope.currentPage - 1) * scope.limit;
+				scope.callback({limit: scope.limit, offset: scope.offset});
+			};
+			
+		}
+	};
+});
 app.directive('validation', function() {
 	return {
 		restrict: 'C',
 		link: function(scope, element, attrs) {
-			element.on('focus click', function (){
+			element.on('focus click keypress', function (){
 				element.closest('.field-box').removeClass('error');
 			});
 		}
@@ -757,6 +941,11 @@ app.filter('emoticons', function() {
 				regexp: /:P/,
 				title: ':P',
 				img: 'stickingout.png'
+			},
+			{
+				regexp: /8-\)/,
+				title: '8-)',
+				img: 'hot.png'
 			},
 			{
 				regexp: /\|-\(/,
@@ -828,62 +1017,6 @@ app.filter('errors', function () {
 		return errors[errorCode];
 	};
 });
-app.factory('LoadingService', function() {
-	
-	var contentElement = '#view-wrapper';
-	var loadingElement = '#content-wrapper > .loading-placeholder';
-	
-	return {
-		/**
-		 * Shows the loading placeholder
-		 */
-		showLoadingPlaceholder: function (){
-			$(loadingElement).fadeIn(0);
-		},
-		/**
-		 * Hides the loading placeholder
-		 */
-		hideLoadingPlaceholder: function (){
-			$(loadingElement).fadeOut(0);
-		},
-		/**
-		 * Shows the ng-view content
-		 */
-		showContent: function (){
-			$(contentElement).css('visibility', 'visible');
-		},
-		/**
-		 * Hides the ng-view content
-		 */
-		hideContent: function (){
-			$(contentElement).css('visibility', 'hidden');
-		},
-		/**
-		 * Hides the ng-view content and shows the loading placeholder
-		 */
-		startLoading: function() {
-			this.hideContent();
-			this.showLoadingPlaceholder();
-		},
-		/**
-		 * Hides the loading placeholder and shows the ng-view content
-		 */
-		doneLoading: function() {
-			this.hideLoadingPlaceholder();
-			this.showContent();
-		}
-	};
-});
-app.factory('ValidationService', function($filter) {
-	return {
-		showError: function(field, errorCode) {
-			var errorMessage = $filter('errors')(errorCode);
-			var fieldBox = $('input[name="' + field + '"], textarea[name="' + field + '"], select[name="' + field + '"]').closest('.field-box');
-			fieldBox.find('.error-msg').html(errorMessage);
-			fieldBox.addClass('error');
-		}
-	};
-});
 app.factory('ArticleCommentService', function($http) {
 	return {
 		getArticleComments: function(articleId, limit, offset) {
@@ -894,6 +1027,15 @@ app.factory('ArticleCommentService', function($http) {
 					article_id: articleId,
 					limit: limit,
 					offset: offset
+				}
+			});
+		},
+		getTotalArticleComments: function(articleId) {
+			return $http({
+				method: 'POST',
+				url: 'ArticleComment/getTotalArticleComments',
+				data: {
+					article_id: articleId
 				}
 			});
 		},

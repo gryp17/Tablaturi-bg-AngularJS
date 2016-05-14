@@ -1,0 +1,40 @@
+.pagination{
+	display: block;
+	text-align: center;
+
+	.page{
+		display: inline-block;
+		padding: 5px 15px;
+		margin: 0px 3px;
+		color: #fff;
+		background-color: lighten($red, 5%);
+		cursor: pointer;
+
+		&.first{
+			.glyphicon:first-child{
+				margin-right: -10px;
+			}
+		}
+
+		&.last{
+			.glyphicon:last-child{
+				margin-left: -10px;
+			}
+		}
+
+		&.active{
+			background-color: darken($red, 20%);
+			font-weight: bold;
+		}
+
+		&.disabled{
+			opacity: 0.4;
+
+			.glyphicon{
+				color: #fff;
+				background-color: transparent;
+				border-color: transparent;
+			}
+		}
+	}
+}

@@ -8,6 +8,9 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 		$scope.articleId = $routeParams.id;
 	}
 	
+	/**
+	 * Add new comment
+	 */
 	$scope.addComment = function(){
 		ArticleCommentService.addArticleComment($scope.articleId, $scope.commentContent).success(function(result) {
 			if(result.status === 0){
@@ -18,10 +21,19 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 			}else{
 				$scope.commentContent = '';
 				$scope.getArticleComments(6, 0);
+				
+				//scroll to the latest comment
+				var offset = $(".comments-wrapper").offset().top;
+				$("html, body").animate({scrollTop: offset}, 500);
 			}
 		});
 	};
 	
+	/**
+	 * Fetches the article comments and renders them in the page
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
 	$scope.getArticleComments = function(limit, offset) {
 		ArticleCommentService.getArticleComments($scope.articleId, limit, offset).success(function(result) {
 			$scope.articleComments = result.data;
@@ -30,7 +42,8 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 
 	$q.all([
 		ArticleService.getArticle($scope.articleId),
-		ArticleCommentService.getArticleComments($scope.articleId, $scope.limit, $scope.offset)
+		ArticleCommentService.getArticleComments($scope.articleId, $scope.limit, $scope.offset),
+		ArticleCommentService.getTotalArticleComments($scope.articleId)
 	]).then(function (result){
 		
 		if(angular.isUndefined(result[0].data.data)){
@@ -47,6 +60,9 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 			
 			//article comments
 			$scope.articleComments = result[1].data.data;
+			
+			//total number of article comments
+			$scope.totalArticleComments = result[2].data.data;
 
 			LoadingService.doneLoading();
 		}

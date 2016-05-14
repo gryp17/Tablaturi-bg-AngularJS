@@ -55,7 +55,9 @@
 			</div>
 		</div>
 
-		<img src="static/img/logo-tablaturi-bg.png" title="Tablaturi-BG"/>
+		<a href="#home">
+			<img src="static/img/logo-tablaturi-bg.png" title="Tablaturi-BG"/>
+		</a>
 	</div>
 </header>
 

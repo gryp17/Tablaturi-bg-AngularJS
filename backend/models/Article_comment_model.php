@@ -29,12 +29,27 @@ class Article_comment_model {
 		$query->execute($params);
 		
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-			//convert the date to miliseconds timestamp
-			$row['date'] = strtotime($row['date']) * 1000;
+			//convert the date to javascript friendly format
+			$row['date'] = preg_replace('/\s/', 'T', $row['date']);
 			$data[] = $row;
 		}
 		
 		return $data;
+	}
+	
+	/**
+	 * Returns the total number of comments for the specified article
+	 * @param int $article_id
+	 * @return int
+	 */
+	public function getTotalArticleComments($article_id){
+		$query = $this->connection->prepare('SELECT count(ID) AS total FROM article_comment WHERE article_ID = :article_id');
+		$params = array('article_id' => $article_id);
+		$query->execute($params);
+		
+		$result = $query->fetch(PDO::FETCH_ASSOC);
+		
+		return $result['total'];
 	}
 	
 	/**

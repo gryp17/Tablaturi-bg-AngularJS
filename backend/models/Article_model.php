@@ -23,8 +23,8 @@ class Article_model {
 		$query->execute($params);
 
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-			//convert the date to miliseconds timestamp
-			$row['date'] = strtotime($row['date']) * 1000;
+			//convert the date to javascript friendly format
+			$row['date'] = preg_replace('/\s/', 'T', $row['date']);
 			$data[] = $row;
 		}
 
@@ -47,8 +47,8 @@ class Article_model {
 		$query->execute($params);
 
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-			//convert the date to miliseconds timestamp
-			$row['date'] = strtotime($row['date']) * 1000;
+			//convert the date to javascript friendly format
+			$row['date'] = preg_replace('/\s/', 'T', $row['date']);
 			$data[] = $row;
 		}
 
@@ -68,8 +68,8 @@ class Article_model {
 		
         $row = $query->fetch(PDO::FETCH_ASSOC);
         if ($row) {
-			//convert the date to miliseconds timestamp
-			$row['date'] = strtotime($row['date']) * 1000;
+			//convert the date to javascript friendly format
+			$row['date'] = preg_replace('/\s/', 'T', $row['date']);
             return $row;
         } else {
             return null;

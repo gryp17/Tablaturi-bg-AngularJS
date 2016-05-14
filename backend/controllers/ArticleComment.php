@@ -16,6 +16,9 @@ class ArticleComment extends Controller {
 			'limit' => 'int',
 			'offset' => 'int'
 		),
+		'getTotalArticleComments' => array(
+			'article_id' => 'int'
+		),
 		'addArticleComment' => array(
 			'article_id' => 'int',
 			'content' => 'required, max-500'
@@ -34,6 +37,25 @@ class ArticleComment extends Controller {
 
 			$article_comment_model = $this->load_model('Article_comment_model');
 			$data = $article_comment_model->getArticleComments($params['article_id'], $params['limit'], $params['offset']);
+			
+			$this->sendResponse(1, $data);
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+	
+	/**
+	 * Returns the total number of comments for the specified article id
+	 */
+	public function getTotalArticleComments() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		
+		if ($this->checkPermission($required_role) == true) {
+
+			$params = $this->getRequestParams();
+
+			$article_comment_model = $this->load_model('Article_comment_model');
+			$data = $article_comment_model->getTotalArticleComments($params['article_id']);
 			
 			$this->sendResponse(1, $data);
 		} else {

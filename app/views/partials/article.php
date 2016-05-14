@@ -1,4 +1,5 @@
 <div class="article">
+	<!-- article wrapper -->
 	<div class="article-wrapper">
 		<div class="date" ng-bind="article.date | date : 'yyyy-MM-dd HH:mm:ss'"></div>
 		<div class="views" ng-bind="'Преглеждания: ' +article.views"></div>
@@ -10,6 +11,7 @@
 		<img class="article-image" ng-src="content/articles/{{article.picture}}"/>
 		<h2 class="title" ng-bind="article.title"></h2>
 		<div class="content" ng-bind-html="article.content"></div>
+		<div class="clearfix"></div>
 		<div class="share">
 			Сподели в: 
 			<hr/>
@@ -20,6 +22,7 @@
 		</div>
 	</div>
 
+	<!-- comments wrapper -->
 	<div class="comments-wrapper">
 		<h4 ng-show="articleComments.length > 0">Коментари:</h4>
 		<h4 ng-show="articleComments.length === 0" class="no-comments">Няма коментари</h4>
@@ -30,16 +33,19 @@
 					<a class="red-link" title="Виж профила на {{comment.username}}" href="#profile/{{comment.author_ID}}" ng-bind="comment.username"></a> каза:
 				</div>
 				<div class="date" ng-bind="comment.date | date : 'yyyy-MM-dd HH:mm:ss'"></div>
-				
 				<div class="content" ng-bind-html="comment.content | emoticons"></div>
 			</div>
-			
 			<div class="clearfix"></div>
 		</div>
+		
+		<div class="pagination" total-items="totalArticleComments" limit="limit" offset="offset" range="2" callback="getArticleComments(limit, offset)"></div>
 	</div>
+	
+	<!-- add comment wrapper -->
 	<div class="add-comment-wrapper">
 		<div ng-show="!loggedInUser" class="comment-login">
-			<a href class="red-link">Регистрирай се</a> или <a href class="red-link">Влез</a> , за да коментираш
+			<a class="red-link" data-toggle="modal" href="#signup-modal" target="_self">Регистрирай се</a>
+			или <a class="red-link" data-toggle="modal" href="#login-modal" target="_self">Влез</a>, за да коментираш
 		</div>
 		<div ng-show="loggedInUser" class="add-comment">
 			<p>Напиши коментар:</p>			

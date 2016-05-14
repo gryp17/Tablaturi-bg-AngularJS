@@ -80,8 +80,6 @@
 	}
 }
 
-
-
 .field-box {
 	position: relative;
 
@@ -109,7 +107,7 @@ a {
 		font-weight: 600;
 		text-decoration: underline;
 
-		&:hover {
+		&:hover, &:focus, &:active:focus {
 			text-decoration: underline;
 		}
 	}
