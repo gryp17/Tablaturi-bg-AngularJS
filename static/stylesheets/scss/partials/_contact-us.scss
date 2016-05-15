@@ -1,0 +1,79 @@
+.contact-us {
+	.title {
+		margin-top: 0;
+		font-size: 17px;
+		text-align: center;
+	}
+	
+	.content {
+		margin-top: 35px;
+	}
+	
+	.contact-form {
+		margin-top: 20px;
+		
+		.field-box {
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 25px;
+			width: 450px;
+			
+			&.captcha-field-box {
+				text-align: left;
+				
+				.captcha {
+					vertical-align: top;
+
+					img {
+						margin-right: 20px;
+
+						&.captcha-img {
+							width: 80px;
+						}
+
+						&.reload-captcha {
+							width: 30px;
+							cursor: pointer;
+						}
+					}
+				}
+
+				.captcha-input {
+					.text-control {
+						width: 80px;
+						margin-bottom: 0;
+					}
+				}
+
+				.captcha, .captcha-input {
+					display: inline-block;
+				}
+			}
+			
+			.text-control {
+				display: block;
+				width: 100%;
+			}
+			
+			textarea {
+				resize: vertical;
+				min-height: 200px;
+			}
+		}
+		
+		.btn {
+			display: block;
+			margin: auto;
+			width: 200px;
+		}
+	}
+	
+	.success-wrapper {
+		margin-top: 30px;
+		text-align: center;
+		
+		.success-msg {
+			margin-top: 25px;
+		}
+	}
+}

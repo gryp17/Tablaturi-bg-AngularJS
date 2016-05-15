@@ -35,8 +35,12 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 	 * @param {int} offset
 	 */
 	$scope.getArticleComments = function(limit, offset) {
-		ArticleCommentService.getArticleComments($scope.articleId, limit, offset).success(function(result) {
-			$scope.articleComments = result.data;
+		$q.all([
+			ArticleCommentService.getArticleComments($scope.articleId, limit, offset),
+			ArticleCommentService.getTotalArticleComments($scope.articleId)
+		]).then(function (result){
+			$scope.articleComments = result[0].data.data;
+			$scope.totalArticleComments = result[1].data.data;
 		});
 	};
 

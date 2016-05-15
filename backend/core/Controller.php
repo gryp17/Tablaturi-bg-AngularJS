@@ -8,6 +8,7 @@ class Controller {
 	const ADMIN_USER = 3;
 	const ACCESS_DENIED = 'Access denied!';
 	const DB_ERROR = 'Query failed!';
+	const EMAIL_ERROR = 'Send email failed!';
 
 	public $required_params;
 

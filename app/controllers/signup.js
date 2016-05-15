@@ -1,4 +1,4 @@
-app.controller('signupController', function($scope, UserService, ValidationService) {
+app.controller('signupController', function($scope, UserService, MiscService, ValidationService) {
 	$scope.userData = {
 		signup_gender: 'M'
 	};
@@ -9,7 +9,7 @@ app.controller('signupController', function($scope, UserService, ValidationServi
 	 * Generates new captcha image
 	 */
 	$scope.generateCaptcha = function() {
-		UserService.generateCaptcha().success(function(result) {
+		MiscService.generateCaptcha().success(function(result) {
 			$scope.captchaImage = result.data;
 		});
 	};
@@ -52,8 +52,13 @@ app.controller('signupController', function($scope, UserService, ValidationServi
 		$scope.resetForm();
 		$scope.$apply();
 	});
-
-	$scope.generateCaptcha();
+	
+	/**
+	 * Generate new captcha when signup modal shows
+	 */	
+	$('#signup-modal').on('shown.bs.modal', function() {
+		$scope.generateCaptcha();
+	});
 
 	$('#signup-datepicker').datepicker({
 		changeMonth: true,

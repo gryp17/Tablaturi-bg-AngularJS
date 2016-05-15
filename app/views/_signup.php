@@ -38,7 +38,7 @@
 				</div>
 				<div class="field-box">
 					<div class="captcha">
-						<img class="captcha-img" ng-src="{{captchaImage}}"/>
+						<img class="captcha-img" ng-src="{{captchaImage || 'static/img/captcha-placeholder.jpg'}}" />
 						<img class="reload-captcha" src="static/img/reload-icon.png" ng-click="generateCaptcha()"/>
 					</div>
 					<div class="captcha-input">

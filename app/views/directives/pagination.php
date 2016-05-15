@@ -1,4 +1,4 @@
-<div ng-show="totalItems && totalItems > 0">
+<div ng-show="totalItems && totalItems > limit">
 	<div class="page first" ng-click="goToFirst()" ng-class="{disabled: currentPage === 1}">
 		<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
 		<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>

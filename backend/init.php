@@ -5,6 +5,7 @@ require_once 'core/App.php';
 require_once 'core/Validator.php';
 require_once 'core/Controller.php';
 require_once 'core/DB.php';
+require_once 'core/Utils.php';
 require_once 'libs/captcha/captcha.php';
 
 session_start();

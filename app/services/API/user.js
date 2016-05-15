@@ -19,12 +19,6 @@ app.factory('UserService', function($http) {
 				url: 'User/isLoggedIn'
 			});
 		},
-		generateCaptcha: function (){
-			return $http({
-				method: 'POST',
-				url: 'User/generateCaptcha'
-			});
-		},
 		signup: function (userData){
 			return $http({
 				method: 'POST',

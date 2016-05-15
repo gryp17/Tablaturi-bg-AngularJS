@@ -82,25 +82,6 @@ class User extends Controller {
 	}
 	
 	/**
-	 * Generates new captcha image
-	 */
-	public function generateCaptcha() {
-		$required_role = Controller::PUBLIC_ACCESS;
-		if ($this->checkPermission($required_role) == true) {
-			$params = $this->getRequestParams();
-			
-			#captcha code
-			$_SESSION['captcha'] = simple_php_captcha();
-			#img source fix
-			$captchaImage = preg_replace('/.*?\/backend/', 'backend', $_SESSION['captcha']['image_src']);
-			
-			$this->sendResponse(1, $captchaImage);
-		} else {
-			$this->sendResponse(0, Controller::ACCESS_DENIED);
-		}
-	}
-	
-	/**
 	 * New user signup
 	 */
 	public function signup() {
@@ -111,9 +92,13 @@ class User extends Controller {
 			
 			$user_model = $this->load_model('User_model');
 			$user_model->insertUser($params['signup_username'], $params['signup_password'], $params['signup_email'], $params['signup_birthday'], $params['signup_gender'], null, 'user');
-			#TODO: sendConfirmationEmail($name, $email);
 			
-			$this->sendResponse(1, true);
+			if(Utils::sendConfirmationEmail($params['signup_username'], $params['signup_email'])){
+				$this->sendResponse(1, true);
+			}else{
+				$this->sendResponse(0, Controller::EMAIL_ERROR);
+			}
+			
 		} else {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}
