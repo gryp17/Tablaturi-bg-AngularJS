@@ -7,7 +7,7 @@
 			<a href="#articles">Новини</a>
 		</div>
 		<div class="item">
-			<a href="#home">Таблатури</a>
+			<a href="#tabs">Таблатури</a>
 		</div>
 		<div class="item">
 			<a href="#guitar-pro">Guitar Pro</a>

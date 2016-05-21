@@ -25,7 +25,6 @@ class Misc extends Controller {
 	public function generateCaptcha() {
 		$required_role = Controller::PUBLIC_ACCESS;
 		if ($this->checkPermission($required_role) == true) {
-			$params = $this->getRequestParams();
 			
 			#captcha code
 			$_SESSION['captcha'] = simple_php_captcha();

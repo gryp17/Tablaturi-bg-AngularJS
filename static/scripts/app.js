@@ -374,6 +374,9 @@ app.config(['$routeProvider', function($routeProvider) {
 		}).when('/article/:id', {
 			templateUrl: 'app/views/partials/article.php',
 			controller: 'articleController'
+		}).when('/tabs', {
+			templateUrl: 'app/views/partials/tabs.php',
+			controller: 'tabsController'
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php'
 		}).when('/contact-us', {
@@ -752,6 +755,22 @@ app.controller('signupController', function($scope, UserService, MiscService, Va
 		$.fn.modal.Constructor.prototype.enforceFocus = enforceModalFocusFn;
 	});
 	//$('#signup-modal').modal({ backdrop : false });
+
+});
+app.controller('tabsController', function ($scope, $q, TabService, LoadingService) {
+	var limit = 5;
+	
+	$q.all([
+		TabService.getMost('popular', limit),
+		TabService.getMost('liked', limit),
+		TabService.getMost('latest', limit),
+		TabService.getMost('commented', limit)
+	]).then(function (responses){
+		console.log(responses);
+		
+		LoadingService.doneLoading();
+	});
+	
 
 });
 app.directive('article', function($filter, $location) {
@@ -1141,6 +1160,16 @@ app.factory('TabService', function($http) {
 			return $http({
 				method: 'GET',
 				url: 'Tab/getTabsCount'
+			});
+		},
+		getMost: function(type, limit) {
+			return $http({
+				method: 'POST',
+				url: 'Tab/getMost',
+				data: {
+					type: type,
+					limit: limit
+				}
 			});
 		}
 	};

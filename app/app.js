@@ -13,6 +13,9 @@ app.config(['$routeProvider', function($routeProvider) {
 		}).when('/article/:id', {
 			templateUrl: 'app/views/partials/article.php',
 			controller: 'articleController'
+		}).when('/tabs', {
+			templateUrl: 'app/views/partials/tabs.php',
+			controller: 'tabsController'
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php'
 		}).when('/contact-us', {

@@ -8,7 +8,10 @@ class Tab_model {
 		$this->connection = DB::getInstance()->connection;
 	}
 
-
+	/**
+	 * Returns the total number of guitar pro and text tabs
+	 * @return array
+	 */
 	public function getTabsCount() {
 		$data = array();
 		
@@ -27,6 +30,43 @@ class Tab_model {
 			'text' => $total - $gp
 		);
 
+		return $data;
+	}
+	
+	/**
+	 * Returns the most popular, liked, latest or commented tabs
+	 * @param string $type
+	 * @param int $limit
+	 */
+	public function getMost($type, $limit) {
+		$data = array();
+		
+		switch ($type) {
+            case 'popular' :
+				$query = $this->connection->prepare('SELECT ID, band, song, downloads FROM tab ORDER BY downloads DESC LIMIT :limit');
+                break;
+            case 'liked' :
+				$query = $this->connection->prepare('SELECT ID, band, song, rating FROM tab ORDER BY rating DESC, band ASC LIMIT :limit');
+                break;
+            case 'latest' :
+				$query = $this->connection->prepare('SELECT ID, band, song, upload_date FROM tab ORDER BY upload_date DESC LIMIT :limit');
+                break;
+            case 'commented' :
+                $query = $this->connection->prepare('SELECT tab.ID, tab.band, tab.song , count( tab_comment.ID ) AS comments FROM tab, tab_comment WHERE tab.ID = tab_comment.tab_ID GROUP BY tab.ID ORDER BY comments DESC LIMIT :limit');
+				break;
+        }
+		
+		$params = array('limit' => $limit);
+		$query->execute($params);
+		
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			//convert the date to javascript friendly format
+			if(isset($row['upload_date'])){
+				$row['upload_date'] = preg_replace('/\s/', 'T', $row['upload_date']);
+			}
+			$data[] = $row;
+		}
+		
 		return $data;
 	}
 
