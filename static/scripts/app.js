@@ -363,6 +363,26 @@ H=h("script,style"),t=e.extend({},z,q,k,u),y=h("background,cite,href,longdesc,sr
 
 var app = angular.module('tablaturi-bg', ['ngRoute', 'ngSanitize']);
 
+/**
+ * Checks if the user is logged in
+ */
+function checkAuth ($rootScope, $q, $location, UserService) {
+	var deferred = $q.defer();
+
+	UserService.isLoggedIn().then(function(result) {
+		if (result.data.data.logged_in === true) {
+			$rootScope.loggedInUser = result.data.data.user;
+			deferred.resolve(true);
+		} else {
+			$rootScope.loggedInUser = undefined;
+			$location.path('/forbidden');
+			deferred.reject();
+		}
+	});
+
+	return deferred.promise;
+}
+
 app.config(['$routeProvider', function($routeProvider) {
 
 		$routeProvider.when('/home', {
@@ -374,6 +394,12 @@ app.config(['$routeProvider', function($routeProvider) {
 		}).when('/article/:id', {
 			templateUrl: 'app/views/partials/article.php',
 			controller: 'articleController'
+		}).when('/profile/:id', {
+			templateUrl: 'app/views/partials/profile.php',
+			controller: 'profileController',
+			resolve: {
+				factory: checkAuth
+            }
 		}).when('/tabs', {
 			templateUrl: 'app/views/partials/tabs.php',
 			controller: 'tabsController'
@@ -384,6 +410,8 @@ app.config(['$routeProvider', function($routeProvider) {
 			controller: 'contactusController'
 		}).when('/copyright', {
 			templateUrl: 'app/views/partials/copyright.php'
+		}).when('/forbidden', {
+			templateUrl: 'app/views/partials/forbidden.php'
 		}).otherwise({
 			templateUrl: 'app/views/partials/home.php',
 			controller: 'homeController'
@@ -391,20 +419,16 @@ app.config(['$routeProvider', function($routeProvider) {
 	}]);
 
 
-app.run(function($rootScope, $location, $http, LoadingService, UserService) {
+app.run(function($rootScope, LoadingService) {
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current) {
-
-		//pages that require login
-		var securePages = [
-			'/profile/:id'
-		];
 
 		//static pages that don't need loading indicator
 		var staticPages = [
 			'/contact-us',
 			'/guitar-pro',
-			'/copyright'
+			'/copyright',
+			'/forbidden'
 		];
 		
 		if (next.$$route) {
@@ -418,43 +442,6 @@ app.run(function($rootScope, $location, $http, LoadingService, UserService) {
 			LoadingService.showLoadingPlaceholder();
 		}
 		
-		$rootScope.checkingLoginStatus = true;
-
-		//authentication check
-		UserService.isLoggedIn().success(function (result){
-			$rootScope.checkingLoginStatus = false;
-			
-			if(result.data.logged_in === true){
-				$rootScope.loggedInUser = result.data.user;
-			}else{
-				$rootScope.loggedInUser = undefined;
-				
-				if (next.$$route) {
-					var nextUrl = next.$$route.originalPath;
-					//if the user is trying to open a secure page and is not logged in - redirect to the home page
-					if(securePages.indexOf(nextUrl) > -1){
-						$location.path('/');
-					}
-				}	
-			}
-		});
-		
-		/*
-		$rootScope.authenticated = false;
-		//call the backend to check if the session is set...
-		if (false) {
-			$rootScope.authenticated = true;
-			//get the logged user data and save it in the $rootScope...
-			//$rootScope.user = 'plamen';
-			console.log('authenticated')
-		} else {
-			if (next.$$route) {
-				var nextUrl = next.$$route.originalPath;
-				console.log(nextUrl);
-				//$location.path('/home');
-			}
-		}*/
-
 	});
 
 });
@@ -673,6 +660,25 @@ app.controller('loginController', function($scope, $rootScope, $window, UserServ
 		});
 	};
 	
+});
+app.controller('profileController', function ($scope, $routeParams, $location, $q, UserService, LoadingService) {
+
+	console.log("profile controller");
+
+	$q.all([
+		UserService.getUser($routeParams.id),
+	]).then(function (responses){
+
+		if(angular.isDefined(responses[0].data.data)){
+			$scope.userData = responses[0].data.data;
+			console.log($scope.userData);
+		}else{
+			$location.path('/');
+		}
+		
+		LoadingService.doneLoading();
+	});
+
 });
 app.controller('signupController', function($scope, UserService, MiscService, ValidationService) {
 	$scope.userData = {
@@ -1200,6 +1206,15 @@ app.factory('UserService', function($http) {
 				method: 'POST',
 				url: 'User/signup',
 				data: userData
+			});
+		},
+		getUser: function (id){
+			return $http({
+				method: 'POST',
+				url: 'User/getUser',
+				data: {
+					id: id
+				}
 			});
 		}
 	};

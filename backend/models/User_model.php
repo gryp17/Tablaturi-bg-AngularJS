@@ -82,6 +82,26 @@ class User_model {
 			return true;
 		}
 	}
+	
+	
+	/**
+	 * Returns the user data
+	 * @param int $id
+	 * @return array
+	 */
+	public function getUser($id){
+		$query = $this->connection->prepare('SELECT * FROM user WHERE ID = :id AND activated = 1');
+		$params = array('id' => $id);
+		$query->execute($params);
+
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+		
+        if ($result) {
+            return $result;
+		}else{
+			return null;
+		}
+	}
 
 
 }

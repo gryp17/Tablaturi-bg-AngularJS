@@ -23,6 +23,9 @@ class User extends Controller {
 			'signup_birthday' => 'date',
 			'signup_gender' => 'in[M;F]',
 			'signup_captcha' => 'matches-captcha'
+		),
+		'getUser' => array(
+			'id' => 'required, int'
 		)
 	);
 
@@ -98,6 +101,25 @@ class User extends Controller {
 			}else{
 				$this->sendResponse(0, Controller::EMAIL_ERROR);
 			}
+			
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+	
+	/**
+	 * Returns the specified user data
+	 */
+	public function getUser() {
+		$required_role = Controller::LOGGED_IN_USER;
+		if ($this->checkPermission($required_role) == true) {
+			
+			$params = $this->getRequestParams();
+			
+			$user_model = $this->load_model('User_model');
+			$data = $user_model->getUser($params['id']);
+			
+			$this->sendResponse(1, $data);
 			
 		} else {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);

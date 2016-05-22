@@ -25,6 +25,15 @@ app.factory('UserService', function($http) {
 				url: 'User/signup',
 				data: userData
 			});
+		},
+		getUser: function (id){
+			return $http({
+				method: 'POST',
+				url: 'User/getUser',
+				data: {
+					id: id
+				}
+			});
 		}
 	};
 });
