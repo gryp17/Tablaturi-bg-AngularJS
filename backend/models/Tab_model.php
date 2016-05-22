@@ -62,7 +62,7 @@ class Tab_model {
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			//convert the date to javascript friendly format
 			if(isset($row['upload_date'])){
-				$row['upload_date'] = preg_replace('/\s/', 'T', $row['upload_date']);
+				$row['upload_date'] = Utils::formatDate($row['upload_date']);
 			}
 			$data[] = $row;
 		}

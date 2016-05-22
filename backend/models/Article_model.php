@@ -24,7 +24,7 @@ class Article_model {
 
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			//convert the date to javascript friendly format
-			$row['date'] = preg_replace('/\s/', 'T', $row['date']);
+			$row['date'] = Utils::formatDate($row['date']);
 			$data[] = $row;
 		}
 
@@ -48,7 +48,7 @@ class Article_model {
 
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			//convert the date to javascript friendly format
-			$row['date'] = preg_replace('/\s/', 'T', $row['date']);
+			$row['date'] = Utils::formatDate($row['date']);
 			$data[] = $row;
 		}
 
@@ -69,7 +69,7 @@ class Article_model {
         $row = $query->fetch(PDO::FETCH_ASSOC);
         if ($row) {
 			//convert the date to javascript friendly format
-			$row['date'] = preg_replace('/\s/', 'T', $row['date']);
+			$row['date'] = Utils::formatDate($row['date']);
             return $row;
         } else {
             return null;

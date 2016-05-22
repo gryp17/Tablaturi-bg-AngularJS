@@ -97,6 +97,10 @@ class User_model {
         $result = $query->fetch(PDO::FETCH_ASSOC);
 		
         if ($result) {
+			//convert the dates to javascript friendly format
+			$result['birthday'] = Utils::formatDate($result['birthday']);
+			$result['last_active_date'] = Utils::formatDate($result['last_active_date']);
+			$result['register_date'] = Utils::formatDate($result['register_date']);
             return $result;
 		}else{
 			return null;

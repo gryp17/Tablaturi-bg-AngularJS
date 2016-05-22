@@ -30,7 +30,7 @@ class Article_comment_model {
 		
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			//convert the date to javascript friendly format
-			$row['date'] = preg_replace('/\s/', 'T', $row['date']);
+			$row['date'] = Utils::formatDate($row['date']);
 			$data[] = $row;
 		}
 		
