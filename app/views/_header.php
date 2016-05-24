@@ -16,7 +16,7 @@
 			<a href="#home">Качи таблатура</a>
 		</div>
 		<div class="item">
-			<a href="#usefull-stuff">Полезно</a>
+			<a href="#usefull">Полезно</a>
 		</div>
 		<div class="item">
 			<a href="#contact-us">Контакти</a>

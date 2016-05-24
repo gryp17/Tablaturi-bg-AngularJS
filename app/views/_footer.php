@@ -8,6 +8,9 @@
 	<div class="item">
 		<a href="" title="Партньори">Партньори</a>
 	</div>
+	<div class="item">
+		<a href="" title="За нас">За нас</a>
+	</div>
 	<div class="copyright">
 		<span ng-bind="currentYear"></span> Всички права запазени. &copy;
 	</div>

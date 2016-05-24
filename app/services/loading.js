@@ -39,8 +39,12 @@ app.factory('LoadingService', function() {
 		 * Hides the loading placeholder and shows the ng-view content
 		 */
 		doneLoading: function() {
-			this.hideLoadingPlaceholder();
-			this.showContent();
+			var self = this;
+			
+			setTimeout(function (){
+				self.hideLoadingPlaceholder();
+				self.showContent();
+			}, 300);
 		}
 	};
 });

@@ -1,0 +1,61 @@
+> .usefull {
+	.title {
+		margin-top: 0;
+		font-size: 17px;
+		text-align: center;
+	}
+
+	.nav-tabs{
+		margin-top: 30px;
+
+		> li{
+			width: 33.3%;
+			text-align: center;
+
+			&.active{
+				> a{
+					@extend .red-link;
+					text-decoration: none !important;
+				}
+			}
+
+			> a{
+				border-radius: 0px;
+				color: #000;
+			}
+		}
+	}
+	
+	.fake-table{
+		margin-top: 30px;
+		display: table;
+		
+		> div{
+			display: table-cell;
+			vertical-align: top;
+			
+			> img{
+				margin-right: 20px;
+				width: 150px;
+			}
+		}
+	}
+	
+	#video{
+		h4{
+			text-align: center;
+			
+			&:first-child{
+				margin-top: 30px;
+			}
+		}
+		
+		iframe{
+			margin-top: 10px;
+			
+			+ iframe{
+				margin-left: 10px;
+			}
+		}
+	}
+}

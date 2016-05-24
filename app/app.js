@@ -44,6 +44,8 @@ app.config(['$routeProvider', function($routeProvider) {
 			controller: 'tabsController'
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php'
+		}).when('/usefull', {
+			templateUrl: 'app/views/partials/usefull.php'
 		}).when('/contact-us', {
 			templateUrl: 'app/views/partials/contact-us.php',
 			controller: 'contactusController'
@@ -66,6 +68,7 @@ app.run(function($rootScope, LoadingService) {
 		var staticPages = [
 			'/contact-us',
 			'/guitar-pro',
+			'/usefull',
 			'/copyright',
 			'/forbidden'
 		];

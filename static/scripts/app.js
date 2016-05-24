@@ -405,6 +405,8 @@ app.config(['$routeProvider', function($routeProvider) {
 			controller: 'tabsController'
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php'
+		}).when('/usefull', {
+			templateUrl: 'app/views/partials/usefull.php'
 		}).when('/contact-us', {
 			templateUrl: 'app/views/partials/contact-us.php',
 			controller: 'contactusController'
@@ -427,6 +429,7 @@ app.run(function($rootScope, LoadingService) {
 		var staticPages = [
 			'/contact-us',
 			'/guitar-pro',
+			'/usefull',
 			'/copyright',
 			'/forbidden'
 		];
@@ -446,257 +449,6 @@ app.run(function($rootScope, LoadingService) {
 
 });
 
-app.directive('article', function($filter, $location) {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/article.php',
-		replace: true,
-		scope: {
-		    articleData: '='
-		},
-		link: function(scope, element, attrs) {
-			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
-			var limit = 210 - scope.articleData.title.length;			
-			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
-			
-			/**
-			 * Redirects to the article page
-			 * @param {int} articleId
-			 */
-			scope.open = function (articleId){
-				$location.path('article/'+articleId);
-			};
-			
-		}
-	};
-});
-app.directive('clickableEmoticon', function() {
-	return {
-		restrict: 'C',
-		scope: {
-			model: '='
-		},
-		link: function(scope, element, attrs) {
-			element.on('click', function (){
-				if(angular.isUndefined(scope.model)){
-					scope.model = attrs.title;
-				} else {
-					scope.model =  scope.model + ' ' + attrs.title;
-				}
-				scope.$apply();
-			});
-		}
-	};
-});
-app.directive('pagination', function() {
-	return {
-		restrict: 'C',
-		templateUrl: 'app/views/directives/pagination.php',
-		replace: true,
-		scope: {
-			limit: '=',
-			offset: '=',
-			totalItems: '=',
-			range: '=',
-			callback: '&'
-		},
-		link: function(scope, element, attrs) {
-			
-			//initialize the pagination when scope.totalItems is set
-			scope.$watch('totalItems', function (){
-				if(angular.isDefined(scope.totalItems)){					
-					scope.currentPage = 1;
-					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
-					scope.generatePages();
-				}
-			});
-			
-			/**
-			 * Calculates the number of visible pages (it's a magic)
-			 */
-			scope.generatePages = function (){
-				scope.pages = [];
-				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
-					if ((i > 0) && (i <= scope.totalPages)) {
-						scope.pages.push(i);
-					}
-				}
-			};
-			
-			/**
-			 * Changes the current page
-			 * @param {int} page
-			 */
-			scope.goTo = function(page){
-				scope.currentPage = page;
-				scope.generatePages();
-				scope.getPageData();
-			};
-			
-			/**
-			 * Sets the first page as current page
-			 */
-			scope.goToFirst = function (){
-				scope.currentPage = 1;
-				scope.generatePages();
-				scope.getPageData();
-				
-			};
-			
-			/**
-			 * Sets the last page as current page
-			 */
-			scope.goToLast = function (){
-				scope.currentPage = scope.totalPages;
-				scope.generatePages();
-				scope.getPageData();
-			};
-			
-			/**
-			 * Sets the previous page as current page
-			 */
-			scope.goToPrevious = function (){
-				if(scope.currentPage > 1){
-					scope.currentPage = scope.currentPage - 1;
-					scope.generatePages();
-					scope.getPageData();
-				}
-			};
-			
-			/**
-			 * Sets the next page as current page
-			 */
-			scope.goToNext = function (){
-				if(scope.currentPage < scope.totalPages){
-					scope.currentPage = scope.currentPage + 1;
-					scope.generatePages();
-					scope.getPageData();
-				}
-			};
-			
-			/**
-			 * Calls the specified callback with the new offset
-			 */
-			scope.getPageData = function (){
-				scope.offset = (scope.currentPage - 1) * scope.limit;
-				scope.callback({limit: scope.limit, offset: scope.offset});
-			};
-			
-		}
-	};
-});
-app.directive('validation', function() {
-	return {
-		restrict: 'C',
-		link: function(scope, element, attrs) {
-			element.on('focus click keypress', function (){
-				element.closest('.field-box').removeClass('error');
-			});
-		}
-	};
-});
-app.filter('emoticons', function() {
-	return function(content) {
-		
-		var emoticonsPath = "static/img/emoticons/";
-		var emoticonsClass = "emoticon";
-
-		var emoticons = [
-			{
-				regexp: /:\)/,
-				title: ':)',
-				img: 'smile.png'
-			},
-			{
-				regexp: /:\(/,
-				title: ':(',
-				img: 'undecided.png'
-			},
-			{
-				regexp: /:D/,
-				title: ':D',
-				img: 'laugh.png'
-			},
-			{
-				regexp: /:P/,
-				title: ':P',
-				img: 'stickingout.png'
-			},
-			{
-				regexp: /8-\)/,
-				title: '8-)',
-				img: 'hot.png'
-			},
-			{
-				regexp: /\|-\(/,
-				title: '|-(',
-				img: 'ambivalent.png'
-			},
-			{
-				regexp: /:O/,
-				title: ':O',
-				img: 'largegasp.png'
-			},
-			{
-				regexp: /\(up\)/,
-				title: '(up)',
-				img: 'thumbsup.png'
-			},
-			{
-				regexp: /\(down\)/,
-				title: '(down)',
-				img: 'thumbsdown.png'
-			},
-			{
-				regexp: /:\@/,
-				title: ':@',
-				img: 'veryangry.png'
-			}
-		];
-		
-		//replace all emoticons with their images
-		emoticons.forEach(function (emoticon){
-			var regexp = new RegExp(emoticon.regexp, "ig");
-			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
-		});
-
-		return content;
-	};
-});
-app.filter('errors', function () {
-	return function (errorCode) {
-
-		var errors = {
-			invalid_login: 'Грешно име или парола',
-			empty_field: 'Празно поле',
-			invalid_int: 'Невалидно число',
-			invalid_date: 'Невалидна дата',
-			invalid_email: 'Невалиден имейл',
-			weak_password: 'Паролата не е над 6 символа или не съдържа поне едно число и буква',
-			no_match: 'Полетата не съвпадат',
-			username_in_use: 'Потребителското име е заето',
-			email_in_use: 'Имейлът е зает',
-			not_in_list: 'Невалидно поле',
-			invalid_captcha: 'Captcha-та не съвпада'
-		};
-		
-		if(angular.isUndefined(errors[errorCode])){
-			//max-\d+ rule
-			if(/exceeds_characters_(\d+)/.exec(errorCode)){
-				var results = /exceeds_characters_(\d+)/.exec(errorCode);
-				return 'Полето надвишава '+results[1]+' символа';
-			}
-			
-			//min-\d+ rule
-			if(/below_characters_(\d+)/.exec(errorCode)){
-				var results = /below_characters_(\d+)/.exec(errorCode);
-				return 'Полето е под '+results[1]+' символа';
-			}
-		}
-
-		return errors[errorCode];
-	};
-});
 app.controller('articleController', function($scope, $rootScope, $routeParams, $location, $sce, $q, $filter, ArticleService, ArticleCommentService, LoadingService, ValidationService) {
 	$scope.limit = 6;
 	$scope.offset = 0;
@@ -1030,6 +782,257 @@ app.controller('tabsController', function ($scope, $q, TabService, LoadingServic
 	
 
 });
+app.directive('article', function($filter, $location) {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/article.php',
+		replace: true,
+		scope: {
+		    articleData: '='
+		},
+		link: function(scope, element, attrs) {
+			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
+			var limit = 210 - scope.articleData.title.length;			
+			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
+			
+			/**
+			 * Redirects to the article page
+			 * @param {int} articleId
+			 */
+			scope.open = function (articleId){
+				$location.path('article/'+articleId);
+			};
+			
+		}
+	};
+});
+app.directive('clickableEmoticon', function() {
+	return {
+		restrict: 'C',
+		scope: {
+			model: '='
+		},
+		link: function(scope, element, attrs) {
+			element.on('click', function (){
+				if(angular.isUndefined(scope.model)){
+					scope.model = attrs.title;
+				} else {
+					scope.model =  scope.model + ' ' + attrs.title;
+				}
+				scope.$apply();
+			});
+		}
+	};
+});
+app.directive('pagination', function() {
+	return {
+		restrict: 'C',
+		templateUrl: 'app/views/directives/pagination.php',
+		replace: true,
+		scope: {
+			limit: '=',
+			offset: '=',
+			totalItems: '=',
+			range: '=',
+			callback: '&'
+		},
+		link: function(scope, element, attrs) {
+			
+			//initialize the pagination when scope.totalItems is set
+			scope.$watch('totalItems', function (){
+				if(angular.isDefined(scope.totalItems)){					
+					scope.currentPage = 1;
+					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
+					scope.generatePages();
+				}
+			});
+			
+			/**
+			 * Calculates the number of visible pages (it's a magic)
+			 */
+			scope.generatePages = function (){
+				scope.pages = [];
+				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
+					if ((i > 0) && (i <= scope.totalPages)) {
+						scope.pages.push(i);
+					}
+				}
+			};
+			
+			/**
+			 * Changes the current page
+			 * @param {int} page
+			 */
+			scope.goTo = function(page){
+				scope.currentPage = page;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the first page as current page
+			 */
+			scope.goToFirst = function (){
+				scope.currentPage = 1;
+				scope.generatePages();
+				scope.getPageData();
+				
+			};
+			
+			/**
+			 * Sets the last page as current page
+			 */
+			scope.goToLast = function (){
+				scope.currentPage = scope.totalPages;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the previous page as current page
+			 */
+			scope.goToPrevious = function (){
+				if(scope.currentPage > 1){
+					scope.currentPage = scope.currentPage - 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Sets the next page as current page
+			 */
+			scope.goToNext = function (){
+				if(scope.currentPage < scope.totalPages){
+					scope.currentPage = scope.currentPage + 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Calls the specified callback with the new offset
+			 */
+			scope.getPageData = function (){
+				scope.offset = (scope.currentPage - 1) * scope.limit;
+				scope.callback({limit: scope.limit, offset: scope.offset});
+			};
+			
+		}
+	};
+});
+app.directive('validation', function() {
+	return {
+		restrict: 'C',
+		link: function(scope, element, attrs) {
+			element.on('focus click keypress', function (){
+				element.closest('.field-box').removeClass('error');
+			});
+		}
+	};
+});
+app.filter('emoticons', function() {
+	return function(content) {
+		
+		var emoticonsPath = "static/img/emoticons/";
+		var emoticonsClass = "emoticon";
+
+		var emoticons = [
+			{
+				regexp: /:\)/,
+				title: ':)',
+				img: 'smile.png'
+			},
+			{
+				regexp: /:\(/,
+				title: ':(',
+				img: 'undecided.png'
+			},
+			{
+				regexp: /:D/,
+				title: ':D',
+				img: 'laugh.png'
+			},
+			{
+				regexp: /:P/,
+				title: ':P',
+				img: 'stickingout.png'
+			},
+			{
+				regexp: /8-\)/,
+				title: '8-)',
+				img: 'hot.png'
+			},
+			{
+				regexp: /\|-\(/,
+				title: '|-(',
+				img: 'ambivalent.png'
+			},
+			{
+				regexp: /:O/,
+				title: ':O',
+				img: 'largegasp.png'
+			},
+			{
+				regexp: /\(up\)/,
+				title: '(up)',
+				img: 'thumbsup.png'
+			},
+			{
+				regexp: /\(down\)/,
+				title: '(down)',
+				img: 'thumbsdown.png'
+			},
+			{
+				regexp: /:\@/,
+				title: ':@',
+				img: 'veryangry.png'
+			}
+		];
+		
+		//replace all emoticons with their images
+		emoticons.forEach(function (emoticon){
+			var regexp = new RegExp(emoticon.regexp, "ig");
+			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
+		});
+
+		return content;
+	};
+});
+app.filter('errors', function () {
+	return function (errorCode) {
+
+		var errors = {
+			invalid_login: 'Грешно име или парола',
+			empty_field: 'Празно поле',
+			invalid_int: 'Невалидно число',
+			invalid_date: 'Невалидна дата',
+			invalid_email: 'Невалиден имейл',
+			weak_password: 'Паролата не е над 6 символа или не съдържа поне едно число и буква',
+			no_match: 'Полетата не съвпадат',
+			username_in_use: 'Потребителското име е заето',
+			email_in_use: 'Имейлът е зает',
+			not_in_list: 'Невалидно поле',
+			invalid_captcha: 'Captcha-та не съвпада'
+		};
+		
+		if(angular.isUndefined(errors[errorCode])){
+			//max-\d+ rule
+			if(/exceeds_characters_(\d+)/.exec(errorCode)){
+				var results = /exceeds_characters_(\d+)/.exec(errorCode);
+				return 'Полето надвишава '+results[1]+' символа';
+			}
+			
+			//min-\d+ rule
+			if(/below_characters_(\d+)/.exec(errorCode)){
+				var results = /below_characters_(\d+)/.exec(errorCode);
+				return 'Полето е под '+results[1]+' символа';
+			}
+		}
+
+		return errors[errorCode];
+	};
+});
 app.factory('LoadingService', function() {
 	
 	var contentElement = '#view-wrapper';
@@ -1071,8 +1074,12 @@ app.factory('LoadingService', function() {
 		 * Hides the loading placeholder and shows the ng-view content
 		 */
 		doneLoading: function() {
-			this.hideLoadingPlaceholder();
-			this.showContent();
+			var self = this;
+			
+			setTimeout(function (){
+				self.hideLoadingPlaceholder();
+				self.showContent();
+			}, 300);
 		}
 	};
 });
