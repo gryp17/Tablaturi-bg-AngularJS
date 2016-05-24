@@ -777,6 +777,10 @@ app.controller('tabsController', function ($scope, $q, TabService, LoadingServic
 	]).then(function (responses){
 		console.log(responses);
 		
+		$scope.mostPopular = responses[0].data.data;
+		$scope.mostLiked = responses[1].data.data;
+		$scope.mostRecent = responses[2].data.data;
+		$scope.mostCommented = responses[3].data.data;
 		LoadingService.doneLoading();
 	});
 	

@@ -1,0 +1,80 @@
+> .top-tabs {
+	text-align: center;
+	
+	.top-table {
+		display: inline-block;
+		width: 47%;
+		margin-left: 8px;
+		margin-right: 8px;
+		border: 1px solid #ccc;
+		
+		&:nth-child(3), &:nth-child(4) {
+			margin-top: 20px;
+		}
+		
+		.header {
+			position: relative;
+			min-height: 70px;
+			line-height: 70px;
+			text-align: center;
+			font-size: 18px;
+			
+			img {
+				position: absolute;
+				left: 0;
+				width: 70px;
+			}
+		}
+		
+		hr {
+			width: 90%;
+			margin: auto;
+			margin-top: 5px;
+		}
+		
+		table {
+			margin-bottom: 0;
+			
+			thead {
+				td {
+					font-weight: 600;
+				}
+			}
+			
+			td {
+				height: 55px;
+				padding: 0 10px;
+				text-align: left;
+				vertical-align: middle;
+				
+				a {
+					text-decoration: none;
+					
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+			}
+			
+			.visits {
+				width: 80px;
+				text-align: center;
+			}
+			
+			.rating {
+				width: 110px;
+				text-align: center;
+			}
+			
+			.date {
+				width: 70px;
+				text-align: center;
+			}
+			
+			.comments {
+				width: 100px;
+				text-align: center;
+			}
+		}
+	}
+}
