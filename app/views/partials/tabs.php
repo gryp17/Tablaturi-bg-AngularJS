@@ -47,7 +47,10 @@
 			<tbody>
 				<tr ng-repeat="tab in mostLiked">
 					<td><a class="red-link" href="#tab/{{tab.ID}}">{{tab.band}} - {{tab.song}}</a></td>
-					<td class="rating">{{tab.rating}}</td>
+					<td class="rating">
+						<span ng-repeat="star in calculateStars(tab.rating) track by $index" 
+							  ng-class="{'star': star === 1, 'empty-star': star === 0}"></span>
+					</td>
 				</tr>
 			</tbody>
 		</table>
