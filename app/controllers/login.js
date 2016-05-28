@@ -1,12 +1,19 @@
-app.controller('loginController', function($scope, $rootScope, $window, UserService, ValidationService) {
+app.controller('loginController', function($scope, $rootScope, $window, $route, UserService, ValidationService) {
 	$scope.loginData = {};
 	
+	/**
+	 * Callback function that is called when a key is pressed in the login inputs
+	 * @param {Object} $event
+	 */
 	$scope.handleKeyPress = function ($event){
 		if ($event.which === 13){
 			$scope.login();
 		}
 	};
 	
+	/**
+	 * Callback function that is called when the login button is pressed
+	 */
 	$scope.login = function (){
 		UserService.login($scope.loginData).success(function (result){
 			if(result.status === 0){
@@ -18,6 +25,13 @@ app.controller('loginController', function($scope, $rootScope, $window, UserServ
 				//$window.location.reload();
 				$rootScope.loggedInUser = result.data;
 				$('#login-modal').modal('hide');
+				
+				//if the user has logged in successfully and is on the "/forbidden" route redirect to the last route
+				if($route.current){
+					if($route.current.$$route.originalPath === "/forbidden"){
+						$window.history.back();
+					}
+				}
 			}
 		});
 	};

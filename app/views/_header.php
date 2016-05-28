@@ -33,12 +33,12 @@
 			</a>
 		</div>
 
-		<div ng-if="!loggedInUser" class="authentication">
+		<div ng-if="!loggedInUser && !authInProgress" class="authentication">
 			<a data-toggle="modal" href="#signup-modal" target="_self">Регистрация</a>
 			<input class="btn btn-red" type="button" value="Вход" data-toggle="modal" data-target="#login-modal"/>
 		</div>
 		
-		<div ng-if="loggedInUser" class="welcome-panel">
+		<div ng-if="loggedInUser && !authInProgress" class="welcome-panel">
 			Добре
 			<span ng-if="loggedInUser.gender === 'M'">дошъл</span>
 			<span ng-if="loggedInUser.gender === 'F'">дошла</span>

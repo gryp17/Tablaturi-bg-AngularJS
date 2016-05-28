@@ -364,10 +364,12 @@ H=h("script,style"),t=e.extend({},z,q,k,u),y=h("background,cite,href,longdesc,sr
 var app = angular.module('tablaturi-bg', ['ngRoute', 'ngSanitize']);
 
 /**
- * Checks if the user is logged in
+ * Checks if the user is logged in.
+ * Redirects to the /forbidden page if the user is not logged in
  */
 function checkAuth ($rootScope, $q, $location, UserService) {
 	var deferred = $q.defer();
+	$rootScope.authInProgress = true;
 
 	UserService.isLoggedIn().then(function(result) {
 		if (result.data.data.logged_in === true) {
@@ -378,6 +380,29 @@ function checkAuth ($rootScope, $q, $location, UserService) {
 			$location.path('/forbidden');
 			deferred.reject();
 		}
+		
+		$rootScope.authInProgress = false;
+	});
+
+	return deferred.promise;
+}
+
+/**
+ * Updates the user login status
+ */
+function updateAuth ($rootScope, $q, $location, UserService){
+	var deferred = $q.defer();
+	$rootScope.authInProgress = true;
+
+	UserService.isLoggedIn().then(function(result) {
+		if (result.data.data.logged_in === true) {
+			$rootScope.loggedInUser = result.data.data.user;
+		} else {
+			$rootScope.loggedInUser = undefined;
+		}
+		
+		$rootScope.authInProgress = false;
+		deferred.resolve(true);
 	});
 
 	return deferred.promise;
@@ -387,13 +412,22 @@ app.config(['$routeProvider', function($routeProvider) {
 
 		$routeProvider.when('/home', {
 			templateUrl: 'app/views/partials/home.php',
-			controller: 'homeController'
+			controller: 'homeController',
+			resolve: {
+				factory: updateAuth
+            }
 		}).when('/articles', {
 			templateUrl: 'app/views/partials/articles.php',
-			controller: 'articlesController'
+			controller: 'articlesController',
+			resolve: {
+				factory: updateAuth
+            }
 		}).when('/article/:id', {
 			templateUrl: 'app/views/partials/article.php',
-			controller: 'articleController'
+			controller: 'articleController',
+			resolve: {
+				factory: updateAuth
+            }
 		}).when('/profile/:id', {
 			templateUrl: 'app/views/partials/profile.php',
 			controller: 'profileController',
@@ -402,21 +436,42 @@ app.config(['$routeProvider', function($routeProvider) {
             }
 		}).when('/tabs', {
 			templateUrl: 'app/views/partials/tabs.php',
-			controller: 'tabsController'
+			controller: 'tabsController',
+			resolve: {
+				factory: updateAuth
+            }
 		}).when('/guitar-pro', {
-			templateUrl: 'app/views/partials/guitar-pro.php'
+			templateUrl: 'app/views/partials/guitar-pro.php',
+			resolve: {
+				factory: updateAuth
+            }
 		}).when('/usefull', {
-			templateUrl: 'app/views/partials/usefull.php'
+			templateUrl: 'app/views/partials/usefull.php',
+			resolve: {
+				factory: updateAuth
+            }
 		}).when('/contact-us', {
 			templateUrl: 'app/views/partials/contact-us.php',
-			controller: 'contactusController'
+			controller: 'contactusController',
+			resolve: {
+				factory: updateAuth
+            }
 		}).when('/copyright', {
-			templateUrl: 'app/views/partials/copyright.php'
+			templateUrl: 'app/views/partials/copyright.php',
+			resolve: {
+				factory: updateAuth
+            }
 		}).when('/forbidden', {
-			templateUrl: 'app/views/partials/forbidden.php'
+			templateUrl: 'app/views/partials/forbidden.php',
+			resolve: {
+				factory: updateAuth
+            }
 		}).otherwise({
 			templateUrl: 'app/views/partials/home.php',
-			controller: 'homeController'
+			controller: 'homeController',
+			resolve: {
+				factory: updateAuth
+            }
 		});
 	}]);
 
@@ -639,15 +694,22 @@ app.controller('layoutController', function($scope, $rootScope, $location, TabSe
 	
 	
 });
-app.controller('loginController', function($scope, $rootScope, $window, UserService, ValidationService) {
+app.controller('loginController', function($scope, $rootScope, $window, $route, UserService, ValidationService) {
 	$scope.loginData = {};
 	
+	/**
+	 * Callback function that is called when a key is pressed in the login inputs
+	 * @param {Object} $event
+	 */
 	$scope.handleKeyPress = function ($event){
 		if ($event.which === 13){
 			$scope.login();
 		}
 	};
 	
+	/**
+	 * Callback function that is called when the login button is pressed
+	 */
 	$scope.login = function (){
 		UserService.login($scope.loginData).success(function (result){
 			if(result.status === 0){
@@ -659,6 +721,13 @@ app.controller('loginController', function($scope, $rootScope, $window, UserServ
 				//$window.location.reload();
 				$rootScope.loggedInUser = result.data;
 				$('#login-modal').modal('hide');
+				
+				//if the user has logged in successfully and is on the "/forbidden" route redirect to the last route
+				if($route.current){
+					if($route.current.$$route.originalPath === "/forbidden"){
+						$window.history.back();
+					}
+				}
 			}
 		});
 	};
