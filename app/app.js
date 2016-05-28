@@ -6,7 +6,7 @@ var app = angular.module('tablaturi-bg', ['ngRoute', 'ngSanitize']);
  * Checks if the user is logged in.
  * Redirects to the /forbidden page if the user is not logged in
  */
-function checkAuth ($rootScope, $q, $location, UserService) {
+function authRequired ($rootScope, $q, $location, UserService) {
 	var deferred = $q.defer();
 	$rootScope.authInProgress = true;
 
@@ -29,7 +29,7 @@ function checkAuth ($rootScope, $q, $location, UserService) {
 /**
  * Updates the user login status
  */
-function updateAuth ($rootScope, $q, $location, UserService){
+function updateAuthStatus ($rootScope, $q, UserService){
 	var deferred = $q.defer();
 	$rootScope.authInProgress = true;
 
@@ -53,70 +53,70 @@ app.config(['$routeProvider', function($routeProvider) {
 			templateUrl: 'app/views/partials/home.php',
 			controller: 'homeController',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).when('/articles', {
 			templateUrl: 'app/views/partials/articles.php',
 			controller: 'articlesController',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).when('/article/:id', {
 			templateUrl: 'app/views/partials/article.php',
 			controller: 'articleController',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).when('/profile/:id', {
 			templateUrl: 'app/views/partials/profile.php',
 			controller: 'profileController',
 			resolve: {
-				factory: checkAuth
+				factory: authRequired
             }
 		}).when('/tabs', {
 			templateUrl: 'app/views/partials/tabs.php',
 			controller: 'tabsController',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).when('/usefull', {
 			templateUrl: 'app/views/partials/usefull.php',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).when('/contact-us', {
 			templateUrl: 'app/views/partials/contact-us.php',
 			controller: 'contactusController',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).when('/copyright', {
 			templateUrl: 'app/views/partials/copyright.php',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).when('/forbidden', {
 			templateUrl: 'app/views/partials/forbidden.php',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		}).otherwise({
 			templateUrl: 'app/views/partials/home.php',
 			controller: 'homeController',
 			resolve: {
-				factory: updateAuth
+				factory: updateAuthStatus
             }
 		});
 	}]);
 
 
 app.run(function($rootScope, LoadingService) {
-
+	
 	$rootScope.$on('$routeChangeStart', function(event, next, current) {
 
 		//static pages that don't need loading indicator

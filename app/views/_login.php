@@ -17,7 +17,7 @@
 				
 				<div class="row">
 					<div class="col-xs-6">
-						<input type="checkbox" id="remember-me" name="remember-me"/>
+						<input type="checkbox" id="remember-me" name="remember-me" ng-model="loginData.login_remember_me"/>
 						<label for="remember-me">
 							Запомни ме
 						</label>

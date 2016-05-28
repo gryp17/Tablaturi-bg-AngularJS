@@ -27,7 +27,7 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 				$('#login-modal').modal('hide');
 				
 				//if the user has logged in successfully and is on the "/forbidden" route redirect to the last route
-				if($route.current){
+				if($route.current && $route.current.$$route){
 					if($route.current.$$route.originalPath === "/forbidden"){
 						$window.history.back();
 					}

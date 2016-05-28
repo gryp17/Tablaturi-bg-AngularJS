@@ -13,7 +13,8 @@ class User extends Controller {
 	public $required_params = array(
 		'login' => array(
 			'login_username' => 'required',
-			'login_password' => 'required'
+			'login_password' => 'required',
+			'login_remember_me' => 'in[1;0;]' //(1 or 0 or empty space) boolean?
 		),
 		'signup' => array(
 			'signup_username' => 'min-6, max-20, valid-characters, unique[username]',
@@ -40,10 +41,20 @@ class User extends Controller {
 
 			$user_model = $this->load_model('User_model');
 			$data = $user_model->checkLogin($params['login_username'], $params['login_password']);
-
+			
 			if ($data === false) {
 				$this->sendResponse(0, array('field' => 'login_password', 'error_code' => 'invalid_login'));
 			} else {
+				
+				//if the remember me option is set to true - keep the user session for 90 days	
+				if(isset($params['login_remember_me']) && $params['login_remember_me']){
+					setcookie(session_name(), session_id(), strtotime( '+90 days' ), '/');
+				}
+				//otherwise keep until the browser is closed (default)
+				else{
+					setcookie(session_name(), session_id(), 0, '/');
+				}
+				
 				$_SESSION['user'] = $data;
 				$this->sendResponse(1, $data);
 			}
@@ -58,8 +69,6 @@ class User extends Controller {
 	public function logout() {
 		$required_role = Controller::PUBLIC_ACCESS;
 		if ($this->checkPermission($required_role) == true) {
-
-			$params = $this->getRequestParams();
 			session_destroy();
 			unset($_SESSION['user']);
 			$this->sendResponse(1, true);
