@@ -79,6 +79,12 @@ app.config(['$routeProvider', function($routeProvider) {
 			resolve: {
 				factory: updateAuthStatus
             }
+		}).when('/search/:type/:band?/:song?', {
+			templateUrl: 'app/views/partials/search.php',
+			controller: 'searchController',
+			resolve: {
+				factory: updateAuthStatus
+            }
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php',
 			resolve: {

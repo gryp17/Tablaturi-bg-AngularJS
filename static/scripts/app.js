@@ -445,6 +445,12 @@ app.config(['$routeProvider', function($routeProvider) {
 			resolve: {
 				factory: updateAuthStatus
             }
+		}).when('/search/:type/:band?/:song?', {
+			templateUrl: 'app/views/partials/search.php',
+			controller: 'searchController',
+			resolve: {
+				factory: updateAuthStatus
+            }
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php',
 			resolve: {
@@ -509,6 +515,395 @@ app.run(function($rootScope, LoadingService) {
 
 });
 
+app.controller('articleController', function($scope, $rootScope, $routeParams, $location, $sce, $q, $filter, ArticleService, ArticleCommentService, LoadingService, ValidationService) {
+	$scope.limit = 6;
+	$scope.offset = 0;
+
+	if(angular.isUndefined($routeParams.id)){
+		$location.path('/');
+	} else {
+		$scope.articleId = $routeParams.id;
+	}
+	
+	/**
+	 * Add new comment
+	 */
+	$scope.addComment = function(){
+		ArticleCommentService.addArticleComment($scope.articleId, $scope.commentContent).success(function(result) {
+			if(result.status === 0){
+				if(result.error){
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			}else{
+				$scope.commentContent = '';
+				$scope.getArticleComments(6, 0);
+				
+				//scroll to the latest comment
+				var offset = $(".comments-wrapper").offset().top;
+				$("html, body").animate({scrollTop: offset}, 500);
+			}
+		});
+	};
+	
+	/**
+	 * Fetches the article comments and renders them in the page
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
+	$scope.getArticleComments = function(limit, offset) {
+		$q.all([
+			ArticleCommentService.getArticleComments($scope.articleId, limit, offset),
+			ArticleCommentService.getTotalArticleComments($scope.articleId)
+		]).then(function (result){
+			$scope.articleComments = result[0].data.data;
+			$scope.totalArticleComments = result[1].data.data;
+		});
+	};
+
+	$q.all([
+		ArticleService.getArticle($scope.articleId),
+		ArticleCommentService.getArticleComments($scope.articleId, $scope.limit, $scope.offset),
+		ArticleCommentService.getTotalArticleComments($scope.articleId)
+	]).then(function (result){
+		
+		if(angular.isUndefined(result[0].data.data)){
+			$location.path('/');
+		}else{
+			//article content
+			$scope.article = result[0].data.data;
+			$scope.article.content = $scope.article.content.replace(/(\r\n|\r|\n)/g, '<br/>');
+			$scope.article.content = $filter('emoticons')($scope.article.content);
+			$scope.article.content = $sce.trustAsHtml($scope.article.content);
+			
+			//article share id
+			$scope.$parent.shareId = $scope.article.ID;
+			
+			//article comments
+			$scope.articleComments = result[1].data.data;
+			
+			//total number of article comments
+			$scope.totalArticleComments = result[2].data.data;
+
+			LoadingService.doneLoading();
+		}
+	});
+	
+	
+	
+});
+app.controller('articlesController', function ($scope, ArticleService, LoadingService) {
+
+	$scope.limit = 6;
+	$scope.offset = 0;
+	$scope.articles = [];
+
+	/**
+	 * Loads the articles from the database
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
+	$scope.loadArticles = function (limit, offset) {
+		ArticleService.getArticles(limit, offset).success(function (result) {
+			console.log(result.data);
+			if (result.error) {
+				console.log(result.error);
+			} else {
+				LoadingService.doneLoading();
+				$scope.articles = $scope.articles.concat(result.data);
+				
+				//hide the load more button if there are no more articles
+				if(result.data.length < $scope.limit){
+					$scope.noMoreArticles = true;
+				}
+			}
+		});
+	};
+	
+	$scope.loadArticles($scope.limit, $scope.offset);
+
+});
+app.controller('contactusController', function($scope, MiscService, UserService, ValidationService) {
+	
+	$scope.formData = {};
+	
+	$scope.sendEmailSuccess = false;
+
+	/**
+	 * Generates new captcha image
+	 */
+	$scope.generateCaptcha = function() {
+		MiscService.generateCaptcha().success(function(result) {
+			$scope.captchaImage = result.data;
+		});
+	};
+	
+	/**
+	 * Generate new captcha when signup modal closes
+	 */
+	$('#signup-modal').on('hide.bs.modal', function() {
+		$scope.generateCaptcha();
+	});
+	
+	$scope.generateCaptcha();
+	
+	/**
+	 * Sends the message to the backend
+	 */
+	$scope.sendEmail = function(){
+		MiscService.contactUs($scope.formData).success(function (result){
+			if (result.status === 0) {
+				if (result.error) {
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			} else {
+				$scope.sendEmailSuccess = true;
+			}
+		});
+	};
+	
+
+});
+app.controller('homeController', function($scope, ArticleService, LoadingService) {
+
+	ArticleService.getArticles(6, 0).success(function(result) {
+		if (result.error) {
+			console.log(result.error);
+		} else {
+			LoadingService.doneLoading();
+
+			$scope.articles = result.data;
+		}
+	});
+
+});
+app.controller('layoutController', function($scope, $rootScope, $location, TabService, UserService) {
+	$scope.searchParams = {
+		type: 'all'
+	};
+	
+	$scope.currentYear = (new Date()).getFullYear();
+	
+	TabService.getTabsCount().success(function (result){
+		if(result.error) {
+			console.log(result.error);
+		} else {
+			$scope.stats = result.data;
+		}	
+	});
+	
+	/**
+	 * Callback function that is called when the logout button is pressed.
+	 * Unsets the loggedInUser and redirects to the home page
+	 */
+	$scope.logout = function (){
+		UserService.logout().success(function (result){
+			if(result.data){
+				$rootScope.loggedInUser = undefined;
+				$location.path('/');
+			}
+		});
+	};
+	
+	/**
+	 * Callback function that is called when the search button is pressed
+	 * It redirects to the search page
+	 */
+	$scope.search = function (){
+		$location.path('/search/'+$scope.searchParams.type+'/'+$scope.searchParams.band+'/'+$scope.searchParams.song);
+	};
+		
+});
+app.controller('loginController', function($scope, $rootScope, $window, $route, UserService, ValidationService) {
+	$scope.loginData = {};
+	
+	/**
+	 * Callback function that is called when a key is pressed in the login inputs
+	 * @param {Object} $event
+	 */
+	$scope.handleKeyPress = function ($event){
+		if ($event.which === 13){
+			$scope.login();
+		}
+	};
+	
+	/**
+	 * Callback function that is called when the login button is pressed
+	 */
+	$scope.login = function (){
+		UserService.login($scope.loginData).success(function (result){
+			if(result.status === 0){
+				if(result.error){
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			}else{
+				//$window.location.reload();
+				$rootScope.loggedInUser = result.data;
+				$('#login-modal').modal('hide');
+				
+				//if the user has logged in successfully and is on the "/forbidden" route redirect to the last route
+				if($route.current && $route.current.$$route){
+					if($route.current.$$route.originalPath === "/forbidden"){
+						$window.history.back();
+					}
+				}
+			}
+		});
+	};
+	
+});
+app.controller('profileController', function ($scope, $routeParams, $location, $q, UserService, LoadingService) {
+
+	console.log("profile controller");
+
+	$q.all([
+		UserService.getUser($routeParams.id),
+	]).then(function (responses){
+
+		if(angular.isDefined(responses[0].data.data)){
+			$scope.userData = responses[0].data.data;
+			console.log($scope.userData);
+		}else{
+			$location.path('/');
+		}
+		
+		LoadingService.doneLoading();
+	});
+
+});
+app.controller('searchController', function ($scope, $routeParams, $location, LoadingService) {
+
+	$scope.search = $routeParams;
+	
+	LoadingService.doneLoading();
+
+});
+app.controller('signupController', function($scope, UserService, MiscService, ValidationService) {
+	$scope.userData = {
+		signup_gender: 'M'
+	};
+
+	$scope.signupSuccess = false;
+
+	/**
+	 * Generates new captcha image
+	 */
+	$scope.generateCaptcha = function() {
+		MiscService.generateCaptcha().success(function(result) {
+			$scope.captchaImage = result.data;
+		});
+	};
+
+	/**
+	 * Sends all the userData to the backend
+	 */
+	$scope.signup = function() {
+		UserService.signup($scope.userData).success(function(result) {
+			if (result.status === 0) {
+				if (result.error) {
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			} else {
+				$scope.signupSuccess = true;
+			}
+		});
+	};
+
+	/**
+	 * Resets the form
+	 * @returns {undefined}
+	 */
+	$scope.resetForm = function() {
+		$scope.userData = {
+			signup_gender: 'M'
+		};
+		
+		$scope.signupSuccess = false;
+		
+		$('#signup-modal .field-box').removeClass('error');
+		$('#signup-modal .error-msg').html('');
+	};
+	
+	/**
+	 * On modal close reset the form
+	 */
+	$('#signup-modal').on('hidden.bs.modal', function (){
+		$scope.resetForm();
+		$scope.$apply();
+	});
+	
+	/**
+	 * Generate new captcha when signup modal shows
+	 */	
+	$('#signup-modal').on('shown.bs.modal', function() {
+		$scope.generateCaptcha();
+	});
+
+	$('#signup-datepicker').datepicker({
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1940:' + new Date().getFullYear(),
+		maxDate: '-1D',
+		monthNamesShort: ['Януари', 'Февруари', 'Март', 'Април', 'Май', 'Юни', 'Юли', 'Август', 'Септември', 'Октомври', 'Ноември', 'Декември'],
+		dayNamesMin: ['Нед', 'Пон', 'Вт', 'Ср ', 'Чет', 'Пет', 'Съб'],
+		firstDay: 1,
+		dateFormat: 'yy-mm-dd'
+	});
+
+	//jquery-ui/bootstrap datepicker hack
+	var enforceModalFocusFn = $.fn.modal.Constructor.prototype.enforceFocus;
+	$.fn.modal.Constructor.prototype.enforceFocus = function() {
+	};
+	$('#signup-modal').on('hidden', function() {
+		$.fn.modal.Constructor.prototype.enforceFocus = enforceModalFocusFn;
+	});
+	//$('#signup-modal').modal({ backdrop : false });
+
+});
+app.controller('tabsController', function ($scope, $q, TabService, LoadingService) {
+	var limit = 5;
+	
+	$q.all([
+		TabService.getMost('popular', limit),
+		TabService.getMost('liked', limit),
+		TabService.getMost('latest', limit),
+		TabService.getMost('commented', limit)
+	]).then(function (responses){
+		
+		$scope.mostPopular = responses[0].data.data;
+		$scope.mostLiked = responses[1].data.data;
+		$scope.mostRecent = responses[2].data.data;
+		$scope.mostCommented = responses[3].data.data;
+		
+		LoadingService.doneLoading();
+	});
+	
+	
+	
+	/**
+	 * Generates an array of integers based on the tab rating
+	 * @param {int} rating
+	 * @returns {Array}
+	 */
+	$scope.calculateStars = function (rating){
+		var result = [];
+		var stars = Math.floor(rating);
+		
+		for(var i = 1; i <= 5; i++){
+			if(i <= stars){
+				result.push(1);
+			}else{
+				result.push(0);
+			}
+		}
+		
+		return result;
+	};
+
+});
 app.directive('article', function($filter, $location) {
 	return {
 		restrict: 'A',
@@ -759,378 +1154,6 @@ app.filter('errors', function () {
 
 		return errors[errorCode];
 	};
-});
-app.controller('articleController', function($scope, $rootScope, $routeParams, $location, $sce, $q, $filter, ArticleService, ArticleCommentService, LoadingService, ValidationService) {
-	$scope.limit = 6;
-	$scope.offset = 0;
-
-	if(angular.isUndefined($routeParams.id)){
-		$location.path('/');
-	} else {
-		$scope.articleId = $routeParams.id;
-	}
-	
-	/**
-	 * Add new comment
-	 */
-	$scope.addComment = function(){
-		ArticleCommentService.addArticleComment($scope.articleId, $scope.commentContent).success(function(result) {
-			if(result.status === 0){
-				if(result.error){
-					//show the error
-					ValidationService.showError(result.error.field, result.error.error_code);
-				}
-			}else{
-				$scope.commentContent = '';
-				$scope.getArticleComments(6, 0);
-				
-				//scroll to the latest comment
-				var offset = $(".comments-wrapper").offset().top;
-				$("html, body").animate({scrollTop: offset}, 500);
-			}
-		});
-	};
-	
-	/**
-	 * Fetches the article comments and renders them in the page
-	 * @param {int} limit
-	 * @param {int} offset
-	 */
-	$scope.getArticleComments = function(limit, offset) {
-		$q.all([
-			ArticleCommentService.getArticleComments($scope.articleId, limit, offset),
-			ArticleCommentService.getTotalArticleComments($scope.articleId)
-		]).then(function (result){
-			$scope.articleComments = result[0].data.data;
-			$scope.totalArticleComments = result[1].data.data;
-		});
-	};
-
-	$q.all([
-		ArticleService.getArticle($scope.articleId),
-		ArticleCommentService.getArticleComments($scope.articleId, $scope.limit, $scope.offset),
-		ArticleCommentService.getTotalArticleComments($scope.articleId)
-	]).then(function (result){
-		
-		if(angular.isUndefined(result[0].data.data)){
-			$location.path('/');
-		}else{
-			//article content
-			$scope.article = result[0].data.data;
-			$scope.article.content = $scope.article.content.replace(/(\r\n|\r|\n)/g, '<br/>');
-			$scope.article.content = $filter('emoticons')($scope.article.content);
-			$scope.article.content = $sce.trustAsHtml($scope.article.content);
-			
-			//article share id
-			$scope.$parent.shareId = $scope.article.ID;
-			
-			//article comments
-			$scope.articleComments = result[1].data.data;
-			
-			//total number of article comments
-			$scope.totalArticleComments = result[2].data.data;
-
-			LoadingService.doneLoading();
-		}
-	});
-	
-	
-	
-});
-app.controller('articlesController', function ($scope, ArticleService, LoadingService) {
-
-	$scope.limit = 6;
-	$scope.offset = 0;
-	$scope.articles = [];
-
-	/**
-	 * Loads the articles from the database
-	 * @param {int} limit
-	 * @param {int} offset
-	 */
-	$scope.loadArticles = function (limit, offset) {
-		ArticleService.getArticles(limit, offset).success(function (result) {
-			console.log(result.data);
-			if (result.error) {
-				console.log(result.error);
-			} else {
-				LoadingService.doneLoading();
-				$scope.articles = $scope.articles.concat(result.data);
-				
-				//hide the load more button if there are no more articles
-				if(result.data.length < $scope.limit){
-					$scope.noMoreArticles = true;
-				}
-			}
-		});
-	};
-	
-	$scope.loadArticles($scope.limit, $scope.offset);
-
-});
-app.controller('contactusController', function($scope, MiscService, UserService, ValidationService) {
-	
-	$scope.formData = {};
-	
-	$scope.sendEmailSuccess = false;
-
-	/**
-	 * Generates new captcha image
-	 */
-	$scope.generateCaptcha = function() {
-		MiscService.generateCaptcha().success(function(result) {
-			$scope.captchaImage = result.data;
-		});
-	};
-	
-	/**
-	 * Generate new captcha when signup modal closes
-	 */
-	$('#signup-modal').on('hide.bs.modal', function() {
-		$scope.generateCaptcha();
-	});
-	
-	$scope.generateCaptcha();
-	
-	/**
-	 * Sends the message to the backend
-	 */
-	$scope.sendEmail = function(){
-		MiscService.contactUs($scope.formData).success(function (result){
-			if (result.status === 0) {
-				if (result.error) {
-					//show the error
-					ValidationService.showError(result.error.field, result.error.error_code);
-				}
-			} else {
-				$scope.sendEmailSuccess = true;
-			}
-		});
-	};
-	
-
-});
-app.controller('homeController', function($scope, ArticleService, LoadingService) {
-
-	ArticleService.getArticles(6, 0).success(function(result) {
-		if (result.error) {
-			console.log(result.error);
-		} else {
-			LoadingService.doneLoading();
-
-			$scope.articles = result.data;
-		}
-	});
-
-});
-app.controller('layoutController', function($scope, $rootScope, $location, TabService, UserService) {
-	
-	$scope.currentYear = (new Date()).getFullYear();
-	
-	TabService.getTabsCount().success(function (result){
-		if(result.error) {
-			console.log(result.error);
-		} else {
-			$scope.stats = result.data;
-		}	
-	});
-	
-	/**
-	 * Callback function that is called when the logout button is pressed.
-	 * Unsets the loggedInUser and redirects to the home page
-	 */
-	$scope.logout = function (){
-		UserService.logout().success(function (result){
-			if(result.data){
-				$rootScope.loggedInUser = undefined;
-				$location.path('/');
-			}
-		});
-	};
-	
-	
-});
-app.controller('loginController', function($scope, $rootScope, $window, $route, UserService, ValidationService) {
-	$scope.loginData = {};
-	
-	/**
-	 * Callback function that is called when a key is pressed in the login inputs
-	 * @param {Object} $event
-	 */
-	$scope.handleKeyPress = function ($event){
-		if ($event.which === 13){
-			$scope.login();
-		}
-	};
-	
-	/**
-	 * Callback function that is called when the login button is pressed
-	 */
-	$scope.login = function (){
-		UserService.login($scope.loginData).success(function (result){
-			if(result.status === 0){
-				if(result.error){
-					//show the error
-					ValidationService.showError(result.error.field, result.error.error_code);
-				}
-			}else{
-				//$window.location.reload();
-				$rootScope.loggedInUser = result.data;
-				$('#login-modal').modal('hide');
-				
-				//if the user has logged in successfully and is on the "/forbidden" route redirect to the last route
-				if($route.current && $route.current.$$route){
-					if($route.current.$$route.originalPath === "/forbidden"){
-						$window.history.back();
-					}
-				}
-			}
-		});
-	};
-	
-});
-app.controller('profileController', function ($scope, $routeParams, $location, $q, UserService, LoadingService) {
-
-	console.log("profile controller");
-
-	$q.all([
-		UserService.getUser($routeParams.id),
-	]).then(function (responses){
-
-		if(angular.isDefined(responses[0].data.data)){
-			$scope.userData = responses[0].data.data;
-			console.log($scope.userData);
-		}else{
-			$location.path('/');
-		}
-		
-		LoadingService.doneLoading();
-	});
-
-});
-app.controller('signupController', function($scope, UserService, MiscService, ValidationService) {
-	$scope.userData = {
-		signup_gender: 'M'
-	};
-
-	$scope.signupSuccess = false;
-
-	/**
-	 * Generates new captcha image
-	 */
-	$scope.generateCaptcha = function() {
-		MiscService.generateCaptcha().success(function(result) {
-			$scope.captchaImage = result.data;
-		});
-	};
-
-	/**
-	 * Sends all the userData to the backend
-	 */
-	$scope.signup = function() {
-		UserService.signup($scope.userData).success(function(result) {
-			if (result.status === 0) {
-				if (result.error) {
-					//show the error
-					ValidationService.showError(result.error.field, result.error.error_code);
-				}
-			} else {
-				$scope.signupSuccess = true;
-			}
-		});
-	};
-
-	/**
-	 * Resets the form
-	 * @returns {undefined}
-	 */
-	$scope.resetForm = function() {
-		$scope.userData = {
-			signup_gender: 'M'
-		};
-		
-		$scope.signupSuccess = false;
-		
-		$('#signup-modal .field-box').removeClass('error');
-		$('#signup-modal .error-msg').html('');
-	};
-	
-	/**
-	 * On modal close reset the form
-	 */
-	$('#signup-modal').on('hidden.bs.modal', function (){
-		$scope.resetForm();
-		$scope.$apply();
-	});
-	
-	/**
-	 * Generate new captcha when signup modal shows
-	 */	
-	$('#signup-modal').on('shown.bs.modal', function() {
-		$scope.generateCaptcha();
-	});
-
-	$('#signup-datepicker').datepicker({
-		changeMonth: true,
-		changeYear: true,
-		yearRange: '1940:' + new Date().getFullYear(),
-		maxDate: '-1D',
-		monthNamesShort: ['Януари', 'Февруари', 'Март', 'Април', 'Май', 'Юни', 'Юли', 'Август', 'Септември', 'Октомври', 'Ноември', 'Декември'],
-		dayNamesMin: ['Нед', 'Пон', 'Вт', 'Ср ', 'Чет', 'Пет', 'Съб'],
-		firstDay: 1,
-		dateFormat: 'yy-mm-dd'
-	});
-
-	//jquery-ui/bootstrap datepicker hack
-	var enforceModalFocusFn = $.fn.modal.Constructor.prototype.enforceFocus;
-	$.fn.modal.Constructor.prototype.enforceFocus = function() {
-	};
-	$('#signup-modal').on('hidden', function() {
-		$.fn.modal.Constructor.prototype.enforceFocus = enforceModalFocusFn;
-	});
-	//$('#signup-modal').modal({ backdrop : false });
-
-});
-app.controller('tabsController', function ($scope, $q, TabService, LoadingService) {
-	var limit = 5;
-	
-	$q.all([
-		TabService.getMost('popular', limit),
-		TabService.getMost('liked', limit),
-		TabService.getMost('latest', limit),
-		TabService.getMost('commented', limit)
-	]).then(function (responses){
-		
-		$scope.mostPopular = responses[0].data.data;
-		$scope.mostLiked = responses[1].data.data;
-		$scope.mostRecent = responses[2].data.data;
-		$scope.mostCommented = responses[3].data.data;
-		
-		LoadingService.doneLoading();
-	});
-	
-	
-	
-	/**
-	 * Generates an array of integers based on the tab rating
-	 * @param {int} rating
-	 * @returns {Array}
-	 */
-	$scope.calculateStars = function (rating){
-		var result = [];
-		var stars = Math.floor(rating);
-		
-		for(var i = 1; i <= 5; i++){
-			if(i <= stars){
-				result.push(1);
-			}else{
-				result.push(0);
-			}
-		}
-		
-		return result;
-	};
-
 });
 app.factory('LoadingService', function() {
 	

@@ -1,4 +1,7 @@
 app.controller('layoutController', function($scope, $rootScope, $location, TabService, UserService) {
+	$scope.searchParams = {
+		type: 'all'
+	};
 	
 	$scope.currentYear = (new Date()).getFullYear();
 	
@@ -23,5 +26,12 @@ app.controller('layoutController', function($scope, $rootScope, $location, TabSe
 		});
 	};
 	
-	
+	/**
+	 * Callback function that is called when the search button is pressed
+	 * It redirects to the search page
+	 */
+	$scope.search = function (){
+		$location.path('/search/'+$scope.searchParams.type+'/'+$scope.searchParams.band+'/'+$scope.searchParams.song);
+	};
+		
 });

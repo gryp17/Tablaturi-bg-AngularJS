@@ -1,17 +1,17 @@
 <div class="search-bar">
-	<input class="text-control" type="text" placeholder="Група"/>
-	<input class="text-control" type="text" placeholder="Песен"/>
+	<input class="text-control" type="text" placeholder="Група" ng-model="searchParams.band"/>
+	<input class="text-control" type="text" placeholder="Песен" ng-model="searchParams.song"/>
 
 	<label class="custom-dropdown">
-		<select>
-			<option>Тип</option>
-			<option>Таблатури</option>
-			<option>Акорди</option>
-			<option>Guitar Pro</option>
-			<option>Backing Tracks</option>
+		<select ng-model="searchParams.type">
+			<option value="all">Тип</option>
+			<option value="tab">Таблатури</option>
+			<option value="chord">Акорди</option>
+			<option value="gp">Guitar Pro</option>
+			<option value="bt">Backing Tracks</option>
 		</select>
 	</label>
 	
-	<input class="btn btn-red" type="button" value="Търси"/>	
+	<input class="btn btn-red" type="button" value="Търси" ng-click="search()"/>	
 	
 </div>
