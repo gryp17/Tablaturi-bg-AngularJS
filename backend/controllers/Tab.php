@@ -14,13 +14,11 @@ class Tab extends Controller {
 		'getMost' => array(
 			'type' => 'in[popular;liked;latest;commented]',
 			'limit' => 'int'
+		),
+		'autocomplete' => array(
+			'type' => 'in[band;song]',
+			'term' => 'required'
 		)
-		/*
-		'getArticlesByDate' => array(
-			'date' => 'date',
-			'limit' => 'int',
-			'offset' => 'int'
-		)*/
 	);
 
 
@@ -39,6 +37,9 @@ class Tab extends Controller {
 		}
 	}
 	
+	/**
+	 * Returns the most downloaded, liked, latest and commented tabs
+	 */
 	public function getMost() {
 		$required_role = Controller::PUBLIC_ACCESS;
 		
@@ -47,6 +48,23 @@ class Tab extends Controller {
 			
 			$tab_model = $this->load_model('Tab_model');
 			$data = $tab_model->getMost($params['type'], $params['limit']);
+			$this->sendResponse(1, $data);
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+	
+	/**
+	 * Returns all band/song names that contain the provided search term
+	 */
+	public function autocomplete() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		
+		if ($this->checkPermission($required_role) == true) {
+			$params = $this->getRequestParams();
+			
+			$tab_model = $this->load_model('Tab_model');
+			$data = $tab_model->getAutocompleteResults($params['type'], $params['term']);
 			$this->sendResponse(1, $data);
 		} else {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);

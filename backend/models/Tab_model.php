@@ -69,6 +69,35 @@ class Tab_model {
 		
 		return $data;
 	}
+	
+	
+	/**
+	 * Returns all band/song names that contain the provided search term
+	 * @param string $type
+	 * @param string $term
+	 * @return array
+	 */
+	public function getAutocompleteResults($type, $term){
+		$data = array();
+				
+		if ($type == 'band') {
+			$query = $this->connection->prepare('SELECT DISTINCT(band) AS term FROM tab WHERE band LIKE :term LIMIT 10');
+        } else {
+			$query = $this->connection->prepare('SELECT DISTINCT(song) AS term FROM tab WHERE song LIKE :term LIMIT 10');
+        }
+		
+		$query->execute(array('term' => '%'.$term.'%'));
+		
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			$data[] = array(
+				'id' => $row['term'],
+				'label' => $row['term'],
+				'value' => $row['term']
+			);
+		}
+		
+		return $data;
+	}
 
 
 }

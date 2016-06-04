@@ -15,6 +15,16 @@ app.factory('TabService', function($http) {
 					limit: limit
 				}
 			});
+		},
+		autocomplete: function(type, term) {
+			return $http({
+				method: 'POST',
+				url: 'Tab/autocomplete',
+				data: {
+					type: type,
+					term: term
+				}
+			});
 		}
 	};
 });
