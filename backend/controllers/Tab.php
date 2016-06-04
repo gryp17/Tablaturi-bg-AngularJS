@@ -18,6 +18,18 @@ class Tab extends Controller {
 		'autocomplete' => array(
 			'type' => 'in[band;song]',
 			'term' => 'required'
+		),
+		'search' => array(
+			'type' => 'in[all;tab;chord;gp;bt]',
+			'band' => 'required[band;song]',
+			'song' => 'required[band;song]',
+			'limit' => 'int',
+			'offset' => 'int'
+		),
+		'getSearchTotal' => array(
+			'type' => 'in[all;tab;chord;gp;bt]',
+			'band' => 'required[band;song]',
+			'song' => 'required[band;song]'
 		)
 	);
 
@@ -66,6 +78,49 @@ class Tab extends Controller {
 			$tab_model = $this->load_model('Tab_model');
 			$data = $tab_model->getAutocompleteResults($params['type'], $params['term']);
 			$this->sendResponse(1, $data);
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+	
+	/**
+	 * Returns all tabs that match the specified search criterias
+	 */
+	public function search() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		
+		if ($this->checkPermission($required_role) == true) {
+			$params = $this->getRequestParams();
+			
+			if($params['type'] != 'bt'){
+				$tab_model = $this->load_model('Tab_model');
+				$data = $tab_model->search($params['type'], $params['band'], $params['song'], $params['limit'], $params['offset']);
+				$this->sendResponse(1, $data);
+			}else{
+				#get backing tracks
+			}
+						
+		} else {
+			$this->sendResponse(0, Controller::ACCESS_DENIED);
+		}
+	}
+	
+	/**
+	 * Returns the total number of tabs that match the specified search criterias
+	 */
+	public function getSearchTotal() {
+		$required_role = Controller::PUBLIC_ACCESS;
+		
+		if ($this->checkPermission($required_role) == true) {
+			$params = $this->getRequestParams();
+			
+			if($params['type'] != 'bt'){
+				$tab_model = $this->load_model('Tab_model');
+				$data = $tab_model->getSearchTotal($params['type'], $params['band'], $params['song']);
+				$this->sendResponse(1, $data);
+			}else{
+				#get backing tracks
+			}
 		} else {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}

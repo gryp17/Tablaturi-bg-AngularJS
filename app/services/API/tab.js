@@ -25,6 +25,30 @@ app.factory('TabService', function($http) {
 					term: term
 				}
 			});
+		},
+		search: function(type, band, song, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'Tab/search',
+				data: {
+					type: type,
+					band: band,
+					song: song,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getSearchTotal: function (type, band, song){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getSearchTotal',
+				data: {
+					type: type,
+					band: band,
+					song: song
+				}
+			});
 		}
 	};
 });

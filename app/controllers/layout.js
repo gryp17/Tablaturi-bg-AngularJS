@@ -1,4 +1,4 @@
-app.controller('layoutController', function($scope, $rootScope, $location, TabService, UserService) {
+app.controller('layoutController', function($scope, $rootScope, $location, $route, $routeParams, TabService, UserService) {
 	$scope.searchParams = {
 		type: 'all'
 	};
@@ -31,7 +31,22 @@ app.controller('layoutController', function($scope, $rootScope, $location, TabSe
 	 * It redirects to the search page
 	 */
 	$scope.search = function (){
-		$location.path('/search/'+$scope.searchParams.type+'/'+$scope.searchParams.band+'/'+$scope.searchParams.song);
+		var type = $scope.searchParams.type;
+		var band = $scope.searchParams.band || '';
+		var song = $scope.searchParams.song || '';
+		
+		//if the current page is not the /search/ redirect to the search page
+		if(/\/search\//i.test($location.path()) === false){
+			$location.path('/search/'+type+'/'+band+'/'+song);
+		}
+		//otherwise just change the routeParams
+		else{
+			$route.updateParams({
+				type: type,
+				band: band,
+				song: song
+			});
+		}
 	};
 		
 });

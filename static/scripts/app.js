@@ -678,7 +678,7 @@ app.controller('homeController', function($scope, ArticleService, LoadingService
 	});
 
 });
-app.controller('layoutController', function($scope, $rootScope, $location, TabService, UserService) {
+app.controller('layoutController', function($scope, $rootScope, $location, $route, $routeParams, TabService, UserService) {
 	$scope.searchParams = {
 		type: 'all'
 	};
@@ -711,7 +711,22 @@ app.controller('layoutController', function($scope, $rootScope, $location, TabSe
 	 * It redirects to the search page
 	 */
 	$scope.search = function (){
-		$location.path('/search/'+$scope.searchParams.type+'/'+$scope.searchParams.band+'/'+$scope.searchParams.song);
+		var type = $scope.searchParams.type;
+		var band = $scope.searchParams.band || '';
+		var song = $scope.searchParams.song || '';
+		
+		//if the current page is not the /search/ redirect to the search page
+		if(/\/search\//i.test($location.path()) === false){
+			$location.path('/search/'+type+'/'+band+'/'+song);
+		}
+		//otherwise just change the routeParams
+		else{
+			$route.updateParams({
+				type: type,
+				band: band,
+				song: song
+			});
+		}
 	};
 		
 });
@@ -773,11 +788,41 @@ app.controller('profileController', function ($scope, $routeParams, $location, $
 	});
 
 });
-app.controller('searchController', function ($scope, $routeParams, $location, LoadingService) {
+app.controller('searchController', function ($scope, $routeParams, $q, TabService, LoadingService) {
+	$scope.limit = 10;
+	$scope.offset = 0;
 
-	$scope.search = $routeParams;
+	var searchType = $routeParams.type;
+	var band = $routeParams.band || '';
+	var song = $routeParams.song || '';
 	
-	LoadingService.doneLoading();
+	//on full page reload - fill the searchParams inputs
+	$scope.$parent.searchParams = angular.copy($routeParams);
+	
+	$q.all([
+		TabService.search(searchType, band, song, $scope.limit, $scope.offset),
+		TabService.getSearchTotal(searchType, band, song),
+	]).then(function (responses){
+		$scope.tabs = responses[0].data.data;
+		$scope.totalResults = responses[1].data.data;
+		LoadingService.doneLoading();
+	});
+	
+	
+	/**
+	 * Callback function that is called when the page in the pagination changes
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
+	$scope.search = function(limit, offset) {
+		$q.all([
+			TabService.search(searchType, band, song, limit, offset),
+			TabService.getSearchTotal(searchType, band, song)
+		]).then(function (responses){
+			$scope.tabs = responses[0].data.data;
+			$scope.totalResults = responses[1].data.data;
+		});
+	};	
 
 });
 app.controller('signupController', function($scope, UserService, MiscService, ValidationService) {
@@ -881,28 +926,6 @@ app.controller('tabsController', function ($scope, $q, TabService, LoadingServic
 		LoadingService.doneLoading();
 	});
 	
-	
-	
-	/**
-	 * Generates an array of integers based on the tab rating
-	 * @param {int} rating
-	 * @returns {Array}
-	 */
-	$scope.calculateStars = function (rating){
-		var result = [];
-		var stars = Math.floor(rating);
-		
-		for(var i = 1; i <= 5; i++){
-			if(i <= stars){
-				result.push(1);
-			}else{
-				result.push(0);
-			}
-		}
-		
-		return result;
-	};
-
 });
 app.directive('article', function($filter, $location) {
 	return {
@@ -1175,6 +1198,44 @@ app.filter('errors', function () {
 		return errors[errorCode];
 	};
 });
+app.filter('ratingStars', function() {
+	return function(rating) {
+		var result = [];
+		var stars = Math.floor(rating);
+
+		//generates an array of integers based on the tab rating
+		//1 - star
+		//0 - empty star
+		for (var i = 1; i <= 5; i++) {
+			if (i <= stars) {
+				result.push(1);
+			} else {
+				result.push(0);
+			}
+		}
+
+		return result;
+	};
+});
+app.filter('tabType', function () {
+	return function (tabType) {
+
+		var tabTypes = {
+			tab: "Tab",
+			gp: "Guitar Pro",
+			chord: "Акорди",
+			bt: "Backing Track",
+			bass: "Bass"
+		};
+		
+		if(angular.isUndefined(tabTypes[tabType])){
+			return tabType;
+		}else{
+			return tabTypes[tabType];
+		}
+
+	};
+});
 app.factory('LoadingService', function() {
 	
 	var contentElement = '#view-wrapper';
@@ -1334,6 +1395,30 @@ app.factory('TabService', function($http) {
 				data: {
 					type: type,
 					term: term
+				}
+			});
+		},
+		search: function(type, band, song, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'Tab/search',
+				data: {
+					type: type,
+					band: band,
+					song: song,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getSearchTotal: function (type, band, song){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getSearchTotal',
+				data: {
+					type: type,
+					band: band,
+					song: song
 				}
 			});
 		}

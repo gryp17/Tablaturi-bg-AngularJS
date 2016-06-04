@@ -64,22 +64,6 @@
 			.rating {
 				width: 110px;
 				text-align: center;
-				
-				.star, .empty-star{
-					display: inline-block;
-					margin-top: 5px;
-					height: 15px;
-					width: 15px;
-					background-size: 15px 15px;
-				}
-
-				.star{
-					background-image: url(../../img/star.png);
-				}
-
-				.empty-star{
-					background-image: url(../../img/star-empty.png);
-				}
 			}
 			
 			.date {

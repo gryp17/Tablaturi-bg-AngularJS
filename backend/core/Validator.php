@@ -24,14 +24,31 @@ class Validator {
 				return array('field' => $field, 'error_code' => 'empty_field');
 			}
 		}
+		#required[] rule (at least one of the fields must be set)
+		elseif (preg_match('/required\[(.+?)\]/i', $rule, $matches)) {
+			$valid = false;
+			$list = $matches[1];
+			$list = explode(';', $list);
+			
+			foreach($list as $param){
+				if (isset($params[$param]) && strlen($params[$param]) > 0) {
+					$valid = true;
+					break;
+				}
+			}
+			
+			if (!$valid) {
+				return array('field' => $field, 'error_code' => 'at_least_one_field_required');
+			}
+		}
 		#integer rule
-		if ($rule == 'int') {
+		elseif ($rule == 'int') {
 			if (!ctype_digit($value)) {
 				return array('field' => $field, 'error_code' => 'invalid_int');
 			}
 		}
 		#date rule
-		if ($rule == 'date') {
+		elseif ($rule == 'date') {
 			if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
 				return array('field' => $field, 'error_code' => 'invalid_date');
 			}
