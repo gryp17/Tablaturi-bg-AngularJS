@@ -83,6 +83,10 @@ class Validator {
 			if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
 				return array('field' => $field, 'error_code' => 'invalid_email');
 			}
+		}elseif ($rule == 'valid-url'){
+			if(!filter_var($value, FILTER_VALIDATE_URL)){
+				return array('field' => $field, 'error_code' => 'invalid_url');
+			}
 		}
 		#strong-passworld rule (at least 6 characters with 1 or more numbers)
 		elseif ($rule == 'strong-password') {

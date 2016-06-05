@@ -9,6 +9,15 @@ app.factory('BackingTrackService', function($http) {
 					song: song
 				}
 			});
+		},
+		getMP3: function (link){
+			return $http({
+				method: 'POST',
+				url: 'BackingTrack/getMP3',
+				data: {
+					link: link
+				}
+			});
 		}
 	};
 });

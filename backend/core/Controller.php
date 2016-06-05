@@ -7,6 +7,7 @@ class Controller {
 	const LOGGED_IN_USER = 2;
 	const ADMIN_USER = 3;
 	const ACCESS_DENIED = 'Access denied!';
+	const NOT_FOUND = 'Not found!';
 	const DB_ERROR = 'Query failed!';
 	const EMAIL_ERROR = 'Send email failed!';
 
