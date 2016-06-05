@@ -85,6 +85,12 @@ app.config(['$routeProvider', function($routeProvider) {
 			resolve: {
 				factory: updateAuthStatus
             }
+		}).when('/search-backing-tracks/:type/:band?/:song?', {
+			templateUrl: 'app/views/partials/search-backing-tracks.php',
+			controller: 'searchBackingTracksController',
+			resolve: {
+				factory: updateAuthStatus
+            }
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php',
 			resolve: {

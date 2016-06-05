@@ -91,15 +91,11 @@ class Tab extends Controller {
 		
 		if ($this->checkPermission($required_role) == true) {
 			$params = $this->getRequestParams();
+
+			$tab_model = $this->load_model('Tab_model');
+			$data = $tab_model->search($params['type'], $params['band'], $params['song'], $params['limit'], $params['offset']);
+			$this->sendResponse(1, $data);
 			
-			if($params['type'] != 'bt'){
-				$tab_model = $this->load_model('Tab_model');
-				$data = $tab_model->search($params['type'], $params['band'], $params['song'], $params['limit'], $params['offset']);
-				$this->sendResponse(1, $data);
-			}else{
-				#get backing tracks
-			}
-						
 		} else {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}
@@ -113,14 +109,11 @@ class Tab extends Controller {
 		
 		if ($this->checkPermission($required_role) == true) {
 			$params = $this->getRequestParams();
+
+			$tab_model = $this->load_model('Tab_model');
+			$data = $tab_model->getSearchTotal($params['type'], $params['band'], $params['song']);
+			$this->sendResponse(1, $data);
 			
-			if($params['type'] != 'bt'){
-				$tab_model = $this->load_model('Tab_model');
-				$data = $tab_model->getSearchTotal($params['type'], $params['band'], $params['song']);
-				$this->sendResponse(1, $data);
-			}else{
-				#get backing tracks
-			}
 		} else {
 			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}

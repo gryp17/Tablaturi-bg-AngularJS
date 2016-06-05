@@ -86,5 +86,21 @@ class Utils {
 	public static function formatDate($input){
 		return preg_replace('/\s/', 'T', $input);
 	}
+	
+	/**
+	 * Returns the page html
+	 * @param string $url
+	 * @param array $params
+	 * @return string
+	 */
+	public static function getPageHtml($url, $params = array()) {
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		return curl_exec($ch);
+	}
 
 }

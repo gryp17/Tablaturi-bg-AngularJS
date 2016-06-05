@@ -451,6 +451,12 @@ app.config(['$routeProvider', function($routeProvider) {
 			resolve: {
 				factory: updateAuthStatus
             }
+		}).when('/search-backing-tracks/:type/:band?/:song?', {
+			templateUrl: 'app/views/partials/search-backing-tracks.php',
+			controller: 'searchBackingTracksController',
+			resolve: {
+				factory: updateAuthStatus
+            }
 		}).when('/guitar-pro', {
 			templateUrl: 'app/views/partials/guitar-pro.php',
 			resolve: {
@@ -711,13 +717,23 @@ app.controller('layoutController', function($scope, $rootScope, $location, $rout
 	 * It redirects to the search page
 	 */
 	$scope.search = function (){
+		var url = '/search/'; 
+		var regexp = '\/search\/';
 		var type = $scope.searchParams.type;
 		var band = $scope.searchParams.band || '';
 		var song = $scope.searchParams.song || '';
 		
-		//if the current page is not the /search/ redirect to the search page
-		if(/\/search\//i.test($location.path()) === false){
-			$location.path('/search/'+type+'/'+band+'/'+song);
+		//if the search type is bt (backing tracks) redirect to the backing tracks search page
+		if(type === 'bt'){
+			url = '/search-backing-tracks/';
+			regexp = '\/search-backing-tracks\/';
+		}
+		
+		regexp = new RegExp(regexp, "i");
+		
+		//if the current page is not the /search/ or /search-backing-tracks/ redirect to the correct page
+		if(regexp.test($location.path()) === false){
+			$location.path(url+type+'/'+band+'/'+song);
 		}
 		//otherwise just change the routeParams
 		else{
@@ -786,6 +802,21 @@ app.controller('profileController', function ($scope, $routeParams, $location, $
 		
 		LoadingService.doneLoading();
 	});
+
+});
+app.controller('searchBackingTracksController', function ($scope, $routeParams, $q, BackingTrackService, LoadingService) {
+	
+	var band = $routeParams.band || '';
+	var song = $routeParams.song || '';
+	
+	//on full page reload - fill the searchParams inputs
+	$scope.$parent.searchParams = angular.copy($routeParams);
+	
+	BackingTrackService.search(band, song).then(function (response){
+		console.log(response);
+		LoadingService.doneLoading();
+	});
+	
 
 });
 app.controller('searchController', function ($scope, $routeParams, $q, TabService, LoadingService) {
@@ -1348,6 +1379,20 @@ app.factory('ArticleService', function($http) {
 				url: 'Article/getArticle',
 				data: {
 					id: id
+				}
+			});
+		}
+	};
+});
+app.factory('BackingTrackService', function($http) {
+	return {
+		search: function(band, song) {
+			return $http({
+				method: 'POST',
+				url: 'BackingTrack/search',
+				data: {
+					band: band,
+					song: song
 				}
 			});
 		}
