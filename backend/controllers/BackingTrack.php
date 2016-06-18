@@ -2,80 +2,75 @@
 
 class BackingTrack extends Controller {
 
+	public function __construct() {
+
+		/**
+		 * List of required parameters and permissions for each API endpoint
+		 * also indicates the parameter type
+		 */
+		$this->endpoints = array(
+			'search' => array(
+				'required_role' => self::PUBLIC_ACCESS,
+				'params' => array(
+					'band' => 'required[band;song]',
+					'song' => 'required[band;song]'
+				)
+			),
+			'getMP3' => array(
+				'required_role' => self::PUBLIC_ACCESS,
+				'params' => array(
+					'link' => 'valid-url'
+				)
+			)
+		);
+
+		#request params
+		$this->params = $this->checkRequest();
+	}
+
 	public function index() {
 		
 	}
 
 	/**
-	 * List of required parameters for each API function
-	 * also indicates the parameter type
-	 */
-	public $required_params = array(
-		'search' => array(
-			'band' => 'required[band;song]',
-			'song' => 'required[band;song]'
-		),
-		'getMP3' => array(
-			'link' => 'valid-url'
-		)
-	);
-
-	/**
 	 * Returns all backing tracks that match the specified search criterias
 	 */
 	public function search() {
-		$required_role = Controller::PUBLIC_ACCESS;
+		$bt_model = $this->load_model('Backing_track_model');
 
-		if ($this->checkPermission($required_role) == true) {
-			$params = $this->getRequestParams();
+		#if the band is set
+		if (strlen($this->params['band']) > 0) {
+			$data = $bt_model->getBandTracks($this->params['band']);
 
-			$bt_model = $this->load_model('Backing_track_model');
+			#if the song is set as well
+			if (strlen($this->params['song']) > 0) {
+				#filter out the songs that don't match the song param
+				$data = array_filter($data, function ($item) {
+					return (strpos(strtolower($item['song']), strtolower($this->params['song'])) !== false);
+				});
 
-			#if the band is set
-			if (strlen($params['band']) > 0) {
-				$data = $bt_model->getBandTracks($params['band']);
-
-				#if the song is set as well
-				if (strlen($params['song']) > 0) {
-					#filter out the songs that don't match the song param
-					$data = array_filter($data, function ($item) use ($params) {
-						return (strpos(strtolower($item['song']), strtolower($params['song'])) !== false);
-					});
-
-					#change the array to indexed (instead of associative)
-					$data = array_values($data);
-				}
+				#change the array to indexed (instead of associative)
+				$data = array_values($data);
 			}
-			#if only the song is set
-			else if (strlen($params['song']) > 0) {
-				$data = $bt_model->getSongTracks($params['song']);
-			}
-
-			$this->sendResponse(1, $data);
-		} else {
-			$this->sendResponse(0, Controller::ACCESS_DENIED);
 		}
+		#if only the song is set
+		else if (strlen($this->params['song']) > 0) {
+			$data = $bt_model->getSongTracks($this->params['song']);
+		}
+
+		$this->sendResponse(1, $data);
 	}
 
 	/**
 	 * Extracts the MP3 link from the provided backing track link
 	 */
 	public function getMP3() {
-		$required_role = Controller::PUBLIC_ACCESS;
-
-		if ($this->checkPermission($required_role) == true) {
-			$params = $this->getRequestParams();
-			
-			$html = Utils::getPageHtml($params['link']);
-			if(preg_match('/href="([^"]+?)"\s+rel="nofollow">Download/is', $html, $results)){
-				$data = $results[1];
-				$this->sendResponse(1, $data);
-			}else{
-				$this->sendResponse(0, Controller::NOT_FOUND);
-			}
-			
+		$html = Utils::getPageHtml($this->params['link']);
+		if (preg_match('/href="([^"]+?)"\s+rel="nofollow">Download/is', $html, $results)) {
+			$data = $results[1];
+			$this->sendResponse(1, $data);
 		} else {
-			$this->sendResponse(0, Controller::ACCESS_DENIED);
+			$this->sendResponse(0, Controller::NOT_FOUND);
 		}
 	}
 
