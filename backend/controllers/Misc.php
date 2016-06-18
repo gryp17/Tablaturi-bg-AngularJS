@@ -2,62 +2,56 @@
 
 class Misc extends Controller {
 
+	public function __construct() {
+
+		/**
+		 * List of required parameters and permissions for each API endpoint
+		 * also indicates the parameter type
+		 */
+		$this->endpoints = array(
+			'generateCaptcha' => array(
+				'required_role' => self::PUBLIC_ACCESS,
+			),
+			'contactUs' => array(
+				'required_role' => self::PUBLIC_ACCESS,
+				'params' => array(
+					'username' => 'min-3, max-20, valid-characters',
+					'email' => 'valid-email',
+					'message' => 'required',
+					'captcha' => 'matches-captcha'
+				)
+			)
+		);
+
+		#request params
+		$this->params = $this->checkRequest();
+	}
+
 	public function index() {
 		
 	}
 
 	/**
-	 * List of required parameters for each API function
-	 * also indicates the parameter type
-	 */
-	public $required_params = array(
-		'contactUs' => array(
-			'username' => 'min-3, max-20, valid-characters',
-			'email' => 'valid-email',
-			'message' => 'required',
-			'captcha' => 'matches-captcha'
-		)
-	);
-	
-	/**
 	 * Generates new captcha image
 	 */
 	public function generateCaptcha() {
-		$required_role = Controller::PUBLIC_ACCESS;
-		if ($this->checkPermission($required_role) == true) {
-			
-			#captcha code
-			$_SESSION['captcha'] = simple_php_captcha();
-			#img source fix
-			$captchaImage = preg_replace('/.*?\/backend/', 'backend', $_SESSION['captcha']['image_src']);
-			
-			$this->sendResponse(1, $captchaImage);
-		} else {
-			$this->sendResponse(0, Controller::ACCESS_DENIED);
-		}
-	}
+		#captcha code
+		$_SESSION['captcha'] = simple_php_captcha();
+		#img source fix
+		$captchaImage = preg_replace('/.*?\/backend/', 'backend', $_SESSION['captcha']['image_src']);
 
+		$this->sendResponse(1, $captchaImage);
+	}
 
 	/**
 	 * Sends contact us email 
 	 */
 	public function contactUs() {
-		$required_role = Controller::PUBLIC_ACCESS;
-		if ($this->checkPermission($required_role) == true) {
-
-			$params = $this->getRequestParams();
-
-			if(Utils::sendContactUsEmail($params['username'], $params['email'], $params['message'])){
-				$this->sendResponse(1, true);
-			}else{
-				$this->sendResponse(0, Controller::EMAIL_ERROR);
-			}
-			
+		if (Utils::sendContactUsEmail($this->params['username'], $this->params['email'], $this->params['message'])) {
+			$this->sendResponse(1, true);
 		} else {
-			$this->sendResponse(0, Controller::ACCESS_DENIED);
+			$this->sendResponse(0, Controller::EMAIL_ERROR);
 		}
 	}
-	
-	
 
 }
