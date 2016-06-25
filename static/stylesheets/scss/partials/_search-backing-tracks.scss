@@ -9,10 +9,15 @@
 		}
 	}
 	
-	.results-table {
-		td:nth-child(3) {
-			width: 80px;
-			text-align: center;
+	.results-table {		
+		td {
+			&:nth-child(3) {
+				width: 80px;
+				text-align: center;
+			}
+			img {
+				width: 20px;
+			}
 		}
 	}
 

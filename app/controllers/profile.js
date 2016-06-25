@@ -1,6 +1,6 @@
-app.controller('profileController', function ($scope, $routeParams, $location, $q, UserService, LoadingService) {
+app.controller('profileController', function ($rootScope, $scope, $routeParams, $location, $q, UserService, LoadingService) {
 
-	console.log("profile controller");
+	$scope.loggedInUser = $rootScope.loggedInUser;
 
 	$q.all([
 		UserService.getUser($routeParams.id),

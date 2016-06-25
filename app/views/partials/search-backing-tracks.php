@@ -33,7 +33,10 @@
 							{{track.song}}
 						</a>
 					</td>
-					<td ng-bind="track.vocals"></td>
+					<td>
+						<img ng-show="track.vocals" src="static/img/checkmark.png" />
+						<img ng-show="!track.vocals" src="static/img/cross.png" />
+					</td>
 				</tr>
 			</tbody>
 		</table>

@@ -1,7 +1,50 @@
 > .profile {
 
-	.title{
+	.nav-tabs{
+		> li{
+			text-align: center;
+
+			&.active{
+				> a{
+					@extend .red-link;
+					text-decoration: none !important;
+				}
+			}
+
+			> a{
+				padding: 10px 12px;
+				border-radius: 0px;
+				color: #000;
+			}
+		}
+	}
+	
+	#profile {
+		padding-top: 20px;
 		
+		.username {
+			display: inline-block;
+			font-size: 21px;
+			
+			span {
+				font-size: 14px;
+			}
+		}
+		
+		.btn-red {
+			float: right;
+			
+			img {
+				width: 16px;
+				margin-right: 2px;
+			}
+		}
+		
+		.user-image {
+			margin-top: 20px;
+			width: 200px;
+			height: 200px;
+		}
 	}
 	
 }
