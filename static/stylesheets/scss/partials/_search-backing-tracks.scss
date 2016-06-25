@@ -1,7 +1,19 @@
 > .search-backing-tracks {
-
-	table{
-		width: 100%;
+	
+	.title {
+		text-align: center;
+		
+		.search-params {
+			color: $red;
+			font-style: italic;
+		}
+	}
+	
+	.results-table {
+		td:nth-child(3) {
+			width: 80px;
+			text-align: center;
+		}
 	}
 
 }

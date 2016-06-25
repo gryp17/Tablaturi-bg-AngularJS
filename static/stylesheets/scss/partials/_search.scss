@@ -1,7 +1,19 @@
 > .search {
-
-	table{
-		width: 100%;
+	
+	.title {
+		text-align: center;
+		
+		.search-params {
+			color: $red;
+			font-style: italic;
+		}
+	}
+	
+	
+	.results-table {
+		td:nth-child(3), td:nth-child(4) {
+			width: 100px;
+		}
 	}
 
 }

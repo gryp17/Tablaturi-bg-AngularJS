@@ -206,3 +206,30 @@ a {
 .empty-star{
 	background-image: url(../../img/star-empty.png);
 }
+
+.results-table {
+	@extend .table;
+	@extend .table-striped;
+	
+	width: 100%;
+	
+	thead {
+		font-weight: 600;
+	}
+	
+	a {
+		text-decoration: none;
+		
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+.ui-autocomplete {
+	border-radius: 0px;
+	
+	.ui-state-focus {
+		border-radius: 0px;
+	}
+}

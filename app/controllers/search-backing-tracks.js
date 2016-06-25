@@ -1,14 +1,14 @@
 app.controller('searchBackingTracksController', function ($scope, $routeParams, $window, BackingTrackService, LoadingService) {
-	$scope.limit = 10;
+	$scope.limit = 20;
 	$scope.offset = 0;
 	
-	var band = $routeParams.band || '';
-	var song = $routeParams.song || '';
+	$scope.band = $routeParams.band || '';
+	$scope.song = $routeParams.song || '';
 	
 	//on full page reload - fill the searchParams inputs
 	$scope.$parent.searchParams = angular.copy($routeParams);
 	
-	BackingTrackService.search(band, song).then(function (response){
+	BackingTrackService.search($scope.band, $scope.song).then(function (response){
 		if(response.data.status === 1){
 			$scope.allBackingTracks = response.data.data;
 			$scope.totalResults = $scope.allBackingTracks.length;
