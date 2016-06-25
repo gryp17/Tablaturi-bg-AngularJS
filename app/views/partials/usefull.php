@@ -10,7 +10,7 @@
 			<a href="#lessons" aria-controls="lessons" role="tab" data-toggle="tab" target="_self">Уроци за начинаещи</a>
 		</li>
 		<li role="presentation">
-			<a href="#video" aria-controls="video" role="tab" data-toggle="tab" target="_self">Видео уроци</a>
+			<a href="#video" aria-controls="video" role="tab" data-toggle="tab" target="_self" ng-click="loadYoutubeIframes = true">Видео уроци</a>
 		</li>
 	</ul>
 
@@ -84,25 +84,27 @@
 		</div>
 		<!-- video -->
 		<div role="tabpanel" class="tab-pane" id="video">
-			<h4>
-				<a class="red-link" href="http://www.guitarjamz.com" target="_blank">Видео уроци от Марти Шварц</a>
-			</h4>
-			<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=guitarjamzdotcom" width="340" height="390"></iframe>
-			<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=martyzsongs" width="340" height="390"></iframe>
-			
-			<hr/>
-			
-			<h4>
-				Още видео уроци
-			</h4>
-			<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=JustinSandercoeSongs" width="340" height="390"></iframe>
-			<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=guitarlessonscom" width="340" height="390"></iframe>
-			<br>
-			<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=tripfuse04" width="340" height="390"></iframe>
-			<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=educationalmaterials" width="340" height="390"></iframe>
-			<br>
-			<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=KristoferDahl" width="340" height="390"></iframe>
-			<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=SteveTerreberry" width="340" height="390"></iframe>
+			<div ng-if="loadYoutubeIframes">
+				<h4>
+					<a class="red-link" href="http://www.guitarjamz.com" target="_blank">Видео уроци от Марти Шварц</a>
+				</h4>
+				<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=guitarjamzdotcom" width="340" height="390"></iframe>
+				<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=martyzsongs" width="340" height="390"></iframe>
+
+				<hr/>
+
+				<h4>
+					Още видео уроци
+				</h4>
+				<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=JustinSandercoeSongs" width="340" height="390"></iframe>
+				<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=guitarlessonscom" width="340" height="390"></iframe>
+				<br>
+				<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=tripfuse04" width="340" height="390"></iframe>
+				<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=educationalmaterials" width="340" height="390"></iframe>
+				<br>
+				<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=KristoferDahl" width="340" height="390"></iframe>
+				<iframe src="http://www.youtube.com/embed/?listType=user_uploads&list=SteveTerreberry" width="340" height="390"></iframe>
+			</div>
 		</div>
 	</div>
 
