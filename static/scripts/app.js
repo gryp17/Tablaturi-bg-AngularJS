@@ -1347,26 +1347,37 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 	console.log('profile controller');
 
 });
-app.controller('userPanelController', function ($rootScope, $scope, $routeParams, $location, $q, UserService, LoadingService) {
+app.controller('userPanelController', function ($rootScope, $scope, $routeParams, $location, $q, UserService, UserCommentService, LoadingService) {
 
+	$scope.limit = 6;
+	$scope.offset = 0;
 	$scope.loggedInUser = $rootScope.loggedInUser;
 
 	$q.all([
 		UserService.getUser($routeParams.id),
-		//TODO: load profile comments
+		UserCommentService.getUserComments($routeParams.id, $scope.limit, $scope.offset),
+		UserCommentService.getTotalUserComments($routeParams.id),
 		//TODO: load user tabs
 		//TODO: load user favourites
 	]).then(function (responses){
 
 		if(angular.isDefined(responses[0].data.data)){
 			$scope.userData = responses[0].data.data;
-			console.log($scope.userData);
 		}else{
 			$location.path('/');
 		}
 		
+		$scope.userComments = responses[1].data.data;
+		$scope.totalUserComments = responses[2].data.data;
+		
+		console.log($scope.userData);
+		console.log($scope.userCommentsa);
+		console.log($scope.totalUserComments);
+		
 		LoadingService.doneLoading();
 	});
+	
+	
 
 });
 app.controller('userTabsController', function ($rootScope, $scope, $routeParams, LoadingService) {
@@ -1522,6 +1533,40 @@ app.factory('TabService', function($http) {
 					type: type,
 					band: band,
 					song: song
+				}
+			});
+		}
+	};
+});
+app.factory('UserCommentService', function($http) {
+	return {
+		getUserComments: function(userId, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'UserComment/getUserComments',
+				data: {
+					user_id: userId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalUserComments: function(userId) {
+			return $http({
+				method: 'POST',
+				url: 'UserComment/getTotalUserComments',
+				data: {
+					user_id: userId
+				}
+			});
+		},
+		addUserComment: function(userId, content) {
+			return $http({
+				method: 'POST',
+				url: 'UserComment/addUserComment',
+				data: {
+					user_id: userId,
+					content: content
 				}
 			});
 		}
