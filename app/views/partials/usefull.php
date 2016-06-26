@@ -2,7 +2,7 @@
 
 	<h2 class="title">Полезно</h2>
 
-	<ul class="nav nav-tabs" role="tablist">
+	<ul class="custom-tabs" role="tablist">
 		<li role="presentation" class="active">
 			<a href="#software" aria-controls="software" role="tab" data-toggle="tab" target="_self">Полезни програми</a>
 		</li>

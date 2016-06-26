@@ -234,3 +234,25 @@ a {
 		border-radius: 0px;
 	}
 }
+
+.custom-tabs{
+	@extend .nav;
+	@extend .nav-tabs;
+	
+	> li{
+		text-align: center;
+
+		&.active{
+			a, a:focus, a:hover{
+				@extend .red-link;
+				text-decoration: none !important;
+			}
+		}
+
+		a{
+			border-radius: 0px;
+			color: #000;
+		}
+	}
+	
+}

@@ -5,24 +5,11 @@
 		text-align: center;
 	}
 
-	.nav-tabs{
+	.custom-tabs{
 		margin-top: 30px;
 
 		> li{
 			width: 33.3%;
-			text-align: center;
-
-			&.active{
-				> a{
-					@extend .red-link;
-					text-decoration: none !important;
-				}
-			}
-
-			> a{
-				border-radius: 0px;
-				color: #000;
-			}
 		}
 	}
 	

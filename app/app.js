@@ -68,8 +68,8 @@ app.config(['$routeProvider', function($routeProvider) {
 				factory: updateAuthStatus
             }
 		}).when('/profile/:id', {
-			templateUrl: 'app/views/partials/profile.php',
-			controller: 'profileController',
+			templateUrl: 'app/views/partials/profile/user-panel.php',
+			controller: 'userPanelController',
 			resolve: {
 				factory: authRequired
             }

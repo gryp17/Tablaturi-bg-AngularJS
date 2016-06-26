@@ -434,8 +434,8 @@ app.config(['$routeProvider', function($routeProvider) {
 				factory: updateAuthStatus
             }
 		}).when('/profile/:id', {
-			templateUrl: 'app/views/partials/profile.php',
-			controller: 'profileController',
+			templateUrl: 'app/views/partials/profile/user-panel.php',
+			controller: 'userPanelController',
 			resolve: {
 				factory: authRequired
             }
@@ -784,25 +784,6 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 		});
 	};
 	
-});
-app.controller('profileController', function ($rootScope, $scope, $routeParams, $location, $q, UserService, LoadingService) {
-
-	$scope.loggedInUser = $rootScope.loggedInUser;
-
-	$q.all([
-		UserService.getUser($routeParams.id),
-	]).then(function (responses){
-
-		if(angular.isDefined(responses[0].data.data)){
-			$scope.userData = responses[0].data.data;
-			console.log($scope.userData);
-		}else{
-			$location.path('/');
-		}
-		
-		LoadingService.doneLoading();
-	});
-
 });
 app.controller('searchBackingTracksController', function ($scope, $routeParams, $window, BackingTrackService, LoadingService) {
 	$scope.limit = 20;
@@ -1360,6 +1341,40 @@ app.factory('ValidationService', function($filter) {
 			fieldBox.addClass('error');
 		}
 	};
+});
+app.controller('profileController', function ($rootScope, $scope, $routeParams, $location, $q, UserService, LoadingService) {
+
+	console.log('profile controller');
+
+});
+app.controller('userPanelController', function ($rootScope, $scope, $routeParams, $location, $q, UserService, LoadingService) {
+
+	$scope.loggedInUser = $rootScope.loggedInUser;
+
+	$q.all([
+		UserService.getUser($routeParams.id),
+		//TODO: load profile comments
+		//TODO: load user tabs
+		//TODO: load user favourites
+	]).then(function (responses){
+
+		if(angular.isDefined(responses[0].data.data)){
+			$scope.userData = responses[0].data.data;
+			console.log($scope.userData);
+		}else{
+			$location.path('/');
+		}
+		
+		LoadingService.doneLoading();
+	});
+
+});
+app.controller('userTabsController', function ($rootScope, $scope, $routeParams, LoadingService) {
+
+	console.log('user tabs');
+		
+	LoadingService.doneLoading();
+
 });
 app.factory('ArticleCommentService', function($http) {
 	return {

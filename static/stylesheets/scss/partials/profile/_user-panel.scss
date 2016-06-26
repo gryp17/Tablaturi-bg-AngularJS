@@ -1,0 +1,17 @@
+> .profile {
+
+	.custom-tabs{
+		> li{
+
+			a{
+				padding: 10px 12px;
+			}
+		}
+	}
+	
+	.tab-content{
+		@import "_profile";
+		@import "_user-tabs";
+	}
+	
+}
