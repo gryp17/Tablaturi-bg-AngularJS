@@ -19,14 +19,14 @@
 					<td>
 						<span class="info-label" ng-show="userData.gender === 'M'">Регистриран на:</span>
 						<span class="info-label" ng-show="userData.gender === 'F'">Регистрирана на:</span>
-						{{userData.register_date | date: "yyyy-MM-dd HH:mm:ss"}}
+						{{userData.register_date | date: "yyyy-MM-dd 'в' HH:mm"}}
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<span class="info-label" ng-show="userData.gender === 'M'">Последно активен на:</span>
 						<span class="info-label" ng-show="userData.gender === 'F'">Последно активна на:</span>
-						{{userData.last_active_date | date: 'yyyy-MM-dd HH:mm:ss'}}
+						{{userData.last_active_date | date: "yyyy-MM-dd 'в' HH:mm"}}
 					</td>
 				</tr>
 				<tr>
