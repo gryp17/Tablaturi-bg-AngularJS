@@ -18,7 +18,7 @@
 			<div class="field-box captcha-field-box">
 				<div class="captcha">
 					<img class="captcha-img" ng-src="{{captchaImage || 'static/img/captcha-placeholder.jpg'}}"/>
-					<img class="reload-captcha" src="static/img/reload-icon.png" ng-click="generateCaptcha()"/>
+					<img class="reload-captcha" src="static/img/icons/reload-icon.png" ng-click="generateCaptcha()"/>
 				</div>
 				<div class="captcha-input">
 					<input class="text-control validation" type="text" placeholder="Captcha" name="captcha" ng-model="formData.captcha"/>
@@ -30,7 +30,7 @@
 	</div>
 	
 	<div ng-show="sendEmailSuccess" class="success-wrapper">
-		<img class="success" src="static/img/success-icon.png"/>
+		<img class="success" src="static/img/icons/success-icon.png"/>
 		<div class="success-msg">
 			<h4>Съобщението беше изпратено успешно.</h4>
 			Ще се свържем с Вас на посочения email възможно най-скоро.

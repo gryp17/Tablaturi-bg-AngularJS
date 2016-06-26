@@ -34,8 +34,8 @@
 						</a>
 					</td>
 					<td>
-						<img ng-show="track.vocals" src="static/img/checkmark.png" />
-						<img ng-show="!track.vocals" src="static/img/cross.png" />
+						<img ng-show="track.vocals" src="static/img/icons/checkmark.png" />
+						<img ng-show="!track.vocals" src="static/img/icons/cross.png" />
 					</td>
 				</tr>
 			</tbody>

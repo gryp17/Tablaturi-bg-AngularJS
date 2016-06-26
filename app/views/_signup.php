@@ -39,7 +39,7 @@
 				<div class="field-box">
 					<div class="captcha">
 						<img class="captcha-img" ng-src="{{captchaImage || 'static/img/captcha-placeholder.jpg'}}" />
-						<img class="reload-captcha" src="static/img/reload-icon.png" ng-click="generateCaptcha()"/>
+						<img class="reload-captcha" src="static/img/icons/reload-icon.png" ng-click="generateCaptcha()"/>
 					</div>
 					<div class="captcha-input">
 						<input class="text-control validation" type="text" placeholder="Captcha" name="signup_captcha" ng-model="userData.signup_captcha"/>
@@ -57,7 +57,7 @@
 				<h4 class="modal-title">Регистрирахте се успешно!</h4>
 			</div>
 			<div class="modal-body">
-				<img class="success" src="static/img/success-icon.png"/>
+				<img class="success" src="static/img/icons/success-icon.png"/>
 				<div class="success-msg">
 					<h4>Благодарим Ви, че се регистрирахте.</h4>
 					До няколко минути ще получите имейл с линк за активация на своя акаунт.
