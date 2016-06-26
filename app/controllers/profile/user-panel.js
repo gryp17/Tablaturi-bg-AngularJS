@@ -21,10 +21,6 @@ app.controller('userPanelController', function ($rootScope, $scope, $routeParams
 		$scope.userComments = responses[1].data.data;
 		$scope.totalUserComments = responses[2].data.data;
 		
-		console.log($scope.userData);
-		console.log($scope.userCommentsa);
-		console.log($scope.totalUserComments);
-		
 		LoadingService.doneLoading();
 	});
 	

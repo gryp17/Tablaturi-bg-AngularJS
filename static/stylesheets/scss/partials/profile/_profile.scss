@@ -19,9 +19,59 @@
 		}
 	}
 
-	.user-image {
-		margin-top: 20px;
+	.user-avatar {
+		margin-top: 15px;
 		width: 200px;
 		height: 200px;
+		vertical-align: top;
+	}
+	
+	.info-label {
+		color: $red;
+		margin-right: 5px;
+	}
+	
+	.table-container {
+		display: inline-block;
+		width: 60%;
+		margin-left: 20px;
+		margin-top: 10px;
+		vertical-align: top;
+		border-left: 3px solid $red;
+		padding-left: 20px;
+		
+		table {
+			margin-bottom: 0px;
+		}
+	}
+	
+	.reputation {
+		width: 200px;
+		margin-top: 15px;
+		text-align: center;
+	}
+	
+	.info-box {
+		margin-top: 30px;
+		background-color: #f9f9f9;
+		
+		.border {
+			background: linear-gradient(to right, rgba(248,65,65,1) 0%, rgba(248,65,65,1) 49%, rgba(249,249,249,1) 100%);
+			height: 3px;
+			width: 100%;
+		}
+		
+		.info {
+			padding: 10px 20px;
+			min-height: 100px;
+		}
+	}
+	
+	.comments-wrapper {
+		margin-top: 30px;
+		
+		.no-comments {
+			text-align: center;
+		}
 	}
 }

@@ -26,23 +26,13 @@
 	<div class="comments-wrapper">
 		<h4 ng-show="articleComments.length > 0">Коментари:</h4>
 		<h4 ng-show="articleComments.length === 0" class="no-comments">Няма коментари</h4>
-		<div class="comment" ng-repeat="comment in articleComments">
-			<img class="user-image img-circle" ng-src="content/avatars/{{comment.photo}}"/>
-			<div class="box">
-				<div class="author">
-					<a class="red-link" title="Виж профила на {{comment.username}}" href="#profile/{{comment.author_ID}}" ng-bind="comment.username"></a> каза:
-				</div>
-				<div class="date" ng-bind="comment.date | date : 'yyyy-MM-dd HH:mm:ss'"></div>
-				<div class="content" ng-bind-html="comment.content | emoticons"></div>
-			</div>
-			<div class="clearfix"></div>
-		</div>
+		<div ng-repeat="comment in articleComments" comment comment-data="comment"></div>
 		
 		<div class="pagination" total-items="totalArticleComments" limit="limit" offset="offset" range="2" callback="getArticleComments(limit, offset)"></div>
 	</div>
 	
 	<!-- add comment wrapper -->
-	<div class="add-comment-wrapper">
+	<div class="add-comment-box">
 		<div ng-show="!loggedInUser" class="comment-login">
 			<a class="red-link" data-toggle="modal" href="#signup-modal" target="_self">Регистрирай се</a>
 			или <a class="red-link" data-toggle="modal" href="#login-modal" target="_self">Влез</a>, за да коментираш
