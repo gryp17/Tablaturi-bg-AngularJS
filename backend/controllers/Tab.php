@@ -23,7 +23,8 @@ class Tab extends Controller {
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
 					'type' => 'in[band;song]',
-					'term' => 'required'
+					'term' => 'required',
+					'band' => 'optional'
 				)
 			),
 			'search' => array(
@@ -77,7 +78,7 @@ class Tab extends Controller {
 	 */
 	public function autocomplete() {
 		$tab_model = $this->load_model('Tab_model');
-		$data = $tab_model->getAutocompleteResults($this->params['type'], $this->params['term']);
+		$data = $tab_model->getAutocompleteResults($this->params['type'], $this->params['term'], $this->params['band']);
 		$this->sendResponse(1, $data);
 	}
 

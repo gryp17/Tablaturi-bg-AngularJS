@@ -74,18 +74,29 @@ class Tab_model {
 	 * Returns all band/song names that contain the provided search term
 	 * @param string $type
 	 * @param string $term
+	 * @param string $band
 	 * @return array
 	 */
-	public function getAutocompleteResults($type, $term) {
+	public function getAutocompleteResults($type, $term, $band) {
 		$data = array();
 
+		$params = array('term' => '%' . $term . '%');
+		
 		if ($type == 'band') {
 			$query = $this->connection->prepare('SELECT DISTINCT(band) AS term FROM tab WHERE band LIKE :term LIMIT 10');
 		} else {
-			$query = $this->connection->prepare('SELECT DISTINCT(song) AS term FROM tab WHERE song LIKE :term LIMIT 10');
+			#if the band is set search only for songs from that band
+			if(isset($band) && strlen($band) > 0){
+				$query = 'SELECT DISTINCT(song) AS term FROM tab WHERE band = :band AND song LIKE :term LIMIT 10';
+				$params['band'] = $band;
+			}else{
+				$query = 'SELECT DISTINCT(song) AS term FROM tab WHERE song LIKE :term LIMIT 10';
+			}
+			
+			$query = $this->connection->prepare($query);
 		}
 
-		$query->execute(array('term' => '%' . $term . '%'));
+		$query->execute($params);
 
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			$data[] = array(
