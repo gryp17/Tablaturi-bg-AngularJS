@@ -1,4 +1,4 @@
-<div class="profile">
+<div class="user-panel">
 	
 	<ul class="custom-tabs" role="tablist">
 		<li role="presentation" class="active">
