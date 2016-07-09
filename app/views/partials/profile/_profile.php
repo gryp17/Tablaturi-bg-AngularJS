@@ -3,7 +3,7 @@
 		<span ng-show="userData.type === 'admin'">(Админ)</span>
 	</div>
 	
-	<button class="btn btn-red" ng-if="loggedInUser.ID === userData.ID" ng-click="">
+	<button class="btn btn-red" ng-if="loggedInUser.ID === userData.ID" ng-click="openEditModal()">
 		<img src="static/img/icons/pencil.png" /> Редактирай
 	</button>
 	
@@ -118,5 +118,7 @@
 			<button ng-click="addComment()" class="btn btn-red">Коментирай</button>
 		</div>
 	</div>
+	
+	<?php include "_edit-profile.php" ?>
 	
 </div>

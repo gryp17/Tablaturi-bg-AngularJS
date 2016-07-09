@@ -1399,6 +1399,15 @@ app.controller('profileController', function ($scope, $routeParams, $q, UserComm
 			$scope.totalUserComments = result[1].data.data;
 		});
 	};
+	
+	$scope.browse = function() {
+		$('.avatar').click();
+	};
+	
+	$scope.openEditModal = function() {
+		$scope.editData = angular.copy($scope.userData);
+		$('#edit-profile-modal').modal('show');
+	};
 
 });
 app.controller('userPanelController', function ($rootScope, $scope, $routeParams, $location, $q, UserService, UserCommentService, LoadingService) {
