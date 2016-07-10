@@ -1,3 +1,23 @@
 > #user-tabs{
 	
+	.no-user-tabs{
+		margin-top: 40px;
+		text-align: center;
+		
+		img{
+			width: 100px;
+			margin-bottom: 20px;
+		}
+	}
+	
+	.results-table{
+		margin-top: 20px;
+		
+		thead{
+			td:last-child{
+				width: 100px;
+			}
+		}
+	}
+	
 }

@@ -44,6 +44,20 @@ class Tab extends Controller {
 					'band' => 'required[band;song]',
 					'song' => 'required[band;song]'
 				)
+			),
+			'getTabsByUploader' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'uploader_id' => 'int',
+					'limit' => 'int',
+					'offset' => 'int'
+				)
+			),
+			'getTotalTabsByUploader' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'uploader_id' => 'int'
+				)
 			)
 		);
 
@@ -97,6 +111,24 @@ class Tab extends Controller {
 	public function getSearchTotal() {
 		$tab_model = $this->load_model('Tab_model');
 		$data = $tab_model->getSearchTotal($this->params['type'], $this->params['band'], $this->params['song']);
+		$this->sendResponse(1, $data);
+	}
+	
+	/**
+	 * Returns all tabs that were uploaded by the specified user id
+	 */
+	public function getTabsByUploader() {
+		$tab_model = $this->load_model('Tab_model');
+		$data = $tab_model->getTabsByUploader($this->params['uploader_id'], $this->params['limit'], $this->params['offset']);
+		$this->sendResponse(1, $data);
+	}
+	
+	/**
+	 * Returns the total number of user tabs
+	 */
+	public function getTotalTabsByUploader() {
+		$tab_model = $this->load_model('Tab_model');
+		$data = $tab_model->getTotalTabsByUploader($this->params['uploader_id']);
 		$this->sendResponse(1, $data);
 	}
 

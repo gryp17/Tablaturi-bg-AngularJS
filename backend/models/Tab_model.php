@@ -246,4 +246,43 @@ class Tab_model {
 		return $result;
 	}
 	
+	/**
+	 * Returns all tabs that were uploaded by the specified user id
+	 * @param int $uploader_id
+	 * @param int $limit
+	 * @param int $offset
+	 * @return array
+	 */
+	public function getTabsByUploader($uploader_id, $limit, $offset){
+		$data = array();
+
+		$query = $this->connection->prepare('SELECT * FROM tab WHERE uploader_ID = :uploader_id ORDER BY upload_date LIMIT :limit OFFSET :offset');
+		$params = array('uploader_id' => $uploader_id ,'limit' => $limit, 'offset' => $offset);
+
+		$query->execute($params);
+
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			//convert the date to javascript friendly format
+			$row['upload_date'] = Utils::formatDate($row['upload_date']);
+			$row['modified_date'] = Utils::formatDate($row['modified_date']);
+			$data[] = $row;
+		}
+
+		return $data;
+	}
+	
+	/**
+	 * Returns the total number of user tabs
+	 * @param int $uploader_id
+	 * @return array
+	 */
+	public function getTotalTabsByUploader($uploader_id){
+		$query = $this->connection->prepare('SELECT COUNT(ID) AS total FROM tab WHERE uploader_ID = :uploader_id');
+		$query->execute(array('uploader_id' => $uploader_id));
+		
+		$result = $query->fetch(PDO::FETCH_ASSOC);
+		
+		return $result['total'];
+	}
+	
 }

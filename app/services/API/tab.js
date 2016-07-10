@@ -50,6 +50,26 @@ app.factory('TabService', function($http) {
 					song: song
 				}
 			});
+		},
+		getTabsByUploader: function (uploaderId, limit, offset){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getTabsByUploader',
+				data: {
+					uploader_id: uploaderId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalTabsByUploader: function (uploaderId){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getTotalTabsByUploader',
+				data: {
+					uploader_id: uploaderId
+				}
+			});
 		}
 	};
 });

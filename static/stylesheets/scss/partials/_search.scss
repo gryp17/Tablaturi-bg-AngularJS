@@ -3,6 +3,13 @@
 	.title {
 		text-align: center;
 		
+		span{
+			img{
+				width: 100px;
+				margin-bottom: 20px;
+			}
+		}
+		
 		.search-params {
 			color: $red;
 			font-style: italic;

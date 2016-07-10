@@ -2,7 +2,11 @@
 	
 	<h4 class="title">
 		<span ng-show="totalResults > 0">Намерени резултати за</span>
-		<span ng-show="totalResults === 0">Няма намерени резултати за</span>
+		<span ng-show="totalResults === 0">
+			<img src="static/img/icons/sad.png"/>
+			<br/>
+			Няма намерени резултати за
+		</span>
 		
 		<span class="search-params">
 			<span ng-show="band" ng-bind="band"></span>
