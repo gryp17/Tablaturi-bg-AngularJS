@@ -34,6 +34,16 @@ app.factory('UserService', function($http) {
 					id: id
 				}
 			});
-		}
+		},
+		updateUser: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'User/updateUser',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
+		},
 	};
 });

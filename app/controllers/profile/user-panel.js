@@ -24,6 +24,4 @@ app.controller('userPanelController', function ($rootScope, $scope, $routeParams
 		LoadingService.doneLoading();
 	});
 	
-	
-
 });

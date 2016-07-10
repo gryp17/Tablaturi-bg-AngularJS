@@ -74,14 +74,10 @@ class Controller {
 					$value = isset($params[$param_name]) ? $params[$param_name] : '';
 					$rules = split(',', $rules);
 
-					foreach ($rules as $rule) {
-						$rule = trim($rule);
-
-						#check the value with each rule and send the error message if necessary
-						$result = Validator::checkParam($param_name, $value, $rule, $params);
-						if ($result !== true) {
-							$this->sendResponse(0, $result);
-						}
+					#check the value with each rule and send the error message if necessary
+					$result = Validator::checkParam($param_name, $value, $rules, $params);
+					if ($result !== true) {
+						$this->sendResponse(0, $result);
 					}
 				}
 			}

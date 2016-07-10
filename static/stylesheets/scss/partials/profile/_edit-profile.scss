@@ -1,61 +1,78 @@
 #edit-profile-modal {
 	.avatar-wrapper {
 		display: inline-block;
-		position: relative;
-		border-radius: 50%;
-		overflow: hidden;
-		cursor: pointer;
+		width: 200px;
 		
-		&:hover {
+		.avatar-circle {
+			position: relative;
+			border-radius: 50%;
+			overflow: hidden;
+			cursor: pointer;
+			
+			&:hover {
+				.overlay {
+					height: 200px;
+					padding-top: 90px;
+				}
+			}
+			
+			.user-avatar {
+				border-radius: 0px;
+				margin-top: 0;
+			}
+
 			.overlay {
-				height: 200px;
-				padding-top: 90px;
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				margin: auto;
+				width: 100%;
+				height: 50px;
+				padding-top: 10px;
+				text-align: center;
+				background-color: rgba(101, 92, 92, 0.5);
+				transition: all 200ms ease-in;
+
+				span {
+					font-size: 30px;
+					color: #fff;
+				}
 			}
 		}
 		
-		.user-avatar {
-			border-radius: 0px;
-			margin-top: 0;
+		.avatar-hint {
+			margin-top: 5px;
+			margin-bottom: 10px;
+			font-size: 10px;
+			font-style: italic;
 		}
 		
 		.avatar {
 			display: none;
 		}
-		
-		.overlay {
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			margin: auto;
-			width: 100%;
-			height: 50px;
-			padding-top: 10px;
-			text-align: center;
-			background-color: rgba(101, 92, 92, 0.5);
-			transition: all 200ms ease-in;
-			
-			span {
-				font-size: 30px;
-				color: #fff;
-			}
-		}
 	}
-	
+
 	.edit-right {
 		display: inline-block;
 		padding-left: 20px;
-		margin-top: 25px;
 		width: 350px;
 		vertical-align: top;
-		
-		.field-box {
-			margin-bottom: 20px;
-			
-			.text-control {
-				width: 100%;
-			}
+	}
+
+	.field-box {
+		margin-bottom: 20px;
+
+		.text-control {
+			display: block;
+			width: 100%;
 		}
 	}
 	
+	.btn-red{
+		display: block;
+		float: none;
+		margin: auto;
+	}
+
 }

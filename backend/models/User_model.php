@@ -106,6 +106,67 @@ class User_model {
 			return null;
 		}
 	}
+	
+	/**
+	 * Updates the user data
+	 * @param int $id
+	 * @param string $password
+	 * @param string $location
+	 * @param string $occupation
+	 * @param string $web
+	 * @param string $about_me
+	 * @param string $instrument
+	 * @param string $favourite_bands
+	 * @return boolean
+	 */
+	public function updateUser($id, $password, $location, $occupation, $web, $about_me, $instrument, $favourite_bands, $avatar){
+		
+		$params = array(
+			'id' => $id,
+			'location' => $location,
+			'occupation' => $occupation,
+			'web' => $web,
+			'about_me' => $about_me,
+			'instrument' => $instrument,
+			'favourite_bands' => $favourite_bands
+		);
+		
+		#add the avatar part of the query if an avatar has been provided
+		if(isset($avatar) && strlen($avatar) > 0){
+			#add the updated get param in order to prevent caching
+			$params['photo'] = $avatar.'?updated='.time();
+			$avatar_query = 'photo = :photo, ';
+		}else{
+			$avatar_query = '';
+		}
+		
+		#add the password part of the query if a password has been provided
+		if(isset($password) && strlen($password) > 0){
+			$password = md5($password);
+			$params['password'] = $password;
+			$password_query = 'password = :password, ';
+		}else{
+			$password_query = '';
+		}
+				
+		$query = 'UPDATE user SET '
+					. $avatar_query
+					. $password_query
+					. 'location = :location, '
+					. 'occupation = :occupation, '
+					. 'web = :web, '
+					. 'about_me = :about_me, '
+					. 'instrument = :instrument, '
+					. 'favourite_bands = :favourite_bands '
+					. 'WHERE ID = :id';
+		
+		$query = $this->connection->prepare($query);
+		if($query->execute($params)){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 
 }
