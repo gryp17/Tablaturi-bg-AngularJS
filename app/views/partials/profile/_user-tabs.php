@@ -39,7 +39,7 @@
 			</tbody>
 		</table>
 
-		<div class="pagination" total-items="totalUserTabs" limit="userTabsLimit" offset="userTabsOffset" range="2" callback="getUserTabs(limit, offset)"></div>
+		<div class="pagination" total-items="totalUserTabs" limit="limit" offset="offset" range="2" callback="getUserTabs(limit, offset)"></div>
 	</div>
 
 

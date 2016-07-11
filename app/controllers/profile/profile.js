@@ -1,4 +1,27 @@
-app.controller('profileController', function ($rootScope, $scope, $routeParams, $q, UserService, UserCommentService, ValidationService) {
+app.controller('profileController', function ($rootScope, $scope, $routeParams, $q, $location, UserService, UserCommentService, LoadingService, ValidationService) {
+
+	$scope.loggedInUser = $rootScope.loggedInUser;
+
+	$scope.limit = 6;
+	$scope.offset = 0;
+
+	$q.all([
+		UserService.getUser($routeParams.id),
+		UserCommentService.getUserComments($routeParams.id, $scope.limit, $scope.offset),
+		UserCommentService.getTotalUserComments($routeParams.id),
+	]).then(function (responses){
+
+		if(angular.isDefined(responses[0].data.data)){
+			$scope.userData = responses[0].data.data;
+		}else{
+			$location.path('/');
+		}
+		
+		$scope.userComments = responses[1].data.data;
+		$scope.totalUserComments = responses[2].data.data;
+		
+		LoadingService.doneLoading();
+	});
 
 	/**
 	 * Add new comment

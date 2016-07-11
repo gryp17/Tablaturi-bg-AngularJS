@@ -435,7 +435,6 @@ app.config(['$routeProvider', function($routeProvider) {
             }
 		}).when('/profile/:id', {
 			templateUrl: 'app/views/partials/profile/user-panel.php',
-			controller: 'userPanelController',
 			resolve: {
 				factory: authRequired
             }
@@ -1368,7 +1367,30 @@ app.factory('ValidationService', function($filter) {
 		}
 	};
 });
-app.controller('profileController', function ($rootScope, $scope, $routeParams, $q, UserService, UserCommentService, ValidationService) {
+app.controller('profileController', function ($rootScope, $scope, $routeParams, $q, $location, UserService, UserCommentService, LoadingService, ValidationService) {
+
+	$scope.loggedInUser = $rootScope.loggedInUser;
+
+	$scope.limit = 6;
+	$scope.offset = 0;
+
+	$q.all([
+		UserService.getUser($routeParams.id),
+		UserCommentService.getUserComments($routeParams.id, $scope.limit, $scope.offset),
+		UserCommentService.getTotalUserComments($routeParams.id),
+	]).then(function (responses){
+
+		if(angular.isDefined(responses[0].data.data)){
+			$scope.userData = responses[0].data.data;
+		}else{
+			$location.path('/');
+		}
+		
+		$scope.userComments = responses[1].data.data;
+		$scope.totalUserComments = responses[2].data.data;
+		
+		LoadingService.doneLoading();
+	});
 
 	/**
 	 * Add new comment
@@ -1480,44 +1502,10 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 	});
 
 });
-app.controller('userPanelController', function ($rootScope, $scope, $routeParams, $location, $q, UserService, UserCommentService, TabService, LoadingService) {
-
-	$scope.loggedInUser = $rootScope.loggedInUser;
-
-	//user comments
-	$scope.limit = 6;
-	$scope.offset = 0;
-	
-	//user tabs
-	$scope.userTabsLimit = 20;
-	$scope.userTabsOffset = 0;
-
-	$q.all([
-		UserService.getUser($routeParams.id),
-		UserCommentService.getUserComments($routeParams.id, $scope.limit, $scope.offset),
-		UserCommentService.getTotalUserComments($routeParams.id),
-		TabService.getTabsByUploader($routeParams.id, $scope.userTabsLimit, $scope.userTabsOffset),
-		TabService.getTotalTabsByUploader($routeParams.id)
-		//TODO: load user favourites
-	]).then(function (responses){
-
-		if(angular.isDefined(responses[0].data.data)){
-			$scope.userData = responses[0].data.data;
-		}else{
-			$location.path('/');
-		}
-		
-		$scope.userComments = responses[1].data.data;
-		$scope.totalUserComments = responses[2].data.data;
-		
-		$scope.userTabs = responses[3].data.data;
-		$scope.totalUserTabs = responses[4].data.data;
-		
-		LoadingService.doneLoading();
-	});
-	
-});
 app.controller('userTabsController', function ($rootScope, $scope, $routeParams, $q, TabService, LoadingService) {
+
+	$scope.limit = 20;
+	$scope.offset = 0;
 
 	$scope.getUserTabs = function (limit, offset){
 		$q.all([
@@ -1528,6 +1516,9 @@ app.controller('userTabsController', function ($rootScope, $scope, $routeParams,
 			$scope.totalUserTabs = result[1].data.data;
 		});
 	};
+	
+	//get the first batch of tabs
+	$scope.getUserTabs($scope.limit, $scope.offset);
 
 });
 app.factory('ArticleCommentService', function($http) {

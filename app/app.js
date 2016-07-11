@@ -69,7 +69,6 @@ app.config(['$routeProvider', function($routeProvider) {
             }
 		}).when('/profile/:id', {
 			templateUrl: 'app/views/partials/profile/user-panel.php',
-			controller: 'userPanelController',
 			resolve: {
 				factory: authRequired
             }
