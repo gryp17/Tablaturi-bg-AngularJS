@@ -136,6 +136,17 @@ create table article_comment(
 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
+create table user_favourite(
+    ID int AUTO_INCREMENT,
+    tab_ID int,
+    user_ID int,
+    date datetime,
+    constraint fk_favourite_tab_id foreign key (tab_ID) references tab(ID),
+    constraint fk_favourite_user_id foreign key(user_ID) references user(ID),
+    constraint pk_user_favourite primary key(ID)
+)
+CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 #data
 
 insert into user values(1,'plamen', '123456', 'skate_mania@abv.bg', now(), now(), 'm', '', 'admin', 1);

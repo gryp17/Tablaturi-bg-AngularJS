@@ -169,3 +169,19 @@ CREATE TABLE IF NOT EXISTS `user_report` (
   KEY `fk_reported_user` (`reported_ID`),
   KEY `fk_reporter_userr` (`reporter_ID`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_favourite`
+--
+
+CREATE TABLE IF NOT EXISTS `user_favourite` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `tab_ID` int(11) DEFAULT NULL,
+  `user_ID` int(11) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_favourite_tab_id` (`tab_ID`),
+  KEY `fk_favourite_user_id` (`user_ID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

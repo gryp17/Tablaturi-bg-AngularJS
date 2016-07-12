@@ -1,8 +1,13 @@
-app.controller('userTabsController', function ($rootScope, $scope, $routeParams, $q, TabService, LoadingService) {
+app.controller('userTabsController', function ($scope, $routeParams, $q, TabService) {
 
 	$scope.limit = 20;
 	$scope.offset = 0;
 
+	/**
+	 * Returns the specified user tabs
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
 	$scope.getUserTabs = function (limit, offset){
 		$q.all([
 			TabService.getTabsByUploader($routeParams.id, limit, offset),

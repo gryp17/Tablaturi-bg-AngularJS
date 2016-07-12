@@ -1,0 +1,35 @@
+> #user-favourites{
+	
+	.no-user-favourites{
+		margin-top: 40px;
+		text-align: center;
+		
+		img{
+			width: 100px;
+			margin-bottom: 20px;
+		}
+	}
+	
+	.results-table{
+		margin-top: 20px;
+				
+		.tab-type{
+			width: 100px;
+		}
+		
+		.remove-favourite{
+			width: 80px;
+			text-align: center;
+			
+			span{
+				cursor: pointer;
+				font-size: 15px;
+				
+				&:hover{
+					color: $red;
+				}
+			}
+		}
+	}
+	
+}

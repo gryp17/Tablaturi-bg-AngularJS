@@ -14,8 +14,13 @@ app.directive('pagination', function() {
 			
 			//initialize the pagination when scope.totalItems is set
 			scope.$watch('totalItems', function (){
-				if(angular.isDefined(scope.totalItems)){					
-					scope.currentPage = 1;
+				if(angular.isDefined(scope.totalItems)){
+					
+					//initialize the currentPage if it's not set yet
+					if(angular.isUndefined(scope.currentPage)){
+						scope.currentPage = 1;
+					}
+
 					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
 					scope.generatePages();
 				}

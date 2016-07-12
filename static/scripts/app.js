@@ -1060,8 +1060,13 @@ app.directive('pagination', function() {
 			
 			//initialize the pagination when scope.totalItems is set
 			scope.$watch('totalItems', function (){
-				if(angular.isDefined(scope.totalItems)){					
-					scope.currentPage = 1;
+				if(angular.isDefined(scope.totalItems)){
+					
+					//initialize the currentPage if it's not set yet
+					if(angular.isUndefined(scope.currentPage)){
+						scope.currentPage = 1;
+					}
+
 					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
 					scope.generatePages();
 				}
@@ -1502,11 +1507,62 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 	});
 
 });
-app.controller('userTabsController', function ($rootScope, $scope, $routeParams, $q, TabService, LoadingService) {
+app.controller('userFavouritesController', function ($rootScope, $scope, $routeParams, $q, UserFavouriteService) {
+	
+	$scope.profileId = parseInt($routeParams.id);
+	$scope.loggedInUser = $rootScope.loggedInUser;
 
 	$scope.limit = 20;
 	$scope.offset = 0;
 
+	/**
+	 * Returns the specified user favourite tabs
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
+	$scope.getUserFavourites = function (limit, offset){
+		$q.all([
+			UserFavouriteService.getUserFavourites($routeParams.id, limit, offset),
+			UserFavouriteService.getTotalUserFavourites($routeParams.id)
+		]).then(function (result){
+			$scope.userFavourites = result[0].data.data;
+			$scope.totalUserFavourites = result[1].data.data;
+		});
+	};
+	
+	/**
+	 * Deletes the specified user tab from the user favourites list
+	 * @param {int} tabId
+	 */
+	$scope.deleteFavouriteTab = function (tabId){
+		UserFavouriteService.deleteFavouriteTab(tabId).then(function (){
+			//manually reduce the number of favourites
+			$scope.totalUserFavourites--;
+			
+			//if the user has deleted the last tab on the page - reduce the offset by one page
+			if($scope.offset >= $scope.totalUserFavourites){
+				$scope.offset = $scope.offset - $scope.limit;
+			}
+			
+			//reload the page
+			$scope.getUserFavourites($scope.limit, $scope.offset);
+		});
+	};
+	
+	//get the first batch of tabs
+	$scope.getUserFavourites($scope.limit, $scope.offset);
+
+});
+app.controller('userTabsController', function ($scope, $routeParams, $q, TabService) {
+
+	$scope.limit = 20;
+	$scope.offset = 0;
+
+	/**
+	 * Returns the specified user tabs
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
 	$scope.getUserTabs = function (limit, offset){
 		$q.all([
 			TabService.getTabsByUploader($routeParams.id, limit, offset),
@@ -1722,6 +1778,48 @@ app.factory('UserCommentService', function($http) {
 				data: {
 					user_id: userId,
 					content: content
+				}
+			});
+		}
+	};
+});
+app.factory('UserFavouriteService', function($http) {
+	return {
+		getUserFavourites: function(userId, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'UserFavourite/getUserFavourites',
+				data: {
+					user_id: userId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalUserFavourites: function(userId) {
+			return $http({
+				method: 'POST',
+				url: 'UserFavourite/getTotalUserFavourites',
+				data: {
+					user_id: userId
+				}
+			});
+		},
+		deleteFavouriteTab: function(tabId) {
+			return $http({
+				method: 'POST',
+				url: 'UserFavourite/deleteFavouriteTab',
+				data: {
+					tab_id: tabId
+				}
+			});
+		},
+		addFavouriteTab: function(tabId) {
+			return $http({
+				method: 'POST',
+				url: 'UserFavourite/addFavouriteTab',
+				data: {
+					tab_id: tabId
 				}
 			});
 		}
