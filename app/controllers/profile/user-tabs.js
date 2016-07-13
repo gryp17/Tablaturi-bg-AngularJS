@@ -1,4 +1,7 @@
-app.controller('userTabsController', function ($scope, $routeParams, $q, TabService) {
+app.controller('userTabsController', function ($rootScope, $scope, $routeParams, $q, TabService) {
+
+	$scope.profileId = parseInt($routeParams.id);
+	$scope.loggedInUser = $rootScope.loggedInUser;
 
 	$scope.limit = 20;
 	$scope.offset = 0;

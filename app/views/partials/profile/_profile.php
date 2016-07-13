@@ -1,5 +1,12 @@
 <div ng-controller="profileController" role="tabpanel" id="profile" class="tab-pane active">
-	<div class="username">{{userData.username}} 
+	<div class="username">
+		<span ng-if="userData.gender === 'M'">
+			<img class="gender-icon male" src="static/img/icons/male-sign.png"/>
+		</span>
+		<span ng-if="userData.gender === 'F'">
+			<img class="gender-icon female" src="static/img/icons/female-sign.png"/>
+		</span>
+		{{userData.username}} 
 		<span ng-show="userData.type === 'admin'">(Админ)</span>
 	</div>
 	

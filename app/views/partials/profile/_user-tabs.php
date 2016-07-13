@@ -14,7 +14,8 @@
 					<td>Група</td>
 					<td>Песен</td>
 					<td>Тип</td>
-					<td>Рейтинг</td>
+					<td class="rating">Рейтинг</td>
+					<td ng-if="loggedInUser.ID === profileId" class="edit-tab">Редактирай</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -31,9 +32,12 @@
 						</a>
 					</td>
 					<td ng-bind="tab.type | tabType"></td>
-					<td>
+					<td class="rating">
 						<span ng-repeat="star in tab.rating| ratingStars track by $index" 
 							  ng-class="{'star': star === 1, 'empty-star': star === 0}"></span>
+					</td>
+					<td ng-if="loggedInUser.ID === profileId" class="edit-tab">
+						<span title="Редактирай таблатурата" class="glyphicon glyphicon-pencil"></span>
 					</td>
 				</tr>
 			</tbody>

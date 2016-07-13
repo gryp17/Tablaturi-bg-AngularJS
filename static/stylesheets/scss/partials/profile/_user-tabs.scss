@@ -13,9 +13,22 @@
 	.results-table{
 		margin-top: 20px;
 		
-		thead{
-			td:last-child{
-				width: 100px;
+		.rating{
+			width: 100px;
+		}
+		
+		.edit-tab{
+			width: 120px;
+			text-align: center;
+			
+			span{
+				cursor: pointer;
+				font-size: 17px;
+				padding: 0px 15px;
+				
+				&:hover{
+					color: $red;
+				}
 			}
 		}
 	}

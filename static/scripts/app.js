@@ -1553,7 +1553,18 @@ app.controller('userFavouritesController', function ($rootScope, $scope, $routeP
 	$scope.getUserFavourites($scope.limit, $scope.offset);
 
 });
-app.controller('userTabsController', function ($scope, $routeParams, $q, TabService) {
+app.controller('userSearchController', function ($scope, $routeParams, $q, UserService, ValidationService) {
+
+	$scope.limit = 6;
+	$scope.offset = 0;
+
+	console.log("user search");
+
+});
+app.controller('userTabsController', function ($rootScope, $scope, $routeParams, $q, TabService) {
+
+	$scope.profileId = parseInt($routeParams.id);
+	$scope.loggedInUser = $rootScope.loggedInUser;
 
 	$scope.limit = 20;
 	$scope.offset = 0;

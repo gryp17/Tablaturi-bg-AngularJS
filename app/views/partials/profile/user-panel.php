@@ -22,6 +22,7 @@
 		<?php include "_profile.php" ?>
 		<?php include "_user-tabs.php" ?>
 		<?php include "_user-favourites.php" ?>
+		<?php include "_user-search.php" ?>
 	</div>
 
 </div>

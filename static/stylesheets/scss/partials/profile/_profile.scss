@@ -4,6 +4,18 @@
 	.username {
 		display: inline-block;
 		font-size: 21px;
+		
+		.gender-icon{
+			margin-top: -5px;
+			
+			&.female{
+				width: 19px;
+			}
+			
+			&.male{
+				width: 15px;
+			}
+		}
 
 		span {
 			font-size: 14px;
