@@ -167,6 +167,92 @@ class User_model {
 			return false;
 		}
 	}
+	
+	
+	/**
+	 * Generates the correct search/count query when searching for users
+	 * @param string $type (search|count)
+	 * @param string $keyword
+	 * @param int $limit
+	 * @param int $offset
+	 * @return array
+	 */
+	private function generateSearchQuery($type, $keyword, $limit, $offset){
+		$result = array(
+			'query' => 'WHERE '
+					. '(username LIKE :username '
+					. 'OR about_me LIKE :about_me '
+					. 'OR location LIKE :location '
+					. 'OR instrument LIKE :instrument '
+					. 'OR occupation LIKE :occupation '
+					. 'OR favourite_bands LIKE :favourite_bands) '
+					. 'AND activated = 1 ORDER BY username ',
+			'params' => array(
+				'username' => '%' . $keyword . '%',
+				'about_me' => '%' . $keyword . '%',
+				'location' => '%' . $keyword . '%',
+				'instrument' => '%' . $keyword . '%',
+				'occupation' => '%' . $keyword . '%',
+				'favourite_bands' => '%' . $keyword . '%'
+			)
+		);
+		
+		#if the query type is search add the limit and offset params
+		if($type === 'search'){
+			$result['query'] = 'SELECT * FROM user '.$result['query'];
+			$result['query'] .= 'LIMIT :limit OFFSET :offset';
+			
+			$result['params']['limit'] = $limit;
+			$result['params']['offset'] = $offset;
+			
+		}else{
+			$result['query'] = 'SELECT COUNT(*) AS total FROM user '.$result['query'];
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * Searches for users using the provided keyword
+	 * @param string $keyword
+	 * @param int $limit
+	 * @param int $offset
+	 * @return array
+	 */
+	public function search($keyword, $limit, $offset){
+		$data = array();
+		
+		$generated_query = $this->generateSearchQuery('search', $keyword, $limit, $offset);
+		
+		$query = $this->connection->prepare($generated_query['query']);		
+		$query->execute($generated_query['params']);
+
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {			
+			//convert the dates to javascript friendly format
+			$row['birthday'] = Utils::formatDate($row['birthday']);
+			$row['last_active_date'] = Utils::formatDate($row['last_active_date']);
+			$row['register_date'] = Utils::formatDate($row['register_date']);
+			$data[] = $row;
+		}
+
+		return $data;
+	}
+	
+	/**
+	 * Returns the total number of users that match the search
+	 * @param string $keyword
+	 * @return int
+	 */
+	public function getTotalSearchResults($keyword){
+		$generated_query = $this->generateSearchQuery('count', $keyword, null, null);
+		
+		$query = $this->connection->prepare($generated_query['query']);
+		$query->execute($generated_query['params']);
+		
+		$result = $query->fetch(PDO::FETCH_ASSOC);
+		
+		return $result['total'];
+	}
 
 
 }

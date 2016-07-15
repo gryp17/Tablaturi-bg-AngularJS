@@ -1,11 +1,7 @@
 <div ng-controller="profileController" role="tabpanel" id="profile" class="tab-pane active">
 	<div class="username">
-		<span ng-if="userData.gender === 'M'">
-			<img class="gender-icon male" src="static/img/icons/male-sign.png"/>
-		</span>
-		<span ng-if="userData.gender === 'F'">
-			<img class="gender-icon female" src="static/img/icons/female-sign.png"/>
-		</span>
+		<img ng-if="userData.gender === 'M'" class="gender-icon male" src="static/img/icons/male-sign.png"/>
+		<img ng-if="userData.gender === 'F'" class="gender-icon female" src="static/img/icons/female-sign.png"/>
 		{{userData.username}} 
 		<span ng-show="userData.type === 'admin'">(Админ)</span>
 	</div>

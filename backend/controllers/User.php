@@ -54,6 +54,20 @@ class User extends Controller {
 				  'favourite_bands' => 'optional, max-500'
 				)
 			),
+			'search' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'keyword' => 'required, min-3, max-50',
+					'limit' => 'int',
+					'offset' => 'int'
+				)
+			),
+			'getTotalSearchResults' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'keyword' => 'required, min-3, max-50',
+				)
+			)
 		);
 
 		#request params
@@ -183,6 +197,26 @@ class User extends Controller {
 		$avatar = 'avatar-' . $user_id . $extension;
 		
 		return $avatar;
+	}
+	
+	/**
+	 * Searches for users using the provided keyword
+	 */
+	public function search(){
+		$user_model = $this->load_model('User_model');
+		$data = $user_model->search($this->params['keyword'], $this->params['limit'], $this->params['offset']);
+
+		$this->sendResponse(1, $data);
+	}
+	
+	/**
+	 * Returns the total number of users that match the search
+	 */
+	public function getTotalSearchResults(){
+		$user_model = $this->load_model('User_model');
+		$data = $user_model->getTotalSearchResults($this->params['keyword']);
+
+		$this->sendResponse(1, $data);
 	}
 
 }

@@ -1,5 +1,53 @@
 > #user-search{
-	
-	color: green;
-	
+
+	.search-wrapper{
+		margin-top: 30px;
+		text-align: center;
+
+		.field-box{
+			display: inline-block;
+
+			.text-control{
+				width: 300px;
+			}
+
+			.error-wrapper{
+				text-align: left;
+			}
+		}
+
+		.btn{
+			margin-left: 7px;
+			margin-top: -3px;
+		}
+	}
+
+	.no-results{
+		margin-top: 40px;
+		text-align: center;
+
+		img{
+			width: 100px;
+			margin-bottom: 20px;
+		}
+	}
+
+	.results-table{
+		margin-top: 30px;
+
+		.gender-icon{
+			margin-top: -5px;
+
+			&.female{
+				width: 19px;
+				margin-left: -4px;
+			}
+
+			&.male{
+				width: 15px;
+			}
+		}
+
+	}
+
 }

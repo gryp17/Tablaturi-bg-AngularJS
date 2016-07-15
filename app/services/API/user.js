@@ -45,5 +45,25 @@ app.factory('UserService', function($http) {
 				data: formData
 			});
 		},
+		search: function(keyword, limit, offset){
+			return $http({
+				method: 'POST',
+				url: 'User/search',
+				data: {
+					keyword: keyword,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalSearchResults: function(keyword){
+			return $http({
+				method: 'POST',
+				url: 'User/getTotalSearchResults',
+				data: {
+					keyword: keyword
+				}
+			});
+		}
 	};
 });
