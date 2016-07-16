@@ -1,6 +1,6 @@
 <?php
 
-class User_comment_model {
+class UserCommentModel {
 
 	private $connection;
 

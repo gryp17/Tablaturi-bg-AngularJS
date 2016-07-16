@@ -36,7 +36,7 @@ class BackingTrack extends Controller {
 	 * Returns all backing tracks that match the specified search criterias
 	 */
 	public function search() {
-		$bt_model = $this->load_model('Backing_track_model');
+		$bt_model = $this->load_model('BackingTrackModel');
 
 		#if the band is set
 		if (strlen($this->params['band']) > 0) {

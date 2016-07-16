@@ -1,6 +1,6 @@
 <?php
 
-class Tab_model {
+class TabModel {
 
 	private $connection;
 

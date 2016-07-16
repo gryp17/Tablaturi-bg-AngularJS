@@ -1,6 +1,6 @@
 <?php
 
-class User_favourite_model {
+class UserFavouriteModel {
 
 	private $connection;
 

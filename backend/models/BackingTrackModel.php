@@ -1,6 +1,6 @@
 <?php
 
-class Backing_track_model {
+class BackingTrackModel {
 
 	/**
 	 * Returns all backing tracks from the bands that match the band search criteria

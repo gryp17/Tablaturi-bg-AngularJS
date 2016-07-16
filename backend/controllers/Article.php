@@ -44,7 +44,7 @@ class Article extends Controller {
 	 * Returns all articles
 	 */
 	public function getArticles() {
-		$article_model = $this->load_model('Article_model');
+		$article_model = $this->load_model('ArticleModel');
 		$data = $article_model->getArticles($this->params['limit'], $this->params['offset']);
 		$this->sendResponse(1, $data);
 	}
@@ -53,7 +53,7 @@ class Article extends Controller {
 	 * Returns all articles that match the specified date
 	 */
 	public function getArticlesByDate() {
-		$article_model = $this->load_model('Article_model');
+		$article_model = $this->load_model('ArticleModel');
 		$data = $article_model->getArticlesByDate($this->params['date'], $this->params['limit'], $this->params['offset']);
 		$this->sendResponse(1, $data);
 	}
@@ -62,7 +62,7 @@ class Article extends Controller {
 	 * Returns single article data matching the provided ID
 	 */
 	public function getArticle() {
-		$article_model = $this->load_model('Article_model');
+		$article_model = $this->load_model('ArticleModel');
 		$data = $article_model->getArticle($this->params['id']);
 
 		#if the article exists increment the views

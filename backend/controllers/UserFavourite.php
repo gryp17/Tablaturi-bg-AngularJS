@@ -49,7 +49,7 @@ class UserFavourite extends Controller {
 	 * Returns all favourite tabs for the specified user id
 	 */
 	public function getUserFavourites() {
-		$user_favourite_model = $this->load_model('User_favourite_model');
+		$user_favourite_model = $this->load_model('UserFavouriteModel');
 		$data = $user_favourite_model->getUserFavourites($this->params['user_id'], $this->params['limit'], $this->params['offset']);
 
 		$this->sendResponse(1, $data);
@@ -59,7 +59,7 @@ class UserFavourite extends Controller {
 	 * Returns the total number of favourite tabs for the specified user id
 	 */
 	public function getTotalUserFavourites() {
-		$user_favourite_model = $this->load_model('User_favourite_model');
+		$user_favourite_model = $this->load_model('UserFavouriteModel');
 		$data = $user_favourite_model->getTotalUserFavourites($this->params['user_id']);
 
 		$this->sendResponse(1, $data);
@@ -69,7 +69,7 @@ class UserFavourite extends Controller {
 	 * Deletes the specified tab from the user's favourites list
 	 */
 	public function deleteFavouriteTab() {
-		$user_favourite_model = $this->load_model('User_favourite_model');
+		$user_favourite_model = $this->load_model('UserFavouriteModel');
 		$user_favourite_model->deleteFavouriteTab($_SESSION['user']['ID'] ,$this->params['tab_id']);
 		
 		$this->sendResponse(1, true);
@@ -80,7 +80,7 @@ class UserFavourite extends Controller {
 	 * returns true if the record was added and false if the tab already is in favourites
 	 */
 	public function addFavouriteTab() {
-		$user_favourite_model = $this->load_model('User_favourite_model');
+		$user_favourite_model = $this->load_model('UserFavouriteModel');
 		$result = $user_favourite_model->addFavouriteTab($_SESSION['user']['ID'] ,$this->params['tab_id']);
 		
 		$this->sendResponse(1, $result);

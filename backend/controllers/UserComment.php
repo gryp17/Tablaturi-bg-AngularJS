@@ -44,7 +44,7 @@ class UserComment extends Controller {
 	 * Returns all article comments for the specified user id
 	 */
 	public function getUserComments() {
-		$user_comment_model = $this->load_model('User_comment_model');
+		$user_comment_model = $this->load_model('UserCommentModel');
 		$data = $user_comment_model->getUserComments($this->params['user_id'], $this->params['limit'], $this->params['offset']);
 
 		$this->sendResponse(1, $data);
@@ -54,7 +54,7 @@ class UserComment extends Controller {
 	 * Returns the total number of comments for the specified user id
 	 */
 	public function getTotalUserComments() {
-		$user_comment_model = $this->load_model('User_comment_model');
+		$user_comment_model = $this->load_model('UserCommentModel');
 		$data = $user_comment_model->getTotalUserComments($this->params['user_id']);
 
 		$this->sendResponse(1, $data);
@@ -64,7 +64,7 @@ class UserComment extends Controller {
 	 * Adds new user comment
 	 */
 	public function addUserComment() {
-		$user_comment_model = $this->load_model('User_comment_model');
+		$user_comment_model = $this->load_model('UserCommentModel');
 		$result = $user_comment_model->addUserComment($this->params['user_id'], $_SESSION['user']['ID'], $this->sanitize($this->params['content']));
 
 		if ($result === true) {

@@ -82,7 +82,7 @@ class User extends Controller {
 	 * Checks if the username and password credentials match and starts the session
 	 */
 	public function login() {
-		$user_model = $this->load_model('User_model');
+		$user_model = $this->load_model('UserModel');
 		$data = $user_model->checkLogin($this->params['login_username'], $this->params['login_password']);
 
 		if ($data === false) {
@@ -114,9 +114,12 @@ class User extends Controller {
 
 	/**
 	 * Checks if the user session is set
+	 * Also updates the last_active date/time of the user
 	 */
 	public function isLoggedIn() {
 		if (isset($_SESSION['user'])) {
+			$user_model = $this->load_model('UserModel');
+			$user_model->updateActivity($_SESSION['user']['ID']);
 			$this->sendResponse(1, array('logged_in' => true, 'user' => $_SESSION['user']));
 		} else {
 			$this->sendResponse(1, array('logged_in' => false));
@@ -127,7 +130,7 @@ class User extends Controller {
 	 * New user signup
 	 */
 	public function signup() {
-		$user_model = $this->load_model('User_model');
+		$user_model = $this->load_model('UserModel');
 		$user_model->insertUser($this->params['signup_username'], $this->params['signup_password'], $this->params['signup_email'], $this->params['signup_birthday'], $this->params['signup_gender'], null, 'user');
 
 		if (Utils::sendConfirmationEmail($this->params['signup_username'], $this->params['signup_email'])) {
@@ -141,7 +144,7 @@ class User extends Controller {
 	 * Returns the specified user data
 	 */
 	public function getUser() {
-		$user_model = $this->load_model('User_model');
+		$user_model = $this->load_model('UserModel');
 		$data = $user_model->getUser($this->params['id']);
 
 		$this->sendResponse(1, $data);
@@ -151,7 +154,7 @@ class User extends Controller {
 	 * Updates the user's data
 	 */
 	public function updateUser() {
-		$user_model = $this->load_model('User_model');
+		$user_model = $this->load_model('UserModel');
 		$new_avatar = '';
 		
 		#if there is a submited avatar
@@ -203,7 +206,7 @@ class User extends Controller {
 	 * Searches for users using the provided keyword
 	 */
 	public function search(){
-		$user_model = $this->load_model('User_model');
+		$user_model = $this->load_model('UserModel');
 		$data = $user_model->search($this->params['keyword'], $this->params['limit'], $this->params['offset']);
 
 		$this->sendResponse(1, $data);
@@ -213,7 +216,7 @@ class User extends Controller {
 	 * Returns the total number of users that match the search
 	 */
 	public function getTotalSearchResults(){
-		$user_model = $this->load_model('User_model');
+		$user_model = $this->load_model('UserModel');
 		$data = $user_model->getTotalSearchResults($this->params['keyword']);
 
 		$this->sendResponse(1, $data);

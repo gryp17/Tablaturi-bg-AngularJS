@@ -44,7 +44,7 @@ class ArticleComment extends Controller {
 	 * Returns all article comments for the specified article id
 	 */
 	public function getArticleComments() {
-		$article_comment_model = $this->load_model('Article_comment_model');
+		$article_comment_model = $this->load_model('ArticleCommentModel');
 		$data = $article_comment_model->getArticleComments($this->params['article_id'], $this->params['limit'], $this->params['offset']);
 
 		$this->sendResponse(1, $data);
@@ -54,7 +54,7 @@ class ArticleComment extends Controller {
 	 * Returns the total number of comments for the specified article id
 	 */
 	public function getTotalArticleComments() {
-		$article_comment_model = $this->load_model('Article_comment_model');
+		$article_comment_model = $this->load_model('ArticleCommentModel');
 		$data = $article_comment_model->getTotalArticleComments($this->params['article_id']);
 
 		$this->sendResponse(1, $data);
@@ -64,7 +64,7 @@ class ArticleComment extends Controller {
 	 * Adds new article comment
 	 */
 	public function addArticleComment() {
-		$article_comment_model = $this->load_model('Article_comment_model');
+		$article_comment_model = $this->load_model('ArticleCommentModel');
 		$result = $article_comment_model->addArticleComment($this->params['article_id'], $_SESSION['user']['ID'], $this->sanitize($this->params['content']));
 
 		if ($result === true) {

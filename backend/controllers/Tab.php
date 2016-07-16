@@ -73,7 +73,7 @@ class Tab extends Controller {
 	 * Returns the total number of tabs in the database
 	 */
 	public function getTabsCount() {
-		$tab_model = $this->load_model('Tab_model');
+		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getTabsCount();
 		$this->sendResponse(1, $data);
 	}
@@ -82,7 +82,7 @@ class Tab extends Controller {
 	 * Returns the most downloaded, liked, latest and commented tabs
 	 */
 	public function getMost() {
-		$tab_model = $this->load_model('Tab_model');
+		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getMost($this->params['type'], $this->params['limit']);
 		$this->sendResponse(1, $data);
 	}
@@ -91,7 +91,7 @@ class Tab extends Controller {
 	 * Returns all band/song names that contain the provided search term
 	 */
 	public function autocomplete() {
-		$tab_model = $this->load_model('Tab_model');
+		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getAutocompleteResults($this->params['type'], $this->params['term'], $this->params['band']);
 		$this->sendResponse(1, $data);
 	}
@@ -100,7 +100,7 @@ class Tab extends Controller {
 	 * Returns all tabs that match the specified search criterias
 	 */
 	public function search() {
-		$tab_model = $this->load_model('Tab_model');
+		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->search($this->params['type'], $this->params['band'], $this->params['song'], $this->params['limit'], $this->params['offset']);
 		$this->sendResponse(1, $data);
 	}
@@ -109,7 +109,7 @@ class Tab extends Controller {
 	 * Returns the total number of tabs that match the specified search criterias
 	 */
 	public function getSearchTotal() {
-		$tab_model = $this->load_model('Tab_model');
+		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getSearchTotal($this->params['type'], $this->params['band'], $this->params['song']);
 		$this->sendResponse(1, $data);
 	}
@@ -118,7 +118,7 @@ class Tab extends Controller {
 	 * Returns all tabs that were uploaded by the specified user id
 	 */
 	public function getTabsByUploader() {
-		$tab_model = $this->load_model('Tab_model');
+		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getTabsByUploader($this->params['uploader_id'], $this->params['limit'], $this->params['offset']);
 		$this->sendResponse(1, $data);
 	}
@@ -127,7 +127,7 @@ class Tab extends Controller {
 	 * Returns the total number of user tabs
 	 */
 	public function getTotalTabsByUploader() {
-		$tab_model = $this->load_model('Tab_model');
+		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getTotalTabsByUploader($this->params['uploader_id']);
 		$this->sendResponse(1, $data);
 	}

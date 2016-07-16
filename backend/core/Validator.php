@@ -1,6 +1,6 @@
 <?php
 
-require_once '/backend/models/User_model.php';
+require_once '/backend/models/UserModel.php';
 
 /**
  * Validator class used for user input validations
@@ -81,7 +81,7 @@ class Validator {
 			elseif (preg_match('/unique\[(.+?)\]/i', $rule, $matches)) {
 				$unique_field = $matches[1];
 
-				$user_model = new User_model();
+				$user_model = new UserModel();
 				$result = $user_model->isUnique($unique_field, $value);
 
 				if ($user_model->isUnique($unique_field, $value) === false) {

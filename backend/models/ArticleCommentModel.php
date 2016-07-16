@@ -1,6 +1,6 @@
 <?php
 
-class Article_comment_model {
+class ArticleCommentModel {
 
 	private $connection;
 

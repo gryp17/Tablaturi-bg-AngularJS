@@ -1,6 +1,6 @@
 <?php
 
-class User_model {
+class UserModel {
 
 	private $connection;
 
@@ -22,8 +22,9 @@ class User_model {
             $password = md5($password);
         }
 		
-		$query = $this->connection->prepare('select * from user where username = :username and password = :password and activated = 1');
-		$query->execute(array('username' => $username, 'password' => $password));
+		$query = $this->connection->prepare('SELECT * FROM user WHERE username = :username AND password = :password AND activated = 1');
+		$params = array('username' => $username, 'password' => $password);
+		$query->execute($params);
 
         $result = $query->fetch(PDO::FETCH_ASSOC);
 		
@@ -33,6 +34,17 @@ class User_model {
 		}else{
 			return false;
 		}
+	}
+	
+	/**
+	 * Updates the last_active_date of the user
+	 * @param int $user_id
+	 * @return boolean
+	 */
+	public function updateActivity($user_id){
+		$query = $this->connection->prepare('UPDATE user SET last_active_date = now() WHERE ID = :user_id');
+		$params = array('user_id' => $user_id);
+		return $query->execute($params);
 	}
 	
 	/**
@@ -253,6 +265,8 @@ class User_model {
 		
 		return $result['total'];
 	}
+	
+	
 
 
 }

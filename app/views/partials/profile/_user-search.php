@@ -9,6 +9,10 @@
 		</div>
 		<input class="btn btn-red" type="button" value="Търси" ng-click="newSearch()"/>
 	</div>
+	
+	<div class="search-ad" ng-show="!users">
+		ad
+	</div>
 
 	<div class="no-results" ng-show="totalUsers === 0">
 		<img src="static/img/icons/sad.png"/>
