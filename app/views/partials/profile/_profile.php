@@ -10,6 +10,10 @@
 		<img src="static/img/icons/pencil.png" /> Редактирай
 	</button>
 	
+	<button class="btn btn-red outline" ng-if="loggedInUser.ID !== userData.ID" ng-click="openReportModal()">
+		<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> Докладвай
+	</button>
+	
 	<div class="clearfix"></div>
 	
 	<br/>
@@ -123,5 +127,6 @@
 	</div>
 	
 	<?php include "_edit-profile.php" ?>
+	<?php include "_report-profile.php" ?>
 	
 </div>

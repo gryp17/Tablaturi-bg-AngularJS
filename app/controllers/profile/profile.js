@@ -60,6 +60,36 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 	};
 	
 	/**
+	 * Opens the report user modal
+	 */
+	$scope.openReportModal = function() {
+		$scope.reportSuccess = false;
+		
+		$scope.reportedUser = {
+			id: $scope.userData.ID,
+			username: $scope.userData.username,
+			reason: 'rude language',
+			other: ''
+		};
+		
+		$scope.$watch('reportedUser', function() {
+			if($scope.reportedUser.reason !== 'other') {
+				$scope.reportedUser.other = '';
+			}
+		}, true);
+		
+		$('#report-profile-modal').modal('show');
+	};
+	
+	/**
+	 * Reports the provided user
+	 * @param {Object} reportedUser
+	 */
+	$scope.reportUser = function(reportedUser) {
+		$scope.reportSuccess = true;
+	};
+	
+	/**
 	 * Opens the hidden file input
 	 */
 	$scope.browse = function() {

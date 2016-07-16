@@ -7,11 +7,11 @@
 			</div>
 			<div class="modal-body">
 				<div class="field-box">
-					<input class="text-control validation" ng-keypress="handleKeyPress($event)" type="text" ng-model="loginData.login_username" name="login_username" placeholder="Потребителско име"/>
+					<input class="text-control validation" enter-click="#login-modal .btn" type="text" ng-model="loginData.login_username" name="login_username" placeholder="Потребителско име"/>
 					<span class="error-msg"></span>
 				</div>
 				<div class="field-box">
-					<input class="text-control validation" ng-keypress="handleKeyPress($event)" type="password" ng-model="loginData.login_password" name="login_password" placeholder="Парола"/>
+					<input class="text-control validation" enter-click="#login-modal .btn" type="password" ng-model="loginData.login_password" name="login_password" placeholder="Парола"/>
 					<span class="error-msg"></span>
 				</div>
 				

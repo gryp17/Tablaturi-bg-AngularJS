@@ -12,7 +12,13 @@
 
 	&.btn-red{
 		background-color: $red;
-
+		
+		&.outline {
+			background-color: #fff;
+			color: $red;
+			border: 1px solid $red;
+		}
+		
 		&:hover{
 			color: #fff;
 			background-color: darken($red, 15%);

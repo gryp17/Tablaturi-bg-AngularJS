@@ -2,16 +2,6 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 	$scope.loginData = {};
 	
 	/**
-	 * Callback function that is called when a key is pressed in the login inputs
-	 * @param {Object} $event
-	 */
-	$scope.handleKeyPress = function ($event){
-		if ($event.which === 13){
-			$scope.login();
-		}
-	};
-	
-	/**
 	 * Callback function that is called when the login button is pressed
 	 */
 	$scope.login = function (){
