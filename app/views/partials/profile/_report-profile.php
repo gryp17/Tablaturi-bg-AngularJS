@@ -27,8 +27,10 @@
 						<label for="other">Друго</label>
 					</div>
 					<div class="field-box">
-						<textarea class="text-control validation" ng-class="{'disabled' : reportedUser.reason !== 'other'}" ng-disabled="reportedUser.reason !== 'other'" name="other" ng-model="reportedUser.other"></textarea>
-						<span class="error-msg"></span>
+						<textarea class="text-control validation" ng-class="{'disabled' : reportedUser.reason !== 'other'}" ng-disabled="reportedUser.reason !== 'other'" name="report" ng-model="reportedUser.other"></textarea>
+						<div>
+							<span class="error-msg"></span>
+						</div>
 					</div>
 					<input class="btn btn-red" type="button" value="Докладвай" ng-click="reportUser(reportedUser)"/>
 				</div>				

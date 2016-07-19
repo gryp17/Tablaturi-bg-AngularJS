@@ -31,6 +31,7 @@ class Utils {
 	 * @param string $name
 	 * @param string $email
 	 * @param string $message
+	 * @return boolean
 	 */
 	public static function sendContactUsEmail($name, $email, $message) {
 		$from = $email;
@@ -64,6 +65,7 @@ class Utils {
 	 * Sends a confirmation email
 	 * @param string $name
 	 * @param string $email
+	 * @return boolean
 	 */
 	public static function sendConfirmationEmail($name, $email){
 		$from = 'admin@tablaturi-bg.com';
@@ -75,6 +77,30 @@ class Utils {
 		$template = str_replace('{{name}}', $name, $template);
 		$template = str_replace('{{link}}', $link, $template);
 		
+		return self::sendEmail($from, $to, $subject, $template);
+	}
+	
+	/**
+	 * Sends a report user email to the administrator
+	 * @param array $reported_user
+	 * @param array $reporter_user
+	 * @param string $report
+	 * @return boolean
+	 */
+	public static function sendUserReportEmail($reported_user, $reporter_user, $report){
+		$from = 'reports@tablaturi-bg.com';
+		$to = 'admin@tablaturi-bg.com';
+		$subject = "Таблатури-BG user report";
+		
+		$report = htmlspecialchars($report);
+		
+		$template = file_get_contents('app/views/email-templates/user-report.php');
+		$template = str_replace('{{reported_username}}', $reported_user['username'], $template);
+		$template = str_replace('{{reported_id}}', $reported_user['ID'], $template);
+		$template = str_replace('{{reporter_username}}', $reporter_user['username'], $template);
+		$template = str_replace('{{reporter_id}}', $reporter_user['ID'], $template);
+		$template = str_replace('{{report}}', $report, $template);
+				
 		return self::sendEmail($from, $to, $subject, $template);
 	}
 	

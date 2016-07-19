@@ -1,4 +1,4 @@
-app.controller('profileController', function ($rootScope, $scope, $routeParams, $q, $location, UserService, UserCommentService, LoadingService, ValidationService) {
+app.controller('profileController', function ($rootScope, $scope, $routeParams, $q, $location, UserService, UserCommentService, UserReportService, LoadingService, ValidationService) {
 
 	$scope.loggedInUser = $rootScope.loggedInUser;
 
@@ -86,7 +86,25 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 	 * @param {Object} reportedUser
 	 */
 	$scope.reportUser = function(reportedUser) {
-		$scope.reportSuccess = true;
+		var reason;
+		
+		if(reportedUser.reason === 'other'){
+			reason = reportedUser.other;
+		}else{
+			reason = reportedUser.reason;
+		}
+		
+		UserReportService.reportUser(reportedUser.id, reason).then(function (result){
+			if (result.data.status === 0) {
+				if (result.data.error) {
+					//show the error
+					ValidationService.showError(result.data.error.field, result.data.error.error_code);
+				}
+			} else {
+				$scope.reportSuccess = true;
+			}
+		});
+		
 	};
 	
 	/**
