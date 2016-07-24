@@ -109,7 +109,9 @@ class Controller {
 					}
 					break;
 				case self::ADMIN_USER:
-					#TODO: check if the user is logged in and is admin
+					if (isset($_SESSION['user']) && $_SESSION['user']['type'] === 'admin') {
+						$result = true;
+					}
 					break;
 			}
 		}

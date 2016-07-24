@@ -18,6 +18,16 @@ app.factory('ArticleService', function($http) {
 					id: id
 				}
 			});
+		},
+		addArticle: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'Article/addArticle',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
 		}
 	};
 });

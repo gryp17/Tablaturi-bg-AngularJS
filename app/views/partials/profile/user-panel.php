@@ -13,7 +13,7 @@
 		<li role="presentation">
 			<a href="#user-search" aria-controls="user-search" role="tab" data-toggle="tab" target="_self">Търси потребители</a>
 		</li>
-		<li role="presentation">
+		<li role="presentation" ng-show="loggedInUser.type === 'admin'">
 			<a href="#add-article" aria-controls="add-article" role="tab" data-toggle="tab" target="_self">Качи новина</a>
 		</li>
 	</ul>
@@ -23,6 +23,7 @@
 		<?php include "_user-tabs.php" ?>
 		<?php include "_user-favourites.php" ?>
 		<?php include "_user-search.php" ?>
+		<?php include "_add-article.php" ?>
 	</div>
 
 </div>

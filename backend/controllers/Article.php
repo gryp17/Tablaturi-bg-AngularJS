@@ -29,6 +29,15 @@ class Article extends Controller {
 				'params' => array(
 					'id' => 'int'
 				)
+			),
+			'addArticle' => array(
+				'required_role' => self::ADMIN_USER,
+				'params' => array(
+					'image' => 'required-file, valid-file-extensions[png;jpg;jpeg], max-file-size-1000',
+					'title' => 'min-3, max-250',
+					'date' => 'datetime',
+					'content' => 'min-3, max-5000'
+				)
 			)
 		);
 
@@ -73,4 +82,38 @@ class Article extends Controller {
 		$this->sendResponse(1, $data);
 	}
 
+	/**
+	 * Adds new article
+	 */
+	public function addArticle() {
+		$article_model = $this->load_model('ArticleModel');
+		
+		$article_image = $this->uploadArticleImage('image', $_SESSION['user']['ID']);
+		$id =  $article_model->addArticle($_SESSION['user']['ID'], $this->params['title'], $this->params['content'], $this->params['date'], $article_image, 0);
+		
+		$this->sendResponse(1, array('article_id' => $id));
+	}
+	
+	/**
+	 * Uploads new article image
+	 * @param string $field_name
+	 * @return string
+	 */
+	private function uploadArticleImage($field_name){
+		#TODO: use static config class for such variables
+		$articles_dir = 'content/articles/';
+		
+		preg_match('/\.([^\.]+?)$/', $_FILES[$field_name]['name'], $matches);
+		$extension = strtolower($matches[1]);
+		$extension = '.' . $extension;
+
+		$datetime = date('YmdHis');
+		
+		#upload the file to the server
+		move_uploaded_file($_FILES[$field_name]['tmp_name'], $articles_dir . $datetime . $extension);
+		$image = $datetime . $extension;
+		
+		return $image;
+	}
+	
 }

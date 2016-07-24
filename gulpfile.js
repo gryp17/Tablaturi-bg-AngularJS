@@ -41,6 +41,7 @@ gulp.task('build-dev', function() {
 gulp.task('styles-min', function() {
 	return gulp.src([
 		'./bower_components/jquery-ui/themes/'+jqueryUItheme+'/jquery-ui.css',
+		'./bower_components/jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon.min.css',
 		cssAppSource
 	]).pipe(sass({
 		precision: 4,
@@ -81,6 +82,8 @@ gulp.task('scripts', function() {
 		'./bower_components/angular/angular.min.js',
 		'./bower_components/angular-route/angular-route.min.js',
 		'./bower_components/angular-sanitize/angular-sanitize.min.js',
+		'./bower_components/jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon.min.js',
+		'./bower_components/jqueryui-timepicker-addon/dist/i18n/jquery-ui-timepicker-bg.js',
 		jsAppSource
 	])
 		.pipe(concat('app.js'))

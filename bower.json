@@ -22,6 +22,7 @@
     "angular": "1.5.x",
     "angular-route": "1.5.x",
     "angular-sanitize": "1.5.x",
-    "jquery-ui": "1.9.2"
+    "jquery-ui": "1.9.2",
+    "jqueryui-timepicker-addon": "~1.6.3"
   }
 }

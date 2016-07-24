@@ -63,6 +63,12 @@ class Validator {
 					return array('field' => $field, 'error_code' => 'invalid_date');
 				}
 			}
+			#datetime rule
+			elseif ($rule == 'datetime') {
+				if (!preg_match('/^\d{4}-\d{2}-\d{2}\s\d{2}\:\d{2}:\d{2}$/', $value)) {
+					return array('field' => $field, 'error_code' => 'invalid_date');
+				}
+			}
 			#max-characters rule
 			elseif (preg_match('/max-(\d+)/i', $rule, $matches)) {
 				$max_length = $matches[1];
@@ -131,6 +137,12 @@ class Validator {
 			elseif ($rule == 'matches-captcha') {
 				if (strtolower($value) !== strtolower($_SESSION['captcha']['code'])) {
 					return array('field' => $field, 'error_code' => 'invalid_captcha');
+				}
+			}
+			#required-file
+			elseif ($rule === 'required-file') {
+				if($_FILES[$field]['error'] === 4){
+					return array('field' => $field, 'error_code' => 'empty_field');
 				}
 			}
 			#max-file-size-kilobytes rule (checks if the uploaded file exceeds the max file size specified in kilobytes)

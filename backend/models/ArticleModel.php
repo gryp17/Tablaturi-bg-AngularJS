@@ -84,5 +84,35 @@ class ArticleModel {
 		$query = $this->connection->prepare('UPDATE article SET views = views + 1 WHERE ID = :id');
 		$query->execute(array('id' => $id));
 	}
+	
+	/**
+	 * Adds new article
+	 * @param int $author_id
+	 * @param string $title
+	 * @param string $content
+	 * @param date $date
+	 * @param string $image
+	 * @param int $views
+	 * @return int
+	 */
+	public function addArticle($author_id, $title, $content, $date, $image, $views){
+		$query = $this->connection->prepare('INSERT INTO article '
+				. '(author_ID, title, content, date, picture, views) '
+				. 'VALUES '
+				. '(:author_id, :title, :content, :date, :image, :views)');
+		
+		$params = array(
+			'author_id' => $author_id,
+			'title' => $title,
+			'content' => $content,
+			'date' => $date,
+			'image' => $image,
+			'views' => $views
+		);
+		
+		$query->execute($params);
+		
+		return $this->connection->lastInsertId();
+	}
 
 }
