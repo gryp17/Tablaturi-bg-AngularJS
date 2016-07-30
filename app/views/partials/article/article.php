@@ -8,6 +8,10 @@
 			<a class="red-link" title="Виж профила на {{article.username}}" href="#profile/{{article.author_ID}}" ng-bind="article.username"></a>
 		</div>
 		<div class="clearfix"></div>
+		<button class="btn btn-red edit-article" ng-if="loggedInUser.type === 'admin'" ng-click="openEditModal()">
+			<img src="static/img/icons/pencil.png"> Редактирай
+		</button>
+		<div class="clearfix"></div>
 		<img class="article-image" ng-src="content/articles/{{article.picture}}"/>
 		<h2 class="title" ng-bind="article.title"></h2>
 		<div class="content" ng-bind-html="article.content"></div>
@@ -59,5 +63,6 @@
 		</div>
 	</div>
 
-
+	<?php include './_edit-article.php' ?>
+	
 </div>

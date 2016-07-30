@@ -28,6 +28,16 @@ app.factory('ArticleService', function($http) {
 				},
 				data: formData
 			});
+		},
+		updateArticle: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'Article/updateArticle',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
 		}
 	};
 });

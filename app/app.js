@@ -62,7 +62,7 @@ app.config(['$routeProvider', function($routeProvider) {
 				factory: updateAuthStatus
             }
 		}).when('/article/:id', {
-			templateUrl: 'app/views/partials/article.php',
+			templateUrl: 'app/views/partials/article/article.php',
 			controller: 'articleController',
 			resolve: {
 				factory: updateAuthStatus
