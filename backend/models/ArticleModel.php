@@ -114,5 +114,43 @@ class ArticleModel {
 		
 		return $this->connection->lastInsertId();
 	}
+	
+	/**
+	 * Updates an existing article
+	 * @param int $article_id
+	 * @param string $title
+	 * @param string $content
+	 * @param date $date
+	 * @param string $image
+	 * @return boolean
+	 */
+	public function updateArticle($article_id, $title, $content, $date, $image){
+		$params = array(
+			'article_id' => $article_id,
+			'title' => $title,
+			'content' => $content,
+			'date' => $date
+		);
+		
+		if($image !== null){
+			$params['picture'] = $image;
+			$picture_query = 'picture = :picture, ';
+		}else{
+			$picture_query = '';
+		}
+		
+		$query = $this->connection->prepare('UPDATE article SET '
+				. $picture_query
+				. 'title = :title, '
+				. 'content = :content, '
+				. 'date = :date '
+				. 'WHERE ID = :article_id');
+		
+		if($query->execute($params)){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 }

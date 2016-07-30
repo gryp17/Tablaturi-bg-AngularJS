@@ -22,15 +22,17 @@ class Validator {
 			$rule = trim($rule);
 
 			#required rule
+			#also checks for submitted files
 			if ($rule == 'required') {
-				if (!isset($value) || strlen($value) === 0) {
+				if ((!isset($value) || strlen($value) === 0) && (!isset($_FILES[$field]) || $_FILES[$field]['error'] === 4)) {
 					return array('field' => $field, 'error_code' => 'empty_field');
 				}
 			}
 			#optional rule (used together with other rules. if the field is not set all other rules will be skipped. however if the field is set the rest of the validations will be run)
+			#it also checks for submitted files
 			#example: optional, max-10 (the field is not required, but if its set it must be less than 10 characters long) 
 			elseif ($rule == 'optional') {
-				if (!isset($value) || strlen($value) === 0) {
+				if ((!isset($value) || strlen($value) === 0) && (!isset($_FILES[$field]) || $_FILES[$field]['error'] === 4)) {
 					break;
 				}
 			}
@@ -137,12 +139,6 @@ class Validator {
 			elseif ($rule == 'matches-captcha') {
 				if (strtolower($value) !== strtolower($_SESSION['captcha']['code'])) {
 					return array('field' => $field, 'error_code' => 'invalid_captcha');
-				}
-			}
-			#required-file
-			elseif ($rule === 'required-file') {
-				if($_FILES[$field]['error'] === 4){
-					return array('field' => $field, 'error_code' => 'empty_field');
 				}
 			}
 			#max-file-size-kilobytes rule (checks if the uploaded file exceeds the max file size specified in kilobytes)

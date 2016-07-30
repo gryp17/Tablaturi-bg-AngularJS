@@ -29,17 +29,19 @@
 					</div>
 					
 					<div class="field-box">
-						<input type="text" name="title" class="validation text-control" placeholder="Заглавие" ng-model='editData.title' />
+						<input type="text" name="title" class="validation text-control" placeholder="Заглавие" ng-model="editData.title" />
 						<span class="error-msg"></span>
 					</div>
 					<div class="field-box">
-						<input id="edit-article-datepicker" readonly class="text-control validation" type="text" placeholder="Дата на публикуване" name="date" ng-model='editData.date' />
+						<input id="edit-article-datepicker" readonly class="text-control validation" type="text" placeholder="Дата на публикуване" name="date" ng-model="editData.date" />
 						<span class="error-msg"></span>
 					</div>
 					<div class="field-box">
-						<textarea class="text-control validation" placeholder="Съдържание" name="content" ng-model='editData.content'></textarea>
+						<textarea class="text-control validation" placeholder="Съдържание" name="content" ng-model="editData.content"></textarea>
 						<span class="error-msg"></span>
 					</div>
+					
+					<input type="hidden" name="id" value="{{editData.ID}}"/>
 
 					<input class="btn btn-red" type="button" value="Запази промените" ng-click="submitEditArticleForm()"/>
 				</form>

@@ -33,12 +33,22 @@ class Article extends Controller {
 			'addArticle' => array(
 				'required_role' => self::ADMIN_USER,
 				'params' => array(
-					'image' => 'required-file, valid-file-extensions[png;jpg;jpeg], max-file-size-1000',
+					'image' => 'required, valid-file-extensions[png;jpg;jpeg], max-file-size-1000',
 					'title' => 'min-3, max-250',
 					'date' => 'datetime',
 					'content' => 'min-3, max-5000'
 				)
-			)
+			),
+			'updateArticle' => array(
+				'required_role' => self::ADMIN_USER,
+				'params' => array(
+					'id' => 'int',
+					'image' => 'optional, valid-file-extensions[png;jpg;jpeg], max-file-size-1000',
+					'title' => 'min-3, max-250',
+					'date' => 'datetime',
+					'content' => 'min-3, max-5000'
+				)
+			),
 		);
 
 		#request params
@@ -95,6 +105,28 @@ class Article extends Controller {
 	}
 	
 	/**
+	 * Updates an existing article
+	 */
+	public function updateArticle() {
+		$article_model = $this->load_model('ArticleModel');
+		$new_image = null;
+		
+		#if there is a submited image
+		if($_FILES['image']['error'] !== 4){
+			#delete the old article image
+			$article_data = $article_model->getArticle($this->params['id']);
+			$old_image = $article_data['picture'];
+			$this->deleteArticleImage($old_image);
+			
+			$new_image = $this->uploadArticleImage('image');
+		}
+		
+		$article_model->updateArticle($this->params['id'], $this->params['title'], $this->params['content'], $this->params['date'], $new_image);
+		
+		$this->sendResponse(1, true);
+	}
+	
+	/**
 	 * Uploads new article image
 	 * @param string $field_name
 	 * @return string
@@ -114,6 +146,20 @@ class Article extends Controller {
 		$image = $datetime . $extension;
 		
 		return $image;
+	}
+	
+	/**
+	 * Deletes the article image from the file system
+	 * @param string $filename
+	 */
+	private function deleteArticleImage($filename){
+		#TODO: use static config class for such variables
+		$articles_dir = 'content/articles/';
+		
+		#delete the old image
+		if (file_exists($articles_dir . $filename)) {
+			unlink($articles_dir . $filename);
+		}
 	}
 	
 }

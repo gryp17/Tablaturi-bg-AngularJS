@@ -56,9 +56,7 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 			//article content
 			$scope.rawArticle = angular.copy(result[0].data.data);
 			$scope.article = result[0].data.data;
-			$scope.article.content = $scope.article.content.replace(/(\r\n|\r|\n)/g, '<br/>');
-			$scope.article.content = $filter('emoticons')($scope.article.content);
-			$scope.article.content = $sce.trustAsHtml($scope.article.content);
+			$scope.article.content = $scope.sanitizeArticleContent($scope.article.content);
 			
 			//article share id
 			$scope.$parent.shareId = $scope.article.ID;
@@ -74,12 +72,42 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 	});
 	
 	/**
+	 * Sanitizes the article content replacing the new lines with <br> tags and applying emoticons
+	 * @param {String} content
+	 * @returns {String}
+	 */
+	$scope.sanitizeArticleContent = function (content) {
+		content = content.replace(/(\r\n|\r|\n)/g, '<br/>');
+		content = $filter('emoticons')(content);
+		content = $sce.trustAsHtml(content);	
+		return content;
+	};
+	
+	/**
 	 * Opens article edit modal
 	 */
 	$scope.openEditModal = function() {
 		$scope.editData = angular.copy($scope.rawArticle);
 		$scope.editData.date = $scope.editData.date.replace('T', ' ');
+		
+		//clear all errors (if any)
+		$('#edit-article-modal .field-box').removeClass('error');
+		
 		$('#edit-article-modal').modal('show');
+	};
+	
+	/**
+	 * Closes the edit modal on success
+	 * It fetches the updated article data
+	 */
+	$scope.closeEditModal = function () {
+		ArticleService.getArticle($scope.articleId).then(function (result){
+			$scope.rawArticle = angular.copy(result.data.data);
+			$scope.article = result.data.data;
+			$scope.article.content = $scope.sanitizeArticleContent($scope.article.content);
+			
+			$('#edit-article-modal').modal('hide');
+		});
 	};
 	
 	$('#edit-article-datepicker').datetimepicker({
@@ -135,9 +163,7 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 					ValidationService.showError(result.error.field, result.error.error_code);
 				}
 			} else {
-				alert('ok');
-				//redirect to the newly created article
-				//$location.path('/article/'+result.data.article_id);
+				$scope.closeEditModal();
 			}
 		});
 	};
