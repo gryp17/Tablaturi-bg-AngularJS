@@ -179,8 +179,7 @@ class User extends Controller {
 	 * @return string
 	 */
 	private function uploadUserAvatar($field_name, $user_id, $current_avatar) {
-		#TODO: use static config class for such variables
-		$avatars_dir = 'content/avatars/';
+		$avatars_dir = Config::AVATARS_DIR;
 
 		preg_match('/\.([^\.]+?)$/', $_FILES[$field_name]['name'], $matches);
 		$extension = strtolower($matches[1]);

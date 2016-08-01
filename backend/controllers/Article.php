@@ -132,8 +132,7 @@ class Article extends Controller {
 	 * @return string
 	 */
 	private function uploadArticleImage($field_name){
-		#TODO: use static config class for such variables
-		$articles_dir = 'content/articles/';
+		$articles_dir = Config::ARTICLES_DIR;
 		
 		preg_match('/\.([^\.]+?)$/', $_FILES[$field_name]['name'], $matches);
 		$extension = strtolower($matches[1]);
@@ -153,8 +152,7 @@ class Article extends Controller {
 	 * @param string $filename
 	 */
 	private function deleteArticleImage($filename){
-		#TODO: use static config class for such variables
-		$articles_dir = 'content/articles/';
+		$articles_dir = Config::ARTICLES_DIR;
 		
 		#delete the old image
 		if (file_exists($articles_dir . $filename)) {
