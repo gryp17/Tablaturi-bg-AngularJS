@@ -285,4 +285,23 @@ class TabModel {
 		return $result['total'];
 	}
 	
+	/**
+	 * Returns the tab data
+	 * @param int $id
+	 * @return array
+	 */
+	public function getTab($id){
+		$query = $this->connection->prepare('SELECT * FROM tab WHERE ID = :id');
+		$query->execute(array('id' => $id));
+		
+		$row = $query->fetch(PDO::FETCH_ASSOC);
+		if($row){
+			//convert the date to javascript friendly format
+			$row['upload_date'] = Utils::formatDate($row['upload_date']);
+			$row['modified_date'] = Utils::formatDate($row['modified_date']);
+		}
+		
+		return $row;
+	}
+	
 }

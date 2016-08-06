@@ -440,6 +440,28 @@ function updateAuthStatus ($rootScope, $q, UserService){
 	return deferred.promise;
 }
 
+/**
+ * Checks if the url matches the old tab's url and redirects to the new url
+ */
+function redirectTab ($window, $q) {
+	var deferred = $q.defer();
+	
+	var url = $window.location.href;
+	var match;
+	
+	if(match = /tab\.php\?id=(\d+)/i.exec(url)){
+		var id = match[1];
+		var path = $window.location.pathname;
+		path = path.replace(/tab\.php.*/i, '#/tab/'+id);
+		$window.location.pathname = path;
+		deferred.reject();
+	}else{
+		deferred.resolve(true);
+	}
+	
+	return deferred.promise;
+}
+
 app.config(['$routeProvider', function($routeProvider) {
 
 		$routeProvider.when('/home', {
@@ -468,6 +490,12 @@ app.config(['$routeProvider', function($routeProvider) {
 		}).when('/tabs', {
 			templateUrl: 'app/views/partials/tabs.php',
 			controller: 'tabsController',
+			resolve: {
+				factory: updateAuthStatus
+            }
+		}).when('/tab/:id', {
+			templateUrl: 'app/views/partials/tab.php',
+			controller: 'tabController',
 			resolve: {
 				factory: updateAuthStatus
             }
@@ -509,11 +537,16 @@ app.config(['$routeProvider', function($routeProvider) {
 			resolve: {
 				factory: updateAuthStatus
             }
+		}).when('/not-found', {
+			templateUrl: 'app/views/partials/not-found.php',
+			resolve: {
+				factory: updateAuthStatus
+            }
 		}).otherwise({
 			templateUrl: 'app/views/partials/home.php',
 			controller: 'homeController',
 			resolve: {
-				factory: updateAuthStatus
+				factory: redirectTab
             }
 		});
 	}]);
@@ -1065,6 +1098,32 @@ app.controller('signupController', function($scope, UserService, MiscService, Va
 	});
 	//$('#signup-modal').modal({ backdrop : false });
 
+});
+app.controller('tabController', function ($scope, $routeParams, $location, $q, TabService, LoadingService) {
+	$scope.limit = 6;
+	$scope.offset = 0;
+	
+	if(angular.isUndefined($routeParams.id)){
+		$location.path('/');
+	} else {
+		$scope.tabId = $routeParams.id;
+	}
+	
+	$q.all([
+		TabService.getTab($scope.tabId),
+		//TODO: tab comments
+		//TabService.getTabComments($scope.tabId, $scope.limit, $scope.offset),
+		//TabService.getTotalTabComments($scope.tabId)
+	]).then(function (results){
+		$scope.tab = results[0].data.data;
+		
+		if($scope.tab === false){
+			$location.path('/not-found');
+		}
+		
+		LoadingService.doneLoading();
+	});
+	
 });
 app.controller('tabsController', function ($scope, $q, TabService, LoadingService) {
 	var limit = 5;
@@ -2044,6 +2103,15 @@ app.factory('TabService', function($http) {
 				url: 'Tab/getTotalTabsByUploader',
 				data: {
 					uploader_id: uploaderId
+				}
+			});
+		},
+		getTab: function (id){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getTab',
+				data: {
+					id: id
 				}
 			});
 		}

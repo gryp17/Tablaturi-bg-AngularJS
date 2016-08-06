@@ -58,6 +58,12 @@ class Tab extends Controller {
 				'params' => array(
 					'uploader_id' => 'int'
 				)
+			),
+			'getTab' => array(
+				'required_role' => self::PUBLIC_ACCESS,
+				'params' => array(
+					'id' => 'int'
+				)
 			)
 		);
 
@@ -129,6 +135,15 @@ class Tab extends Controller {
 	public function getTotalTabsByUploader() {
 		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getTotalTabsByUploader($this->params['uploader_id']);
+		$this->sendResponse(1, $data);
+	}
+	
+	/**
+	 * Returns the tab data
+	 */
+	public function getTab() {
+		$tab_model = $this->load_model('TabModel');
+		$data = $tab_model->getTab($this->params['id']);
 		$this->sendResponse(1, $data);
 	}
 

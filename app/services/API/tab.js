@@ -70,6 +70,15 @@ app.factory('TabService', function($http) {
 					uploader_id: uploaderId
 				}
 			});
+		},
+		getTab: function (id){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getTab',
+				data: {
+					id: id
+				}
+			});
 		}
 	};
 });

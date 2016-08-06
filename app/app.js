@@ -47,6 +47,28 @@ function updateAuthStatus ($rootScope, $q, UserService){
 	return deferred.promise;
 }
 
+/**
+ * Checks if the url matches the old tab's url and redirects to the new url
+ */
+function redirectTab ($window, $q) {
+	var deferred = $q.defer();
+	
+	var url = $window.location.href;
+	var match;
+	
+	if(match = /tab\.php\?id=(\d+)/i.exec(url)){
+		var id = match[1];
+		var path = $window.location.pathname;
+		path = path.replace(/tab\.php.*/i, '#/tab/'+id);
+		$window.location.pathname = path;
+		deferred.reject();
+	}else{
+		deferred.resolve(true);
+	}
+	
+	return deferred.promise;
+}
+
 app.config(['$routeProvider', function($routeProvider) {
 
 		$routeProvider.when('/home', {
@@ -75,6 +97,12 @@ app.config(['$routeProvider', function($routeProvider) {
 		}).when('/tabs', {
 			templateUrl: 'app/views/partials/tabs.php',
 			controller: 'tabsController',
+			resolve: {
+				factory: updateAuthStatus
+            }
+		}).when('/tab/:id', {
+			templateUrl: 'app/views/partials/tab.php',
+			controller: 'tabController',
 			resolve: {
 				factory: updateAuthStatus
             }
@@ -116,11 +144,16 @@ app.config(['$routeProvider', function($routeProvider) {
 			resolve: {
 				factory: updateAuthStatus
             }
+		}).when('/not-found', {
+			templateUrl: 'app/views/partials/not-found.php',
+			resolve: {
+				factory: updateAuthStatus
+            }
 		}).otherwise({
 			templateUrl: 'app/views/partials/home.php',
 			controller: 'homeController',
 			resolve: {
-				factory: updateAuthStatus
+				factory: redirectTab
             }
 		});
 	}]);
