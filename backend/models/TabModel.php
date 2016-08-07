@@ -299,9 +299,11 @@ class TabModel {
 			//convert the date to javascript friendly format
 			$row['upload_date'] = Utils::formatDate($row['upload_date']);
 			$row['modified_date'] = Utils::formatDate($row['modified_date']);
+			
+			return $row;
+		}else{
+			return null;
 		}
-		
-		return $row;
 	}
 	
 }

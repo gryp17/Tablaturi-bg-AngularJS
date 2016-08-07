@@ -395,6 +395,125 @@ if(c&&c._defaults.timeOnly&&b.input.val()!==b.lastVal)try{$.datepicker._updateDa
 
 var app = angular.module('tablaturi-bg', ['ngRoute', 'ngSanitize']);
 
+app.run(function($rootScope, LoadingService) {
+	
+	$rootScope.$on('$routeChangeStart', function(event, next, current) {
+
+		//static pages that don't need loading indicator
+		var staticPages = [
+			'/contact-us',
+			'/guitar-pro',
+			'/usefull',
+			'/copyright',
+			'/forbidden',
+			'/not-found'
+		];
+		
+		if (next.$$route) {
+			//if the page that is about to be loaded is not in the static pages list...
+			if(staticPages.indexOf(next.$$route.originalPath) < 0){
+				LoadingService.startLoading();
+			} else {
+				LoadingService.doneLoading();
+			}
+		}else{
+			LoadingService.showLoadingPlaceholder();
+		}
+		
+	});
+
+});
+
+app.config(['$routeProvider', function($routeProvider) {
+
+	$routeProvider.when('/home', {
+		templateUrl: 'app/views/partials/home.php',
+		controller: 'homeController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/articles', {
+		templateUrl: 'app/views/partials/articles.php',
+		controller: 'articlesController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/article/:id', {
+		templateUrl: 'app/views/partials/article/article.php',
+		controller: 'articleController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/profile/:id', {
+		templateUrl: 'app/views/partials/profile/user-panel.php',
+		resolve: {
+			factory: authRequired
+		}
+	}).when('/tabs', {
+		templateUrl: 'app/views/partials/tabs.php',
+		controller: 'tabsController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/tab/:id', {
+		templateUrl: 'app/views/partials/tab.php',
+		controller: 'tabController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/search/:type/:band?/:song?', {
+		templateUrl: 'app/views/partials/search.php',
+		controller: 'searchController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/search-backing-tracks/:type/:band?/:song?', {
+		templateUrl: 'app/views/partials/search-backing-tracks.php',
+		controller: 'searchBackingTracksController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/guitar-pro', {
+		templateUrl: 'app/views/partials/guitar-pro.php',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/usefull', {
+		templateUrl: 'app/views/partials/usefull.php',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/contact-us', {
+		templateUrl: 'app/views/partials/contact-us.php',
+		controller: 'contactusController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/copyright', {
+		templateUrl: 'app/views/partials/copyright.php',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/forbidden', {
+		templateUrl: 'app/views/partials/forbidden.php',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/not-found', {
+		templateUrl: 'app/views/partials/not-found.php',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).otherwise({
+		templateUrl: 'app/views/partials/home.php',
+		controller: 'homeController',
+		resolve: {
+			factory: redirectTab
+		}
+	});
+}]);
+
+
 /**
  * Checks if the user is logged in.
  * Redirects to the /forbidden page if the user is not logged in
@@ -461,134 +580,11 @@ function redirectTab ($window, $q) {
 	
 	return deferred.promise;
 }
-
-app.config(['$routeProvider', function($routeProvider) {
-
-		$routeProvider.when('/home', {
-			templateUrl: 'app/views/partials/home.php',
-			controller: 'homeController',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/articles', {
-			templateUrl: 'app/views/partials/articles.php',
-			controller: 'articlesController',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/article/:id', {
-			templateUrl: 'app/views/partials/article/article.php',
-			controller: 'articleController',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/profile/:id', {
-			templateUrl: 'app/views/partials/profile/user-panel.php',
-			resolve: {
-				factory: authRequired
-            }
-		}).when('/tabs', {
-			templateUrl: 'app/views/partials/tabs.php',
-			controller: 'tabsController',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/tab/:id', {
-			templateUrl: 'app/views/partials/tab.php',
-			controller: 'tabController',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/search/:type/:band?/:song?', {
-			templateUrl: 'app/views/partials/search.php',
-			controller: 'searchController',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/search-backing-tracks/:type/:band?/:song?', {
-			templateUrl: 'app/views/partials/search-backing-tracks.php',
-			controller: 'searchBackingTracksController',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/guitar-pro', {
-			templateUrl: 'app/views/partials/guitar-pro.php',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/usefull', {
-			templateUrl: 'app/views/partials/usefull.php',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/contact-us', {
-			templateUrl: 'app/views/partials/contact-us.php',
-			controller: 'contactusController',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/copyright', {
-			templateUrl: 'app/views/partials/copyright.php',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/forbidden', {
-			templateUrl: 'app/views/partials/forbidden.php',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).when('/not-found', {
-			templateUrl: 'app/views/partials/not-found.php',
-			resolve: {
-				factory: updateAuthStatus
-            }
-		}).otherwise({
-			templateUrl: 'app/views/partials/home.php',
-			controller: 'homeController',
-			resolve: {
-				factory: redirectTab
-            }
-		});
-	}]);
-
-
-app.run(function($rootScope, LoadingService) {
-	
-	$rootScope.$on('$routeChangeStart', function(event, next, current) {
-
-		//static pages that don't need loading indicator
-		var staticPages = [
-			'/contact-us',
-			'/guitar-pro',
-			'/usefull',
-			'/copyright',
-			'/forbidden'
-		];
-		
-		if (next.$$route) {
-			//if the page that is about to be loaded is not in the static pages list...
-			if(staticPages.indexOf(next.$$route.originalPath) < 0){
-				LoadingService.startLoading();
-			} else {
-				LoadingService.doneLoading();
-			}
-		}else{
-			LoadingService.showLoadingPlaceholder();
-		}
-		
-	});
-
-});
-
 app.controller('articleController', function($scope, $rootScope, $routeParams, $location, $sce, $q, $filter, ArticleService, ArticleCommentService, LoadingService, ValidationService) {
 	$scope.limit = 6;
 	$scope.offset = 0;
 
-	if(angular.isUndefined($routeParams.id)){
-		$location.path('/');
-	} else {
-		$scope.articleId = $routeParams.id;
-	}
+	$scope.articleId = $routeParams.id;
 	
 	/**
 	 * Add new comment
@@ -633,7 +629,7 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 	]).then(function (result){
 		
 		if(angular.isUndefined(result[0].data.data)){
-			$location.path('/');
+			$location.path('/not-found');
 		}else{
 			//article content
 			$scope.rawArticle = angular.copy(result[0].data.data);
@@ -1099,30 +1095,47 @@ app.controller('signupController', function($scope, UserService, MiscService, Va
 	//$('#signup-modal').modal({ backdrop : false });
 
 });
-app.controller('tabController', function ($scope, $routeParams, $location, $q, TabService, LoadingService) {
+app.controller('tabController', function ($scope, $routeParams, $location, $q, TabService, TabCommentService, LoadingService) {
 	$scope.limit = 6;
 	$scope.offset = 0;
-	
-	if(angular.isUndefined($routeParams.id)){
-		$location.path('/');
-	} else {
-		$scope.tabId = $routeParams.id;
-	}
+		
+	$scope.tabId = $routeParams.id;
 	
 	$q.all([
 		TabService.getTab($scope.tabId),
-		//TODO: tab comments
-		//TabService.getTabComments($scope.tabId, $scope.limit, $scope.offset),
-		//TabService.getTotalTabComments($scope.tabId)
+		TabCommentService.getTabComments($scope.tabId, $scope.limit, $scope.offset),
+		TabCommentService.getTotalTabComments($scope.tabId)
 	]).then(function (results){
-		$scope.tab = results[0].data.data;
 		
-		if($scope.tab === false){
+		if(angular.isUndefined(results[0].data.data)){
 			$location.path('/not-found');
 		}
 		
+		$scope.tab = results[0].data.data;
+		
+		//tab comments
+		$scope.tabComments = results[1].data.data;
+			
+		//total number of tab comments
+		$scope.totalTabComments = results[2].data.data;
+		
 		LoadingService.doneLoading();
 	});
+	
+	/**
+	 * Fetches the tab comments and renders them in the page
+	 * @param {int} limit
+	 * @param {int} offset
+	 */
+	$scope.getTabComments = function(limit, offset) {
+		$q.all([
+			TabCommentService.getTabComments($scope.tabId, $scope.limit, $scope.offset),
+		TabCommentService.getTotalTabComments($scope.tabId)
+		]).then(function (results){
+			$scope.tabComments = results[0].data.data;
+			$scope.totalTabComments = results[1].data.data;
+		});
+	};
 	
 });
 app.controller('tabsController', function ($scope, $q, TabService, LoadingService) {
@@ -1143,6 +1156,162 @@ app.controller('tabsController', function ($scope, $q, TabService, LoadingServic
 		LoadingService.doneLoading();
 	});
 	
+});
+app.filter('age', function() {
+	return function(dateString) {
+		if (angular.isDefined(dateString)) {
+			var today = new Date();
+			var birthDate = new Date(dateString);
+			var age = today.getFullYear() - birthDate.getFullYear();
+			var m = today.getMonth() - birthDate.getMonth();
+			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+				age--;
+			}
+			return age;
+		}
+	};
+});
+app.filter('emoticons', function() {
+	return function(content) {
+		
+		var emoticonsPath = "static/img/emoticons/";
+		var emoticonsClass = "emoticon";
+
+		var emoticons = [
+			{
+				regexp: /:\)/,
+				title: ':)',
+				img: 'smile.png'
+			},
+			{
+				regexp: /:\(/,
+				title: ':(',
+				img: 'undecided.png'
+			},
+			{
+				regexp: /:D/,
+				title: ':D',
+				img: 'laugh.png'
+			},
+			{
+				regexp: /:P/,
+				title: ':P',
+				img: 'stickingout.png'
+			},
+			{
+				regexp: /8-\)/,
+				title: '8-)',
+				img: 'hot.png'
+			},
+			{
+				regexp: /\|-\(/,
+				title: '|-(',
+				img: 'ambivalent.png'
+			},
+			{
+				regexp: /:O/,
+				title: ':O',
+				img: 'largegasp.png'
+			},
+			{
+				regexp: /\(up\)/,
+				title: '(up)',
+				img: 'thumbsup.png'
+			},
+			{
+				regexp: /\(down\)/,
+				title: '(down)',
+				img: 'thumbsdown.png'
+			},
+			{
+				regexp: /:\@/,
+				title: ':@',
+				img: 'veryangry.png'
+			}
+		];
+		
+		//replace all emoticons with their images
+		emoticons.forEach(function (emoticon){
+			var regexp = new RegExp(emoticon.regexp, "ig");
+			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
+		});
+
+		return content;
+	};
+});
+app.filter('errors', function () {
+	return function (errorCode) {
+
+		var errors = {
+			invalid_login: 'Грешно име или парола',
+			empty_field: 'Празно поле',
+			invalid_int: 'Невалидно число',
+			invalid_date: 'Невалидна дата',
+			invalid_email: 'Невалиден имейл',
+			weak_password: 'Паролата не съдържа поне едно число и буква',
+			no_match: 'Полетата не съвпадат',
+			username_in_use: 'Потребителското име е заето',
+			email_in_use: 'Имейлът е зает',
+			not_in_list: 'Невалидно поле',
+			invalid_captcha: 'Captcha-та не съвпада',
+			invalid_file_extension: 'Невалиден формат',
+			exceeds_max_file_size: 'Файлът надвишава максималния размер'
+		};
+		
+		if(angular.isUndefined(errors[errorCode])){
+			//max-\d+ rule
+			if(/exceeds_characters_(\d+)/.exec(errorCode)){
+				var results = /exceeds_characters_(\d+)/.exec(errorCode);
+				return 'Полето надвишава '+results[1]+' символа';
+			}
+			
+			//min-\d+ rule
+			if(/below_characters_(\d+)/.exec(errorCode)){
+				var results = /below_characters_(\d+)/.exec(errorCode);
+				return 'Полето е под '+results[1]+' символа';
+			}
+		}
+
+		return errors[errorCode];
+	};
+});
+app.filter('ratingStars', function() {
+	return function(rating) {
+		var result = [];
+		var stars = Math.floor(rating);
+
+		//generates an array of integers based on the tab rating
+		//1 - star
+		//0 - empty star
+		for (var i = 1; i <= 5; i++) {
+			if (i <= stars) {
+				result.push(1);
+			} else {
+				result.push(0);
+			}
+		}
+
+		return result;
+	};
+});
+app.filter('tabType', function () {
+	return function (tabType) {
+
+		var tabTypes = {
+			tab: "Tab",
+			gp: "Guitar Pro",
+			chord: "Акорди",
+			bt: "Backing Track",
+			bass: "Bass"
+		};
+		
+		if(angular.isUndefined(tabTypes[tabType])){
+			return tabType;
+		}else{
+			return tabTypes[tabType];
+		}
+
+	};
 });
 app.directive('article', function($filter, $location) {
 	return {
@@ -1338,162 +1507,6 @@ app.directive('validation', function() {
 				element.closest('.field-box').removeClass('error');
 			});
 		}
-	};
-});
-app.filter('age', function() {
-	return function(dateString) {
-		if (angular.isDefined(dateString)) {
-			var today = new Date();
-			var birthDate = new Date(dateString);
-			var age = today.getFullYear() - birthDate.getFullYear();
-			var m = today.getMonth() - birthDate.getMonth();
-			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-				age--;
-			}
-			return age;
-		}
-	};
-});
-app.filter('emoticons', function() {
-	return function(content) {
-		
-		var emoticonsPath = "static/img/emoticons/";
-		var emoticonsClass = "emoticon";
-
-		var emoticons = [
-			{
-				regexp: /:\)/,
-				title: ':)',
-				img: 'smile.png'
-			},
-			{
-				regexp: /:\(/,
-				title: ':(',
-				img: 'undecided.png'
-			},
-			{
-				regexp: /:D/,
-				title: ':D',
-				img: 'laugh.png'
-			},
-			{
-				regexp: /:P/,
-				title: ':P',
-				img: 'stickingout.png'
-			},
-			{
-				regexp: /8-\)/,
-				title: '8-)',
-				img: 'hot.png'
-			},
-			{
-				regexp: /\|-\(/,
-				title: '|-(',
-				img: 'ambivalent.png'
-			},
-			{
-				regexp: /:O/,
-				title: ':O',
-				img: 'largegasp.png'
-			},
-			{
-				regexp: /\(up\)/,
-				title: '(up)',
-				img: 'thumbsup.png'
-			},
-			{
-				regexp: /\(down\)/,
-				title: '(down)',
-				img: 'thumbsdown.png'
-			},
-			{
-				regexp: /:\@/,
-				title: ':@',
-				img: 'veryangry.png'
-			}
-		];
-		
-		//replace all emoticons with their images
-		emoticons.forEach(function (emoticon){
-			var regexp = new RegExp(emoticon.regexp, "ig");
-			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
-		});
-
-		return content;
-	};
-});
-app.filter('errors', function () {
-	return function (errorCode) {
-
-		var errors = {
-			invalid_login: 'Грешно име или парола',
-			empty_field: 'Празно поле',
-			invalid_int: 'Невалидно число',
-			invalid_date: 'Невалидна дата',
-			invalid_email: 'Невалиден имейл',
-			weak_password: 'Паролата не съдържа поне едно число и буква',
-			no_match: 'Полетата не съвпадат',
-			username_in_use: 'Потребителското име е заето',
-			email_in_use: 'Имейлът е зает',
-			not_in_list: 'Невалидно поле',
-			invalid_captcha: 'Captcha-та не съвпада',
-			invalid_file_extension: 'Невалиден формат',
-			exceeds_max_file_size: 'Файлът надвишава максималния размер'
-		};
-		
-		if(angular.isUndefined(errors[errorCode])){
-			//max-\d+ rule
-			if(/exceeds_characters_(\d+)/.exec(errorCode)){
-				var results = /exceeds_characters_(\d+)/.exec(errorCode);
-				return 'Полето надвишава '+results[1]+' символа';
-			}
-			
-			//min-\d+ rule
-			if(/below_characters_(\d+)/.exec(errorCode)){
-				var results = /below_characters_(\d+)/.exec(errorCode);
-				return 'Полето е под '+results[1]+' символа';
-			}
-		}
-
-		return errors[errorCode];
-	};
-});
-app.filter('ratingStars', function() {
-	return function(rating) {
-		var result = [];
-		var stars = Math.floor(rating);
-
-		//generates an array of integers based on the tab rating
-		//1 - star
-		//0 - empty star
-		for (var i = 1; i <= 5; i++) {
-			if (i <= stars) {
-				result.push(1);
-			} else {
-				result.push(0);
-			}
-		}
-
-		return result;
-	};
-});
-app.filter('tabType', function () {
-	return function (tabType) {
-
-		var tabTypes = {
-			tab: "Tab",
-			gp: "Guitar Pro",
-			chord: "Акорди",
-			bt: "Backing Track",
-			bass: "Bass"
-		};
-		
-		if(angular.isUndefined(tabTypes[tabType])){
-			return tabType;
-		}else{
-			return tabTypes[tabType];
-		}
-
 	};
 });
 app.factory('LoadingService', function() {
@@ -2029,6 +2042,40 @@ app.factory('MiscService', function($http) {
 				method: 'POST',
 				url: 'Misc/contactUs',
 				data: contactUsData
+			});
+		}
+	};
+});
+app.factory('TabCommentService', function($http) {
+	return {
+		getTabComments: function(tabId, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'TabComment/getTabComments',
+				data: {
+					tab_id: tabId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalTabComments: function(tabId) {
+			return $http({
+				method: 'POST',
+				url: 'TabComment/getTotalTabComments',
+				data: {
+					tab_id: tabId
+				}
+			});
+		},
+		addTabComment: function(tabId, content) {
+			return $http({
+				method: 'POST',
+				url: 'TabComment/addTabComment',
+				data: {
+					tab_id: tabId,
+					content: content
+				}
 			});
 		}
 	};

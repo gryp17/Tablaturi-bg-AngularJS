@@ -2,11 +2,7 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 	$scope.limit = 6;
 	$scope.offset = 0;
 
-	if(angular.isUndefined($routeParams.id)){
-		$location.path('/');
-	} else {
-		$scope.articleId = $routeParams.id;
-	}
+	$scope.articleId = $routeParams.id;
 	
 	/**
 	 * Add new comment
@@ -51,7 +47,7 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 	]).then(function (result){
 		
 		if(angular.isUndefined(result[0].data.data)){
-			$location.path('/');
+			$location.path('/not-found');
 		}else{
 			//article content
 			$scope.rawArticle = angular.copy(result[0].data.data);
