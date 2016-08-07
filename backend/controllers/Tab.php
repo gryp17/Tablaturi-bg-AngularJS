@@ -15,14 +15,14 @@ class Tab extends Controller {
 			'getMost' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'type' => 'in[popular;liked;latest;commented]',
+					'type' => 'in[popular,liked,latest,commented]',
 					'limit' => 'int'
 				)
 			),
 			'autocomplete' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'type' => 'in[band;song]',
+					'type' => 'in[band,song]',
 					'term' => 'required',
 					'band' => 'optional'
 				)
@@ -30,9 +30,9 @@ class Tab extends Controller {
 			'search' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'type' => 'in[all;tab;chord;gp;bt]',
-					'band' => 'required[band;song]',
-					'song' => 'required[band;song]',
+					'type' => 'in[all,tab,chord,gp,bt]',
+					'band' => 'required[band,song]',
+					'song' => 'required[band,song]',
 					'limit' => 'int',
 					'offset' => 'int'
 				)
@@ -40,9 +40,9 @@ class Tab extends Controller {
 			'getSearchTotal' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'type' => 'in[all;tab;chord;gp;bt]',
-					'band' => 'required[band;song]',
-					'song' => 'required[band;song]'
+					'type' => 'in[all,tab,chord,gp,bt]',
+					'band' => 'required[band,song]',
+					'song' => 'required[band,song]'
 				)
 			),
 			'getTabsByUploader' => array(

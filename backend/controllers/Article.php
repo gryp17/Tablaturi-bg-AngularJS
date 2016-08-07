@@ -33,20 +33,20 @@ class Article extends Controller {
 			'addArticle' => array(
 				'required_role' => self::ADMIN_USER,
 				'params' => array(
-					'image' => 'required, valid-file-extensions[png;jpg;jpeg], max-file-size-1000',
-					'title' => 'min-3, max-250',
+					'image' => array('required', 'valid-file-extensions[png,jpg,jpeg]', 'max-file-size-1000'),
+					'title' => array('min-3', 'max-250'),
 					'date' => 'datetime',
-					'content' => 'min-3, max-5000'
+					'content' => array('min-3', 'max-5000')
 				)
 			),
 			'updateArticle' => array(
 				'required_role' => self::ADMIN_USER,
 				'params' => array(
 					'id' => 'int',
-					'image' => 'optional, valid-file-extensions[png;jpg;jpeg], max-file-size-1000',
-					'title' => 'min-3, max-250',
+					'image' => array('optional', 'valid-file-extensions[png,jpg,jpeg]', 'max-file-size-1000'),
+					'title' => array('min-3', 'max-250'),
 					'date' => 'datetime',
-					'content' => 'min-3, max-5000'
+					'content' => array('min-3', 'max-5000')
 				)
 			),
 		);

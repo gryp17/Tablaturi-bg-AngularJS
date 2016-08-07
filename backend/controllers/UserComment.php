@@ -27,7 +27,7 @@ class UserComment extends Controller {
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
 					'user_id' => 'int',
-					'content' => 'required, max-500'
+					'content' => array('required', 'max-500')
 				)
 			)
 		);

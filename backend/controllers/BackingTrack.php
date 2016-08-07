@@ -12,8 +12,8 @@ class BackingTrack extends Controller {
 			'search' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'band' => 'required[band;song]',
-					'song' => 'required[band;song]'
+					'band' => 'required[band,song]',
+					'song' => 'required[band,song]'
 				)
 			),
 			'getMP3' => array(

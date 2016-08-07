@@ -13,7 +13,7 @@ class UserReport extends Controller {
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
 					'user_id' => 'int',
-					'report' => 'min-3, max-1000'
+					'report' => array('min-3', 'max-1000')
 				)
 			)
 		);

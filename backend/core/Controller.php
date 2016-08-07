@@ -72,7 +72,10 @@ class Controller {
 				$required_params = $this->endpoints[$function]['params'];
 				foreach ($required_params as $param_name => $rules) {
 					$value = isset($params[$param_name]) ? $params[$param_name] : '';
-					$rules = split(',', $rules);
+					
+					if(!is_array($rules)){
+						$rules = array($rules);
+					}
 
 					#check the value with each rule and send the error message if necessary
 					$result = Validator::checkParam($param_name, $value, $rules, $params);

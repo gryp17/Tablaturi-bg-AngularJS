@@ -14,7 +14,7 @@ class User extends Controller {
 				'params' => array(
 					'login_username' => 'required',
 					'login_password' => 'required',
-					'login_remember_me' => 'in[1;0;]' //(1 or 0 or empty space) boolean?
+					'login_remember_me' => 'in[1,0,]' //(1 or 0 or empty space) boolean?
 				)
 			),
 			'logout' => array(
@@ -26,39 +26,39 @@ class User extends Controller {
 			'signup' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'signup_username' => 'min-6, max-20, valid-characters, unique[username]',
-					'signup_email' => 'valid-email, unique[email]',
-					'signup_password' => 'min-6, max-20, strong-password',
+					'signup_username' => array('min-6', 'max-20', 'valid-characters', 'unique[username]'),
+					'signup_email' => array('valid-email', 'unique[email]'),
+					'signup_password' => array('min-6', 'max-20', 'strong-password'),
 					'signup_repeat_password' => 'matches[signup_password]',
 					'signup_birthday' => 'date',
-					'signup_gender' => 'in[M;F]',
+					'signup_gender' => 'in[M,F]',
 					'signup_captcha' => 'matches-captcha'
 				)
 			),
 			'getUser' => array(
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
-					'id' => 'required, int'
+					'id' => array('required', 'int')
 				)
 			),
 			'updateUser' => array(
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
-					'avatar' => 'optional, valid-file-extensions[png;jpg;jpeg], max-file-size-1000',
-					'password' => 'optional, min-6, max-20, strong-password',
+					'avatar' => array('optional', 'valid-file-extensions[png,jpg,jpeg]', 'max-file-size-1000'),
+					'password' => array('optional', 'min-6', 'max-20', 'strong-password'),
 					'repeat_password' => 'matches[password]',
-					'location' => 'optional, max-100',
-					'occupation' => 'optional, max-200',
-					'web' => 'optional, max-200',
-					'about_me' => 'optional, max-500',
-					'instrument' => 'optional, max-500',
-					'favourite_bands' => 'optional, max-500'
+					'location' => array('optional', 'max-100'),
+					'occupation' => array('optional', 'max-200'),
+					'web' => array('optional', 'max-200'),
+					'about_me' => array('optional', 'max-500'),
+					'instrument' => array('optional', 'max-500'),
+					'favourite_bands' => array('optional', 'max-500')
 				)
 			),
 			'search' => array(
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
-					'keyword' => 'required, min-3, max-50',
+					'keyword' => array('required', 'min-3', 'max-50'),
 					'limit' => 'int',
 					'offset' => 'int'
 				)
@@ -66,7 +66,7 @@ class User extends Controller {
 			'getTotalSearchResults' => array(
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
-					'keyword' => 'required, min-3, max-50',
+					'keyword' => array('required', 'min-3', 'max-50'),
 				)
 			)
 		);

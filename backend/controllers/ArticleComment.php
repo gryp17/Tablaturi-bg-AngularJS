@@ -27,7 +27,7 @@ class ArticleComment extends Controller {
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
 					'article_id' => 'int',
-					'content' => 'required, max-500'
+					'content' => array('required', 'max-500')
 				)
 			)
 		);

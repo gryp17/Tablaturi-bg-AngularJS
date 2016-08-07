@@ -40,7 +40,7 @@ class Validator {
 			elseif (preg_match('/required\[(.+?)\]/i', $rule, $matches)) {
 				$valid = false;
 				$list = $matches[1];
-				$list = explode(';', $list);
+				$list = explode(',', $list);
 
 				foreach ($list as $param) {
 					if (isset($params[$param]) && strlen($params[$param]) > 0) {
@@ -129,7 +129,7 @@ class Validator {
 			#in[] rule
 			elseif (preg_match('/in\[(.+?)\]/i', $rule, $matches)) {
 				$list = $matches[1];
-				$list = explode(';', $list);
+				$list = explode(',', $list);
 
 				if (in_array($value, $list) === false) {
 					return array('field' => $field, 'error_code' => 'not_in_list');
@@ -154,7 +154,7 @@ class Validator {
 			#valid-file-extensions[] rule (the uploaded file must match one of the provided extensions)
 			elseif (preg_match('/valid-file-extensions\[(.+?)\]/i', $rule, $matches)) {
 				$list = $matches[1];
-				$list = explode(';', $list);
+				$list = explode(',', $list);
 				
 				preg_match('/\.([^\.]+?)$/', $_FILES[$field]['name'], $matches);
 				$extension = strtolower($matches[1]);
