@@ -13,14 +13,14 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 
 		if(angular.isDefined(responses[0].data.data)){
 			$scope.userData = responses[0].data.data;
+			
+			$scope.userComments = responses[1].data.data;
+			$scope.totalUserComments = responses[2].data.data;
+		
+			LoadingService.doneLoading();
 		}else{
-			$location.path('/');
+			$location.path('/not-found');
 		}
-		
-		$scope.userComments = responses[1].data.data;
-		$scope.totalUserComments = responses[2].data.data;
-		
-		LoadingService.doneLoading();
 	});
 
 	/**

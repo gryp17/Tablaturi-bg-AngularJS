@@ -12,17 +12,18 @@ app.controller('tabController', function ($scope, $routeParams, $location, $q, T
 		
 		if(angular.isUndefined(results[0].data.data)){
 			$location.path('/not-found');
+		}else{
+			$scope.tab = results[0].data.data;
+		
+			//tab comments
+			$scope.tabComments = results[1].data.data;
+
+			//total number of tab comments
+			$scope.totalTabComments = results[2].data.data;
+
+			LoadingService.doneLoading();
 		}
 		
-		$scope.tab = results[0].data.data;
-		
-		//tab comments
-		$scope.tabComments = results[1].data.data;
-			
-		//total number of tab comments
-		$scope.totalTabComments = results[2].data.data;
-		
-		LoadingService.doneLoading();
 	});
 	
 	/**

@@ -13,7 +13,7 @@
 			<a href="#guitar-pro">Guitar Pro</a>
 		</div>
 		<div class="item">
-			<a href="#home">Качи таблатура</a>
+			<a href="#upload-tab">Качи таблатура</a>
 		</div>
 		<div class="item">
 			<a href="#usefull">Полезно</a>

@@ -505,8 +505,6 @@ app.config(['$routeProvider', function($routeProvider) {
 			factory: updateAuthStatus
 		}
 	}).otherwise({
-		templateUrl: 'app/views/partials/home.php',
-		controller: 'homeController',
 		resolve: {
 			factory: redirectTab
 		}
@@ -561,8 +559,9 @@ function updateAuthStatus ($rootScope, $q, UserService){
 
 /**
  * Checks if the url matches the old tab's url and redirects to the new url
+ * Otherwise it redirects to the "home" or "not-found" pages
  */
-function redirectTab ($window, $q) {
+function redirectTab ($window, $q, $location) {
 	var deferred = $q.defer();
 	
 	var url = $window.location.href;
@@ -575,7 +574,14 @@ function redirectTab ($window, $q) {
 		$window.location.pathname = path;
 		deferred.reject();
 	}else{
-		deferred.resolve(true);
+		
+		if($location.path() === ''){
+			$location.path('/home');
+		}else{
+			$location.path('/not-found');
+		}
+		
+		deferred.reject();
 	}
 	
 	return deferred.promise;
@@ -1109,17 +1115,18 @@ app.controller('tabController', function ($scope, $routeParams, $location, $q, T
 		
 		if(angular.isUndefined(results[0].data.data)){
 			$location.path('/not-found');
+		}else{
+			$scope.tab = results[0].data.data;
+		
+			//tab comments
+			$scope.tabComments = results[1].data.data;
+
+			//total number of tab comments
+			$scope.totalTabComments = results[2].data.data;
+
+			LoadingService.doneLoading();
 		}
 		
-		$scope.tab = results[0].data.data;
-		
-		//tab comments
-		$scope.tabComments = results[1].data.data;
-			
-		//total number of tab comments
-		$scope.totalTabComments = results[2].data.data;
-		
-		LoadingService.doneLoading();
 	});
 	
 	/**
@@ -1156,162 +1163,6 @@ app.controller('tabsController', function ($scope, $q, TabService, LoadingServic
 		LoadingService.doneLoading();
 	});
 	
-});
-app.filter('age', function() {
-	return function(dateString) {
-		if (angular.isDefined(dateString)) {
-			var today = new Date();
-			var birthDate = new Date(dateString);
-			var age = today.getFullYear() - birthDate.getFullYear();
-			var m = today.getMonth() - birthDate.getMonth();
-			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-				age--;
-			}
-			return age;
-		}
-	};
-});
-app.filter('emoticons', function() {
-	return function(content) {
-		
-		var emoticonsPath = "static/img/emoticons/";
-		var emoticonsClass = "emoticon";
-
-		var emoticons = [
-			{
-				regexp: /:\)/,
-				title: ':)',
-				img: 'smile.png'
-			},
-			{
-				regexp: /:\(/,
-				title: ':(',
-				img: 'undecided.png'
-			},
-			{
-				regexp: /:D/,
-				title: ':D',
-				img: 'laugh.png'
-			},
-			{
-				regexp: /:P/,
-				title: ':P',
-				img: 'stickingout.png'
-			},
-			{
-				regexp: /8-\)/,
-				title: '8-)',
-				img: 'hot.png'
-			},
-			{
-				regexp: /\|-\(/,
-				title: '|-(',
-				img: 'ambivalent.png'
-			},
-			{
-				regexp: /:O/,
-				title: ':O',
-				img: 'largegasp.png'
-			},
-			{
-				regexp: /\(up\)/,
-				title: '(up)',
-				img: 'thumbsup.png'
-			},
-			{
-				regexp: /\(down\)/,
-				title: '(down)',
-				img: 'thumbsdown.png'
-			},
-			{
-				regexp: /:\@/,
-				title: ':@',
-				img: 'veryangry.png'
-			}
-		];
-		
-		//replace all emoticons with their images
-		emoticons.forEach(function (emoticon){
-			var regexp = new RegExp(emoticon.regexp, "ig");
-			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
-		});
-
-		return content;
-	};
-});
-app.filter('errors', function () {
-	return function (errorCode) {
-
-		var errors = {
-			invalid_login: 'Грешно име или парола',
-			empty_field: 'Празно поле',
-			invalid_int: 'Невалидно число',
-			invalid_date: 'Невалидна дата',
-			invalid_email: 'Невалиден имейл',
-			weak_password: 'Паролата не съдържа поне едно число и буква',
-			no_match: 'Полетата не съвпадат',
-			username_in_use: 'Потребителското име е заето',
-			email_in_use: 'Имейлът е зает',
-			not_in_list: 'Невалидно поле',
-			invalid_captcha: 'Captcha-та не съвпада',
-			invalid_file_extension: 'Невалиден формат',
-			exceeds_max_file_size: 'Файлът надвишава максималния размер'
-		};
-		
-		if(angular.isUndefined(errors[errorCode])){
-			//max-\d+ rule
-			if(/exceeds_characters_(\d+)/.exec(errorCode)){
-				var results = /exceeds_characters_(\d+)/.exec(errorCode);
-				return 'Полето надвишава '+results[1]+' символа';
-			}
-			
-			//min-\d+ rule
-			if(/below_characters_(\d+)/.exec(errorCode)){
-				var results = /below_characters_(\d+)/.exec(errorCode);
-				return 'Полето е под '+results[1]+' символа';
-			}
-		}
-
-		return errors[errorCode];
-	};
-});
-app.filter('ratingStars', function() {
-	return function(rating) {
-		var result = [];
-		var stars = Math.floor(rating);
-
-		//generates an array of integers based on the tab rating
-		//1 - star
-		//0 - empty star
-		for (var i = 1; i <= 5; i++) {
-			if (i <= stars) {
-				result.push(1);
-			} else {
-				result.push(0);
-			}
-		}
-
-		return result;
-	};
-});
-app.filter('tabType', function () {
-	return function (tabType) {
-
-		var tabTypes = {
-			tab: "Tab",
-			gp: "Guitar Pro",
-			chord: "Акорди",
-			bt: "Backing Track",
-			bass: "Bass"
-		};
-		
-		if(angular.isUndefined(tabTypes[tabType])){
-			return tabType;
-		}else{
-			return tabTypes[tabType];
-		}
-
-	};
 });
 app.directive('article', function($filter, $location) {
 	return {
@@ -1509,6 +1360,162 @@ app.directive('validation', function() {
 		}
 	};
 });
+app.filter('age', function() {
+	return function(dateString) {
+		if (angular.isDefined(dateString)) {
+			var today = new Date();
+			var birthDate = new Date(dateString);
+			var age = today.getFullYear() - birthDate.getFullYear();
+			var m = today.getMonth() - birthDate.getMonth();
+			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+				age--;
+			}
+			return age;
+		}
+	};
+});
+app.filter('emoticons', function() {
+	return function(content) {
+		
+		var emoticonsPath = "static/img/emoticons/";
+		var emoticonsClass = "emoticon";
+
+		var emoticons = [
+			{
+				regexp: /:\)/,
+				title: ':)',
+				img: 'smile.png'
+			},
+			{
+				regexp: /:\(/,
+				title: ':(',
+				img: 'undecided.png'
+			},
+			{
+				regexp: /:D/,
+				title: ':D',
+				img: 'laugh.png'
+			},
+			{
+				regexp: /:P/,
+				title: ':P',
+				img: 'stickingout.png'
+			},
+			{
+				regexp: /8-\)/,
+				title: '8-)',
+				img: 'hot.png'
+			},
+			{
+				regexp: /\|-\(/,
+				title: '|-(',
+				img: 'ambivalent.png'
+			},
+			{
+				regexp: /:O/,
+				title: ':O',
+				img: 'largegasp.png'
+			},
+			{
+				regexp: /\(up\)/,
+				title: '(up)',
+				img: 'thumbsup.png'
+			},
+			{
+				regexp: /\(down\)/,
+				title: '(down)',
+				img: 'thumbsdown.png'
+			},
+			{
+				regexp: /:\@/,
+				title: ':@',
+				img: 'veryangry.png'
+			}
+		];
+		
+		//replace all emoticons with their images
+		emoticons.forEach(function (emoticon){
+			var regexp = new RegExp(emoticon.regexp, "ig");
+			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
+		});
+
+		return content;
+	};
+});
+app.filter('errors', function () {
+	return function (errorCode) {
+
+		var errors = {
+			invalid_login: 'Грешно име или парола',
+			empty_field: 'Празно поле',
+			invalid_int: 'Невалидно число',
+			invalid_date: 'Невалидна дата',
+			invalid_email: 'Невалиден имейл',
+			weak_password: 'Паролата не съдържа поне едно число и буква',
+			no_match: 'Полетата не съвпадат',
+			username_in_use: 'Потребителското име е заето',
+			email_in_use: 'Имейлът е зает',
+			not_in_list: 'Невалидно поле',
+			invalid_captcha: 'Captcha-та не съвпада',
+			invalid_file_extension: 'Невалиден формат',
+			exceeds_max_file_size: 'Файлът надвишава максималния размер'
+		};
+		
+		if(angular.isUndefined(errors[errorCode])){
+			//max-\d+ rule
+			if(/exceeds_characters_(\d+)/.exec(errorCode)){
+				var results = /exceeds_characters_(\d+)/.exec(errorCode);
+				return 'Полето надвишава '+results[1]+' символа';
+			}
+			
+			//min-\d+ rule
+			if(/below_characters_(\d+)/.exec(errorCode)){
+				var results = /below_characters_(\d+)/.exec(errorCode);
+				return 'Полето е под '+results[1]+' символа';
+			}
+		}
+
+		return errors[errorCode];
+	};
+});
+app.filter('ratingStars', function() {
+	return function(rating) {
+		var result = [];
+		var stars = Math.floor(rating);
+
+		//generates an array of integers based on the tab rating
+		//1 - star
+		//0 - empty star
+		for (var i = 1; i <= 5; i++) {
+			if (i <= stars) {
+				result.push(1);
+			} else {
+				result.push(0);
+			}
+		}
+
+		return result;
+	};
+});
+app.filter('tabType', function () {
+	return function (tabType) {
+
+		var tabTypes = {
+			tab: "Tab",
+			gp: "Guitar Pro",
+			chord: "Акорди",
+			bt: "Backing Track",
+			bass: "Bass"
+		};
+		
+		if(angular.isUndefined(tabTypes[tabType])){
+			return tabType;
+		}else{
+			return tabTypes[tabType];
+		}
+
+	};
+});
 app.factory('LoadingService', function() {
 	
 	var contentElement = '#view-wrapper';
@@ -1647,14 +1654,14 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 
 		if(angular.isDefined(responses[0].data.data)){
 			$scope.userData = responses[0].data.data;
+			
+			$scope.userComments = responses[1].data.data;
+			$scope.totalUserComments = responses[2].data.data;
+		
+			LoadingService.doneLoading();
 		}else{
-			$location.path('/');
+			$location.path('/not-found');
 		}
-		
-		$scope.userComments = responses[1].data.data;
-		$scope.totalUserComments = responses[2].data.data;
-		
-		LoadingService.doneLoading();
 	});
 
 	/**

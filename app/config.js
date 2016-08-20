@@ -79,8 +79,6 @@ app.config(['$routeProvider', function($routeProvider) {
 			factory: updateAuthStatus
 		}
 	}).otherwise({
-		templateUrl: 'app/views/partials/home.php',
-		controller: 'homeController',
 		resolve: {
 			factory: redirectTab
 		}
@@ -135,8 +133,9 @@ function updateAuthStatus ($rootScope, $q, UserService){
 
 /**
  * Checks if the url matches the old tab's url and redirects to the new url
+ * Otherwise it redirects to the "home" or "not-found" pages
  */
-function redirectTab ($window, $q) {
+function redirectTab ($window, $q, $location) {
 	var deferred = $q.defer();
 	
 	var url = $window.location.href;
@@ -149,7 +148,14 @@ function redirectTab ($window, $q) {
 		$window.location.pathname = path;
 		deferred.reject();
 	}else{
-		deferred.resolve(true);
+		
+		if($location.path() === ''){
+			$location.path('/home');
+		}else{
+			$location.path('/not-found');
+		}
+		
+		deferred.reject();
 	}
 	
 	return deferred.promise;
