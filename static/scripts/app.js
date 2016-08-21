@@ -409,7 +409,7 @@ app.run(function($rootScope, LoadingService) {
 			'/not-found'
 		];
 		
-		if (next.$$route) {
+		if (next.$$route) {			
 			//if the page that is about to be loaded is not in the static pages list...
 			if(staticPages.indexOf(next.$$route.originalPath) < 0){
 				LoadingService.startLoading();
@@ -417,7 +417,7 @@ app.run(function($rootScope, LoadingService) {
 				LoadingService.doneLoading();
 			}
 		}else{
-			LoadingService.showLoadingPlaceholder();
+			//LoadingService.showLoadingPlaceholder();
 		}
 		
 	});
@@ -1550,8 +1550,12 @@ app.factory('LoadingService', function() {
 		 * Hides the ng-view content and shows the loading placeholder
 		 */
 		startLoading: function() {
-			this.hideContent();
-			this.showLoadingPlaceholder();
+			var self = this;
+			
+			self.hideContent();
+			setTimeout(function (){
+				self.showLoadingPlaceholder();
+			}, 200);
 		},
 		/**
 		 * Hides the loading placeholder and shows the ng-view content

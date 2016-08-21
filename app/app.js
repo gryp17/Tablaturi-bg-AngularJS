@@ -16,7 +16,7 @@ app.run(function($rootScope, LoadingService) {
 			'/not-found'
 		];
 		
-		if (next.$$route) {
+		if (next.$$route) {			
 			//if the page that is about to be loaded is not in the static pages list...
 			if(staticPages.indexOf(next.$$route.originalPath) < 0){
 				LoadingService.startLoading();
@@ -24,7 +24,7 @@ app.run(function($rootScope, LoadingService) {
 				LoadingService.doneLoading();
 			}
 		}else{
-			LoadingService.showLoadingPlaceholder();
+			//LoadingService.showLoadingPlaceholder();
 		}
 		
 	});
