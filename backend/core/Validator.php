@@ -1,6 +1,6 @@
 <?php
 
-require_once '/backend/models/UserModel.php';
+require_once 'backend/models/UserModel.php';
 
 /**
  * Validator class used for user input validations
