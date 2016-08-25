@@ -5,6 +5,13 @@ app.controller('layoutController', function($scope, $rootScope, $location, $rout
 	
 	$scope.currentYear = (new Date()).getFullYear();
 	
+	//watch for content height changes and update the contentWrapperHeight variable
+	$scope.$watch(function (){
+		return $('#content-wrapper').outerHeight();
+	}, function (value){
+		$scope.contentWrapperHeight = value;
+	});
+	
 	TabService.getTabsCount().success(function (result){
 		if(result.error) {
 			console.log(result.error);

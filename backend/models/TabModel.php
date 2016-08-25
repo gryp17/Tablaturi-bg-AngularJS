@@ -18,12 +18,12 @@ class TabModel {
 		#get the total number of tabs
 		$query = $this->connection->prepare('SELECT COUNT(ID) FROM tab');
 		$query->execute();
-		$total = $query->fetch()[0];
+		$total = (int) $query->fetch()[0];
 
 		#get only the guitar pro tabs
 		$query = $this->connection->prepare('SELECT COUNT(ID) FROM tab WHERE type = "gp"');
 		$query->execute();
-		$gp = $query->fetch()[0];
+		$gp = (int) $query->fetch()[0];
 
 		$data = array(
 			'gp' => $gp,
@@ -149,7 +149,7 @@ class TabModel {
 		
 		$result = $query->fetch(PDO::FETCH_ASSOC);
 		
-		return $result['total'];
+		return (int) $result['total'];
 	}
 
 	/**

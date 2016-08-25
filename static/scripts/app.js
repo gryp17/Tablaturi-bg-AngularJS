@@ -850,6 +850,13 @@ app.controller('layoutController', function($scope, $rootScope, $location, $rout
 	
 	$scope.currentYear = (new Date()).getFullYear();
 	
+	//watch for content height changes and update the contentWrapperHeight variable
+	$scope.$watch(function (){
+		return $('#content-wrapper').outerHeight();
+	}, function (value){
+		$scope.contentWrapperHeight = value;
+	});
+	
 	TabService.getTabsCount().success(function (result){
 		if(result.error) {
 			console.log(result.error);
@@ -999,7 +1006,7 @@ app.controller('searchController', function ($scope, $routeParams, $q, TabServic
 	
 	$q.all([
 		TabService.search($scope.searchType, $scope.band, $scope.song, $scope.limit, $scope.offset),
-		TabService.getSearchTotal($scope.searchType, $scope.band, $scope.song),
+		TabService.getSearchTotal($scope.searchType, $scope.band, $scope.song)
 	]).then(function (responses){
 		$scope.tabs = responses[0].data.data;
 		$scope.totalResults = responses[1].data.data;
@@ -1167,202 +1174,6 @@ app.controller('tabsController', function ($scope, $q, TabService, LoadingServic
 		LoadingService.doneLoading();
 	});
 	
-});
-app.directive('article', function($filter, $location) {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/article.php',
-		replace: true,
-		scope: {
-		    articleData: '='
-		},
-		link: function(scope, element, attrs) {
-			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
-			var limit = 210 - scope.articleData.title.length;			
-			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
-			
-			/**
-			 * Redirects to the article page
-			 * @param {int} articleId
-			 */
-			scope.open = function (articleId){
-				$location.path('article/'+articleId);
-			};
-			
-		}
-	};
-});
-app.directive('autocomplete', function(TabService) {
-	return {
-		restrict: 'A',
-		scope: {
-		    autocomplete: '@', //band | song
-			band: '=' //optional parameter that is used when autocompleting the 'song' field 
-		},
-		link: function(scope, element, attrs) {
-			element.autocomplete({
-				minLength: 1,
-				delay: 300,
-				source: function(request, responseCallback) {
-					TabService.autocomplete(scope.autocomplete, request.term, scope.band).then(function (result){
-						//pass the data to the jqueryUI responseCallback function
-						responseCallback(result.data.data);
-					});
-				}
-			});
-		}
-	};
-});
-app.directive('clickableEmoticon', function() {
-	return {
-		restrict: 'C',
-		scope: {
-			model: '='
-		},
-		link: function(scope, element, attrs) {
-			element.on('click', function (){
-				if(angular.isUndefined(scope.model)){
-					scope.model = attrs.title;
-				} else {
-					scope.model =  scope.model + ' ' + attrs.title;
-				}
-				scope.$apply();
-			});
-		}
-	};
-});
-app.directive('comment', function() {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/comment.php',
-		scope: {
-		    commentData: '='
-		}
-	};
-});
-app.directive('enterClick', function() {
-	return {
-		restrict: 'A',
-		link: function(scope, element, attrs) {
-			element.on('keypress', function(e) {
-				if (e.which === 13){
-					$(attrs.enterClick).click();					
-				}
-			});
-		}
-	};
-}); 
-app.directive('pagination', function() {
-	return {
-		restrict: 'C',
-		templateUrl: 'app/views/directives/pagination.php',
-		replace: true,
-		scope: {
-			limit: '=',
-			offset: '=',
-			totalItems: '=',
-			range: '=',
-			callback: '&'
-		},
-		link: function(scope, element, attrs) {
-			
-			//initialize the pagination when scope.totalItems is set
-			scope.$watch('totalItems', function (){
-				if(angular.isDefined(scope.totalItems)){
-					
-					//initialize the currentPage if it's not set yet
-					if(angular.isUndefined(scope.currentPage)){
-						scope.currentPage = 1;
-					}
-
-					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
-					scope.generatePages();
-				}
-			});
-			
-			/**
-			 * Calculates the number of visible pages (it's a magic)
-			 */
-			scope.generatePages = function (){
-				scope.pages = [];
-				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
-					if ((i > 0) && (i <= scope.totalPages)) {
-						scope.pages.push(i);
-					}
-				}
-			};
-			
-			/**
-			 * Changes the current page
-			 * @param {int} page
-			 */
-			scope.goTo = function(page){
-				scope.currentPage = page;
-				scope.generatePages();
-				scope.getPageData();
-			};
-			
-			/**
-			 * Sets the first page as current page
-			 */
-			scope.goToFirst = function (){
-				scope.currentPage = 1;
-				scope.generatePages();
-				scope.getPageData();
-				
-			};
-			
-			/**
-			 * Sets the last page as current page
-			 */
-			scope.goToLast = function (){
-				scope.currentPage = scope.totalPages;
-				scope.generatePages();
-				scope.getPageData();
-			};
-			
-			/**
-			 * Sets the previous page as current page
-			 */
-			scope.goToPrevious = function (){
-				if(scope.currentPage > 1){
-					scope.currentPage = scope.currentPage - 1;
-					scope.generatePages();
-					scope.getPageData();
-				}
-			};
-			
-			/**
-			 * Sets the next page as current page
-			 */
-			scope.goToNext = function (){
-				if(scope.currentPage < scope.totalPages){
-					scope.currentPage = scope.currentPage + 1;
-					scope.generatePages();
-					scope.getPageData();
-				}
-			};
-			
-			/**
-			 * Calls the specified callback with the new offset
-			 */
-			scope.getPageData = function (){
-				scope.offset = (scope.currentPage - 1) * scope.limit;
-				scope.callback({limit: scope.limit, offset: scope.offset});
-			};
-			
-		}
-	};
-});
-app.directive('validation', function() {
-	return {
-		restrict: 'C',
-		link: function(scope, element, attrs) {
-			element.on('focus click keypress', function (){
-				element.closest('.field-box').removeClass('error');
-			});
-		}
-	};
 });
 app.filter('age', function() {
 	return function(dateString) {
@@ -2334,6 +2145,202 @@ app.factory('UserService', function($http) {
 				data: {
 					keyword: keyword
 				}
+			});
+		}
+	};
+});
+app.directive('article', function($filter, $location) {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/article.php',
+		replace: true,
+		scope: {
+		    articleData: '='
+		},
+		link: function(scope, element, attrs) {
+			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
+			var limit = 210 - scope.articleData.title.length;			
+			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
+			
+			/**
+			 * Redirects to the article page
+			 * @param {int} articleId
+			 */
+			scope.open = function (articleId){
+				$location.path('article/'+articleId);
+			};
+			
+		}
+	};
+});
+app.directive('autocomplete', function(TabService) {
+	return {
+		restrict: 'A',
+		scope: {
+		    autocomplete: '@', //band | song
+			band: '=' //optional parameter that is used when autocompleting the 'song' field 
+		},
+		link: function(scope, element, attrs) {
+			element.autocomplete({
+				minLength: 1,
+				delay: 300,
+				source: function(request, responseCallback) {
+					TabService.autocomplete(scope.autocomplete, request.term, scope.band).then(function (result){
+						//pass the data to the jqueryUI responseCallback function
+						responseCallback(result.data.data);
+					});
+				}
+			});
+		}
+	};
+});
+app.directive('clickableEmoticon', function() {
+	return {
+		restrict: 'C',
+		scope: {
+			model: '='
+		},
+		link: function(scope, element, attrs) {
+			element.on('click', function (){
+				if(angular.isUndefined(scope.model)){
+					scope.model = attrs.title;
+				} else {
+					scope.model =  scope.model + ' ' + attrs.title;
+				}
+				scope.$apply();
+			});
+		}
+	};
+});
+app.directive('comment', function() {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/comment.php',
+		scope: {
+		    commentData: '='
+		}
+	};
+});
+app.directive('enterClick', function() {
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs) {
+			element.on('keypress', function(e) {
+				if (e.which === 13){
+					$(attrs.enterClick).click();					
+				}
+			});
+		}
+	};
+}); 
+app.directive('pagination', function() {
+	return {
+		restrict: 'C',
+		templateUrl: 'app/views/directives/pagination.php',
+		replace: true,
+		scope: {
+			limit: '=',
+			offset: '=',
+			totalItems: '=',
+			range: '=',
+			callback: '&'
+		},
+		link: function(scope, element, attrs) {
+			
+			//initialize the pagination when scope.totalItems is set
+			scope.$watch('totalItems', function (){
+				if(angular.isDefined(scope.totalItems)){
+					
+					//initialize the currentPage if it's not set yet
+					if(angular.isUndefined(scope.currentPage)){
+						scope.currentPage = 1;
+					}
+
+					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
+					scope.generatePages();
+				}
+			});
+			
+			/**
+			 * Calculates the number of visible pages (it's a magic)
+			 */
+			scope.generatePages = function (){
+				scope.pages = [];
+				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
+					if ((i > 0) && (i <= scope.totalPages)) {
+						scope.pages.push(i);
+					}
+				}
+			};
+			
+			/**
+			 * Changes the current page
+			 * @param {int} page
+			 */
+			scope.goTo = function(page){
+				scope.currentPage = page;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the first page as current page
+			 */
+			scope.goToFirst = function (){
+				scope.currentPage = 1;
+				scope.generatePages();
+				scope.getPageData();
+				
+			};
+			
+			/**
+			 * Sets the last page as current page
+			 */
+			scope.goToLast = function (){
+				scope.currentPage = scope.totalPages;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the previous page as current page
+			 */
+			scope.goToPrevious = function (){
+				if(scope.currentPage > 1){
+					scope.currentPage = scope.currentPage - 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Sets the next page as current page
+			 */
+			scope.goToNext = function (){
+				if(scope.currentPage < scope.totalPages){
+					scope.currentPage = scope.currentPage + 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Calls the specified callback with the new offset
+			 */
+			scope.getPageData = function (){
+				scope.offset = (scope.currentPage - 1) * scope.limit;
+				scope.callback({limit: scope.limit, offset: scope.offset});
+			};
+			
+		}
+	};
+});
+app.directive('validation', function() {
+	return {
+		restrict: 'C',
+		link: function(scope, element, attrs) {
+			element.on('focus click keypress', function (){
+				element.closest('.field-box').removeClass('error');
 			});
 		}
 	};

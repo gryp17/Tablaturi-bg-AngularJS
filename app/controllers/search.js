@@ -11,7 +11,7 @@ app.controller('searchController', function ($scope, $routeParams, $q, TabServic
 	
 	$q.all([
 		TabService.search($scope.searchType, $scope.band, $scope.song, $scope.limit, $scope.offset),
-		TabService.getSearchTotal($scope.searchType, $scope.band, $scope.song),
+		TabService.getSearchTotal($scope.searchType, $scope.band, $scope.song)
 	]).then(function (responses){
 		$scope.tabs = responses[0].data.data;
 		$scope.totalResults = responses[1].data.data;

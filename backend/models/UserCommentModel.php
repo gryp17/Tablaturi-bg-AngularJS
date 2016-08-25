@@ -49,7 +49,7 @@ class UserCommentModel {
 		
 		$result = $query->fetch(PDO::FETCH_ASSOC);
 		
-		return $result['total'];
+		return (int) $result['total'];
 	}
 	
 	/**

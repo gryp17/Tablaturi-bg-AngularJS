@@ -28,8 +28,8 @@
 
 	<!-- comments wrapper -->
 	<div class="comments-wrapper">
-		<h4 ng-show="articleComments.length > 0">Коментари:</h4>
-		<h4 ng-show="articleComments.length === 0" class="no-comments">Няма коментари</h4>
+		<h4 ng-show="totalArticleComments > 0">Коментари:</h4>
+		<h4 ng-show="totalArticleComments === 0" class="no-comments">Няма коментари</h4>
 		<div ng-repeat="comment in articleComments" comment comment-data="comment"></div>
 		
 		<div class="pagination" total-items="totalArticleComments" limit="limit" offset="offset" range="2" callback="getArticleComments(limit, offset)"></div>
