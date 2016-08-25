@@ -25,7 +25,7 @@
 			<?php include "_header.php" ?>
 			<?php include "_search.php" ?>
 
-			<div class="left-ads">left</div>
+			<div class="left-wrapper">left</div>
 
 			<div id="content-wrapper">
 
@@ -84,9 +84,9 @@
 				</div>
 			</div>
 
-			<div class="right-ads">right</div>
+			<div class="right-wrapper">right</div>
 
-			<div class="bottom-ad"></div>
+			<div class="bottom-wrapper"></div>
 
 			<?php include "_footer.php" ?>
         </div>

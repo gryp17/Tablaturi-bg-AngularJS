@@ -149,7 +149,7 @@ CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 #data
 
-insert into user values(1,'plamen', '123456', 'skate_mania@abv.bg', now(), now(), 'm', '', 'admin', 1);
+insert into user values(1,'plamen', '81dc9bdb52d04dc20036dbd8313ed055', 'skate_mania@abv.bg', now(), now(), 'm', '', 'admin', 1, '','','','','','',1,now());
 
 insert into tab values(1, 'Guitar Pro', null, 'Linkin park', 'In the end', 1, 'intro', null, 3.5, 125, now(), now(), 1);
 insert into tab values(2, 'Guitar Pro', null, 'Linkin park', 'In the end', 1, 'intro', null, 3.5, 125, now(), now(), 1);
