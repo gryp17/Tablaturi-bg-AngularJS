@@ -86,14 +86,16 @@ body{
 		min-height: 600px;
 		margin: 5px;
 		vertical-align: top;
-		background-color: gray;
+		//background-color: gray;
 	}
 
 	.bottom-wrapper {
-		height: 90px;
-		margin-left: 5px;
-		margin-right: 5px;
-		background-color: blue;
+		margin: auto;
+		width: 728px;
+		min-height: 90px;
+		//margin-left: 5px;
+		//margin-right: 5px;
+		//background-color: blue;
 	}
 
 	@import "_footer";
