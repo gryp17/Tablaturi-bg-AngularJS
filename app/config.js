@@ -1,6 +1,12 @@
 app.config(['$routeProvider', function($routeProvider) {
 
-	$routeProvider.when('/home', {
+	$routeProvider.when('/', {
+		templateUrl: 'app/views/partials/home.php',
+		controller: 'homeController',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/home', {
 		templateUrl: 'app/views/partials/home.php',
 		controller: 'homeController',
 		resolve: {
