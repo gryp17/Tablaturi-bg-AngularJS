@@ -1,7 +1,5 @@
 <?php
 
-require_once 'UserModel.php'; 
-
 class TabModel {
 
 	private $connection;
@@ -325,11 +323,7 @@ class TabModel {
 		}else{
 			$query = $this->connection->prepare('INSERT INTO tab_rating (tab_ID, user_ID, rating, date) VALUES (:tab_id, :user_id, :rating, now())');
 			$query->execute(array('tab_id' => $tab_id, 'user_id' => $user_id, 'rating' => $rating));
-			
-			//give 1 reputation
-			$user_model = new UserModel();
-			$user_model->giveReputation($user_id, 1);
-			
+						
 			//calculate the new average tab rating
 			$this->calculateTabRating($tab_id);
 			

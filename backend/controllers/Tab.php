@@ -160,6 +160,12 @@ class Tab extends Controller {
 		$tab_model = $this->load_model('TabModel');
 		$result = $tab_model->rateTab($_SESSION['user']['ID'], $this->params['tab_id'], $this->params['rating']);
 		
+		if($result){
+			//give 1 reputation
+			$user_model = $this->load_model('UserModel');
+			$user_model->giveReputation($_SESSION['user']['ID'], 1);
+		}
+		
 		$this->sendResponse(1, $result);
 	}
 

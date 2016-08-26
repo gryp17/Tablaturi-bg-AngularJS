@@ -68,6 +68,11 @@ class UserComment extends Controller {
 		$result = $user_comment_model->addUserComment($this->params['user_id'], $_SESSION['user']['ID'], $this->sanitize($this->params['content']));
 
 		if ($result === true) {
+			
+			//give 1 reputation
+			$user_model = $this->load_model('UserModel');
+			$user_model->giveReputation($_SESSION['user']['ID'], 1);
+			
 			$this->sendResponse(1, $result);
 		} else {
 			$this->sendResponse(0, Controller::DB_ERROR);

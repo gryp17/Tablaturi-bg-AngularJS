@@ -68,6 +68,11 @@ class ArticleComment extends Controller {
 		$result = $article_comment_model->addArticleComment($this->params['article_id'], $_SESSION['user']['ID'], $this->sanitize($this->params['content']));
 
 		if ($result === true) {
+			
+			//give 1 reputation
+			$user_model = $this->load_model('UserModel');
+			$user_model->giveReputation($_SESSION['user']['ID'], 1);
+			
 			$this->sendResponse(1, $result);
 		} else {
 			$this->sendResponse(0, Controller::DB_ERROR);
