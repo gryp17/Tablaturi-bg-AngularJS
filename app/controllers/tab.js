@@ -33,11 +33,31 @@ app.controller('tabController', function ($scope, $routeParams, $location, $q, T
 	 */
 	$scope.getTabComments = function(limit, offset) {
 		$q.all([
-			TabCommentService.getTabComments($scope.tabId, $scope.limit, $scope.offset),
-		TabCommentService.getTotalTabComments($scope.tabId)
+			TabCommentService.getTabComments($scope.tabId, limit, offset),
+			TabCommentService.getTotalTabComments($scope.tabId)
 		]).then(function (results){
 			$scope.tabComments = results[0].data.data;
 			$scope.totalTabComments = results[1].data.data;
+		});
+	};
+	
+	/**
+	 * Rates the tab
+	 * @param {int} rating
+	 */
+	$scope.rateTab = function (rating){
+		TabService.rateTab($scope.tabId, rating).then(function (result){
+			
+			if(result.data.error === 'access_denied'){
+				alert('login or signup');
+			}else{
+				if(result.data.data === true){
+					alert('thank you. you have been awarded +1 reputation');
+				}else{
+					alert('you have already rated this tab');
+				}
+			}
+
 		});
 	};
 	

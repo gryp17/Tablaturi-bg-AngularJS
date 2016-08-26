@@ -1,5 +1,7 @@
 <?php
 
+require_once 'UserModel.php'; 
+
 class TabModel {
 
 	private $connection;
@@ -304,6 +306,47 @@ class TabModel {
 		}else{
 			return null;
 		}
+	}
+	
+	/**
+	 * Inserts new tab rating and calculates the average tab rating
+	 * @param int $user_id
+	 * @param int $tab_id
+	 * @param int $rating
+	 * @return boolean
+	 */
+	public function rateTab($user_id, $tab_id, $rating){
+		$check_query = $this->connection->prepare('SELECT * FROM tab_rating WHERE tab_ID = :tab_id AND user_ID = :user_id');
+		$check_query->execute(array('tab_id' => $tab_id, 'user_id' => $user_id));
+		$row = $check_query->fetch();
+		
+		if($row){
+			return false;
+		}else{
+			$query = $this->connection->prepare('INSERT INTO tab_rating (tab_ID, user_ID, rating, date) VALUES (:tab_id, :user_id, :rating, now())');
+			$query->execute(array('tab_id' => $tab_id, 'user_id' => $user_id, 'rating' => $rating));
+			
+			//give 1 reputation
+			$user_model = new UserModel();
+			$user_model->giveReputation($user_id, 1);
+			
+			//calculate the new average tab rating
+			$this->calculateTabRating($tab_id);
+			
+			return true;
+		}
+
+	}
+	
+	
+	/**
+	 * Calculates the current tab rating and updates the rating field of the tab
+	 * @param int $tab_id
+	 * @return boolean
+	 */
+	private function calculateTabRating($tab_id){
+		$query = $this->connection->prepare('UPDATE tab SET rating = (SELECT AVG(rating) FROM tab_rating WHERE tab_ID = :tab_id) where ID = :update_tab_id');
+		return $query->execute(array('tab_id' => $tab_id, 'update_tab_id' => $tab_id));
 	}
 	
 }

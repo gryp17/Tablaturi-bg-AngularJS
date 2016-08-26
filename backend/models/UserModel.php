@@ -266,6 +266,16 @@ class UserModel {
 		return (int) $result['total'];
 	}
 	
+	/**
+	 * Gives the user the provided amount of reputation
+	 * @param int $user_id
+	 * @param int $amount
+	 */
+	public function giveReputation($user_id, $amount){
+		$query = $this->connection->prepare('UPDATE user SET reputation = reputation + :amount WHERE ID = :user_id');
+		return $query->execute(array('amount' => $amount, 'user_id' => $user_id));
+	}
+	
 	
 
 

@@ -79,6 +79,16 @@ app.factory('TabService', function($http) {
 					id: id
 				}
 			});
+		},
+		rateTab: function (tabId, rating){
+			return $http({
+				method: 'POST',
+				url: 'Tab/rateTab',
+				data: {
+					tab_id: tabId,
+					rating: rating
+				}
+			});
 		}
 	};
 });

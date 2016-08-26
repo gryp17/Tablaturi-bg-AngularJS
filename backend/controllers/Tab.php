@@ -64,6 +64,12 @@ class Tab extends Controller {
 				'params' => array(
 					'id' => 'int'
 				)
+			),
+			'rateTab' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'rating' => 'int, in[1,2,3,4,5]'
+				)
 			)
 		);
 
@@ -145,6 +151,16 @@ class Tab extends Controller {
 		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getTab($this->params['id']);
 		$this->sendResponse(1, $data);
+	}
+	
+	/**
+	 * Rate the tab
+	 */
+	public function rateTab() {
+		$tab_model = $this->load_model('TabModel');
+		$result = $tab_model->rateTab($_SESSION['user']['ID'], $this->params['tab_id'], $this->params['rating']);
+		
+		$this->sendResponse(1, $result);
 	}
 
 }

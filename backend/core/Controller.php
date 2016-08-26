@@ -6,11 +6,11 @@ class Controller {
 	const PUBLIC_ACCESS = 1;
 	const LOGGED_IN_USER = 2;
 	const ADMIN_USER = 3;
-	const INVALID_REQUEST = 'Invalid request!';
-	const ACCESS_DENIED = 'Access denied!';
-	const NOT_FOUND = 'Not found!';
-	const DB_ERROR = 'Query failed!';
-	const EMAIL_ERROR = 'Send email failed!';
+	const INVALID_REQUEST = 'invalid_request';
+	const ACCESS_DENIED = 'access_denied';
+	const NOT_FOUND = 'not_found';
+	const DB_ERROR = 'query_failed';
+	const EMAIL_ERROR = 'send_email_failed';
 
 	public $endpoints;
 	public $params;
