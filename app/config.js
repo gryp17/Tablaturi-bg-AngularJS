@@ -36,7 +36,7 @@ app.config(['$routeProvider', function($routeProvider) {
 			factory: updateAuthStatus
 		}
 	}).when('/tab/:id', {
-		templateUrl: 'app/views/partials/tab.php',
+		templateUrl: 'app/views/partials/tab/tab.php',
 		controller: 'tabController',
 		resolve: {
 			factory: updateAuthStatus

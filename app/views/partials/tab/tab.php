@@ -45,9 +45,18 @@
 		</div>
 		<!-- right -->
 		<div class="right">
-			<button class="btn btn-red outline">
+			
+			<!-- add to favourites button -->
+			<button ng-if="favouriteTabs.indexOf(tab.ID) === -1" class="btn btn-red outline" ng-click="addToFavourites(tab.ID)">
 				<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Добави в любими
 			</button>
+			
+			<!-- remove from favourites button -->
+			<button ng-if="favouriteTabs.indexOf(tab.ID) !== -1" class="btn btn-red" ng-click="removeFromFavourites(tab.ID)">
+				<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Премахни от любими
+			</button>
+			
+			<!-- report tab button -->
 			<button class="btn btn-red outline" ng-click="openReportTabModal()">
 				<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> Докладвай
 			</button>
@@ -161,6 +170,6 @@
 		</div>
 	</div>
 	
-	
+	<?php include "_report-tab.php" ?>
 	
 </div>

@@ -1,0 +1,38 @@
+#report-tab-modal {
+	.report-tab-wrapper {
+		.report-title {
+			margin-bottom: 10px;
+		}
+		
+		.field-box {
+			margin-top: 10px;
+			margin-bottom: 20px;
+			
+			textarea {
+				width: 100%;
+				resize: vertical;
+				
+				&.disabled {
+					opacity: 0.3;
+					cursor: not-allowed;
+				}
+			}
+		}
+		
+		.btn-red {
+			display: block;
+			float: none;
+			margin: auto;
+		}
+	}
+	
+	.success {
+		display: block;
+		margin: auto;
+		
+		.success-msg {
+			margin-top: 20px;
+			text-align: center;
+		}
+	}
+}

@@ -1,9 +1,9 @@
-app.controller('tabController', function ($scope, $routeParams, $location, $q, TabService, TabCommentService, ValidationService, LoadingService) {
+app.controller('tabController', function ($scope, $rootScope, $routeParams, $location, $q, TabService, TabCommentService, UserFavouriteService, TabReportService, ValidationService, LoadingService) {
 	$scope.limit = 6;
 	$scope.offset = 0;
 		
 	$scope.tabId = $routeParams.id;
-	
+		
 	$q.all([
 		TabService.getTab($scope.tabId),
 		TabCommentService.getTabComments($scope.tabId, $scope.limit, $scope.offset),
@@ -23,10 +23,26 @@ app.controller('tabController', function ($scope, $routeParams, $location, $q, T
 
 			//total number of tab comments
 			$scope.totalTabComments = results[2].data.data;
-
+			
 			LoadingService.doneLoading();
 		}
 		
+	});
+	
+	/**
+	 * Watch for user login/logout and update the user favourites list accordingly
+	 */
+	$rootScope.$watch('loggedInUser', function (){
+		//if the user is logged in - fetch all favourites
+		if(angular.isDefined($rootScope.loggedInUser)){
+			UserFavouriteService.getUserFavourites($rootScope.loggedInUser.ID, 999999, 0).then(function (result){
+				$scope.favouriteTabs = result.data.data.map(function (tab){
+					return tab.ID;
+				});
+			});
+		}else{
+			$scope.favouriteTabs = [];
+		}
 	});
 	
 	/**
@@ -64,6 +80,84 @@ app.controller('tabController', function ($scope, $routeParams, $location, $q, T
 				$('html, body').animate({scrollTop: offset}, 500);
 			}
 		});
+	};
+	
+	/**
+	 * Adds the tab to the favourites list
+	 * @param {int} tabId
+	 */
+	$scope.addToFavourites = function (tabId){
+		UserFavouriteService.addFavouriteTab(tabId).then(function (result){
+			if(result.data.error === 'access_denied'){
+				alert('login or signup');
+			}else{
+				$scope.favouriteTabs.push(tabId);
+			}			
+		});
+	};
+	
+	/**
+	 * Deletes the tab from the favourites list
+	 * @param {int} tabId
+	 */
+	$scope.removeFromFavourites = function (tabId){
+		UserFavouriteService.deleteFavouriteTab(tabId).then(function (){
+			$scope.favouriteTabs = $scope.favouriteTabs.filter(function (id){
+				return id !== tabId;
+			});
+		});
+	};
+	
+	
+	/**
+	 * Opens the report tab modal
+	 */
+	$scope.openReportTabModal = function (){
+		//open the modal only if the user is logged in
+		if(angular.isDefined($rootScope.loggedInUser)){
+			$scope.reportSuccess = false;
+		
+			$scope.reportedTab = {
+				id: $scope.tabId,
+				reason: 'invalid tab/format',
+				other: ''
+			};
+
+			$scope.$watch('reportedTab', function() {
+				if($scope.reportedTab.reason !== 'other') {
+					$scope.reportedTab.other = '';
+				}
+			}, true);
+
+			$('#report-tab-modal').modal('show');
+		}else{
+			alert('login or signup');
+		}
+	};
+	
+	/**
+	 * Reports the tab
+	 */
+	$scope.reportTab = function (reportedTab){
+		var reason;
+		
+		if(reportedTab.reason === 'other'){
+			reason = reportedTab.other;
+		}else{
+			reason = reportedTab.reason;
+		}
+		
+		TabReportService.reportTab(reportedTab.id, reason).then(function (result){
+			if (result.data.status === 0) {
+				if (result.data.error) {
+					//show the error
+					ValidationService.showError(result.data.error.field, result.data.error.error_code);
+				}
+			} else {
+				$scope.reportSuccess = true;
+			}
+		});
+		
 	};
 	
 	/**
