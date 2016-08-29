@@ -1,3 +1,124 @@
 > .tab{
+
+	hr{
+		border-color: $red;
+	}
+
+	.tab-info{
+		margin-top: 10px;
+		text-align: center;
+
+		.left, .right{
+			display: inline-block;
+			vertical-align: top;
+			width: 49.5%;
+		}
+
+		.left{
+			text-align: left;
+
+			.title{
+				font-size: 18px;
+			}
+
+			.author{
+				margin-top: 5px;
+				font-style: italic;
+			}
+
+			table{
+				margin-top: 20px;
+
+				.info-label{
+					color: $red;
+					margin-right: 5px;
+				}
+			}
+		}
+
+		.right{
+			text-align: right;
+
+			button{
+				display: block;
+				float: right;
+				clear: both;
+
+				&:nth-child(2){
+					margin-top: 5px;
+				}
+			}
+
+			.views{
+				margin-top: 20px;
+			}
+
+			.rating{
+				margin-top: 20px;
+
+				.stars-rating{
+					float: right;
+				}
+			}
+		}
+	}
+
+	.tab-content{
+
+		.download-button{
+			margin-top: 20px;
+		}
+
+		.hint{
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		.gp{
+			text-align: center;
+		}
+
+		.text{
+			.tools{
+				margin-bottom: 15px;
+
+				button{
+					font-size: 25px;
+					width: 35px;
+					height: 35px;
+					padding: 0px;
+				}
+			}
+
+			pre{
+				border-radius: 0px;
+				white-space: pre-wrap;
+				white-space: -moz-pre-wrap;
+				white-space: -pre-wrap;
+				white-space: -o-pre-wrap;
+				word-wrap: break-word;
+			}
+
+			.download-text-wrapper{
+				text-align: center;
+			}
+		}
+	}
+
+	.share{
+		margin-top: 10px;
+		
+		hr{
+			margin: 10px 0px;
+		}
+
+		span{
+			height: 22px;
+		}
+	}
 	
+	.comments-wrapper{
+		margin-top: 20px;
+	}
+
 }

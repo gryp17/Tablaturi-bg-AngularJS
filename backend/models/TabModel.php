@@ -291,7 +291,25 @@ class TabModel {
 	 * @return array
 	 */
 	public function getTab($id){
-		$query = $this->connection->prepare('SELECT * FROM tab WHERE ID = :id');
+		$query = $this->connection->prepare('SELECT '
+				. 'tab.ID, '
+				. 'tab.type, '
+				. 'tab.path, '
+				. 'tab.band, '
+				. 'tab.song, '
+				. 'tab.version, '
+				. 'tab.tab_type, '
+				. 'tab.content, '
+				. 'tab.rating, '
+				. 'tab.downloads, '
+				. 'tab.upload_date, '
+				. 'tab.modified_date, '
+				. 'tab.tunning, '
+				. 'tab.difficulty, '
+				. 'tab.uploader_ID, '
+				. 'user.username '
+				. 'FROM tab, user '
+				. 'WHERE tab.uploader_ID = user.ID AND tab.ID = :id');
 		$query->execute(array('id' => $id));
 		
 		$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -304,6 +322,16 @@ class TabModel {
 		}else{
 			return null;
 		}
+	}
+	
+	/**
+	 * Updates the tab views/downloads
+	 * @param int $id
+	 * @return boolean
+	 */
+	public function addTabView($id){
+		$query = $this->connection->prepare('UPDATE tab SET downloads = downloads + 1 WHERE ID = :tab_id');
+		return $query->execute(array('tab_id' => $id));
 	}
 	
 	/**
@@ -339,7 +367,7 @@ class TabModel {
 	 * @return boolean
 	 */
 	private function calculateTabRating($tab_id){
-		$query = $this->connection->prepare('UPDATE tab SET rating = (SELECT AVG(rating) FROM tab_rating WHERE tab_ID = :tab_id) where ID = :update_tab_id');
+		$query = $this->connection->prepare('UPDATE tab SET rating = (SELECT AVG(rating) FROM tab_rating WHERE tab_ID = :tab_id) WHERE ID = :update_tab_id');
 		return $query->execute(array('tab_id' => $tab_id, 'update_tab_id' => $tab_id));
 	}
 	

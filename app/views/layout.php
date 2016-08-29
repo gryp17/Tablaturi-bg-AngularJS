@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano" >
-        <meta property="og:url" content="http://tablaturi-bg.com/#/article/{{shareId}}"/>
+        <meta property="og:url" content="http://tablaturi-bg.com/{{shareLink}}"/>
         <meta property="og:site_name" content="Tablaturi-bg.com" />
 		
 		<meta name="description" content="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи." /> 

@@ -1,4 +1,4 @@
-app.controller('tabController', function ($scope, $routeParams, $location, $q, TabService, TabCommentService, LoadingService) {
+app.controller('tabController', function ($scope, $routeParams, $location, $q, TabService, TabCommentService, ValidationService, LoadingService) {
 	$scope.limit = 6;
 	$scope.offset = 0;
 		
@@ -14,6 +14,9 @@ app.controller('tabController', function ($scope, $routeParams, $location, $q, T
 			$location.path('/not-found');
 		}else{
 			$scope.tab = results[0].data.data;
+		
+			//tab share link
+			$scope.$parent.shareLink = '#/tab/'+$scope.tab.ID;
 		
 			//tab comments
 			$scope.tabComments = results[1].data.data;
@@ -42,6 +45,28 @@ app.controller('tabController', function ($scope, $routeParams, $location, $q, T
 	};
 	
 	/**
+	 * Add new comment
+	 * @returns {undefined}
+	 */
+	$scope.addComment = function(){
+		TabCommentService.addTabComment($scope.tabId, $scope.commentContent).success(function(result) {
+			if(result.status === 0){
+				if(result.error){
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			}else{
+				$scope.commentContent = '';
+				$scope.getTabComments(6, 0);
+				
+				//scroll to the latest comment
+				var offset = $('.comments-wrapper').offset().top;
+				$('html, body').animate({scrollTop: offset}, 500);
+			}
+		});
+	};
+	
+	/**
 	 * Rates the tab
 	 * @param {int} rating
 	 */
@@ -59,6 +84,32 @@ app.controller('tabController', function ($scope, $routeParams, $location, $q, T
 			}
 
 		});
+	};
+	
+	/**
+	 * Zooms in or out the "pre" container
+	 * @param {int} amount
+	 */
+	$scope.zoom = function (amount){
+		var fontSize = $('pre').css('font-size');
+		fontSize = parseInt(fontSize.replace('px', ''));
+		$('pre').css('font-size', fontSize + amount);
+	};
+	
+	/**
+	 * Requests the guitar pro file for the provided tab id
+	 * @param {int} tabId
+	 */
+	$scope.downloadGpTab = function (tabId){
+		
+	};
+	
+	/**
+	 * Requests the text file version of the provided tab id
+	 * @param {int} tabId
+	 */
+	$scope.downloadTextTab = function (tabId){
+		
 	};
 	
 });

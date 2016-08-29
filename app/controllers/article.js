@@ -19,8 +19,8 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 				$scope.getArticleComments(6, 0);
 				
 				//scroll to the latest comment
-				var offset = $(".comments-wrapper").offset().top;
-				$("html, body").animate({scrollTop: offset}, 500);
+				var offset = $('.comments-wrapper').offset().top;
+				$('html, body').animate({scrollTop: offset}, 500);
 			}
 		});
 	};
@@ -54,8 +54,8 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 			$scope.article = result[0].data.data;
 			$scope.article.content = $scope.sanitizeArticleContent($scope.article.content);
 			
-			//article share id
-			$scope.$parent.shareId = $scope.article.ID;
+			//article share link
+			$scope.$parent.shareLink = '#/article/'+$scope.article.ID;
 			
 			//article comments
 			$scope.articleComments = result[1].data.data;

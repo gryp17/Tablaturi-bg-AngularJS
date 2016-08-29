@@ -150,6 +150,12 @@ class Tab extends Controller {
 	public function getTab() {
 		$tab_model = $this->load_model('TabModel');
 		$data = $tab_model->getTab($this->params['id']);
+		
+		#if the tab exists increment the views
+		if ($data !== null) {
+			$tab_model->addTabView($this->params['id']);
+		}
+
 		$this->sendResponse(1, $data);
 	}
 	
