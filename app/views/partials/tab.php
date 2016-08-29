@@ -6,6 +6,6 @@
 	<br><br>
 	
 	Оцени:
-	<div stars-rating callback="rateTab(rating)"></div>
+	<div stars-rating current-rating="{{tab.rating}}" callback="rateTab(rating)"></div>
 	
 </div>

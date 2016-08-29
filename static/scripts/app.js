@@ -1393,6 +1393,7 @@ app.directive('starsRating', function() {
 		templateUrl: 'app/views/directives/stars-rating.php',
 		replace: true,
 		scope: {
+			currentRating: '@',
 			callback: '&'
 		},
 		link: function(scope, element, attrs) {
@@ -1420,14 +1421,24 @@ app.directive('starsRating', function() {
 				}
 			];
 			
+			scope.$watch('currentRating', function (){
+				//if the currentRating is set - fill the stars
+				if(angular.isDefined(scope.currentRating)){	
+					var starIndex = Math.round(scope.currentRating) - 1;
+					scope.highlightStar(starIndex, false);
+				}
+			});
+			
 			/**
 			 * Fills all stars up to the provided index and shows the selected star text
 			 * @param {int} index
 			 */
-			scope.highlightStar = function (index){
+			scope.highlightStar = function (index, showStarText){
 				
-				//set the correct star text
-				scope.selectedStarText = scope.stars[index].text;
+				if(showStarText){
+					//set the correct star text
+					scope.selectedStarText = scope.stars[index].text;
+				}
 				
 				//fill/unfill the stars
 				scope.stars = scope.stars.map(function (star, currentIndex){
