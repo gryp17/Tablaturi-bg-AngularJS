@@ -46,19 +46,26 @@
 		<!-- right -->
 		<div class="right">
 			
-			<!-- add to favourites button -->
-			<button ng-if="favouriteTabs.indexOf(tab.ID) === -1" class="btn btn-red outline" ng-click="addToFavourites(tab.ID)">
-				<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Добави в любими
-			</button>
-			
-			<!-- remove from favourites button -->
-			<button ng-if="favouriteTabs.indexOf(tab.ID) !== -1" class="btn btn-red" ng-click="removeFromFavourites(tab.ID)">
-				<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Премахни от любими
-			</button>
-			
-			<!-- report tab button -->
-			<button class="btn btn-red outline" ng-click="openReportTabModal()">
-				<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> Докладвай
+			<div ng-if="loggedInUser.ID !== tab.uploader_ID">
+				<!-- add to favourites button -->
+				<button ng-if="favouriteTabs.indexOf(tab.ID) === -1" class="btn btn-red outline" ng-click="addToFavourites(tab.ID)">
+					<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Добави в любими
+				</button>
+
+				<!-- remove from favourites button -->
+				<button ng-if="favouriteTabs.indexOf(tab.ID) !== -1" class="btn btn-red" ng-click="removeFromFavourites(tab.ID)">
+					<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Премахни от любими
+				</button>
+
+				<!-- report tab button -->
+				<button class="btn btn-red outline" ng-click="openReportTabModal()">
+					<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> Докладвай
+				</button>
+			</div>
+						
+			<!-- edit tab button -->
+			<button ng-if="loggedInUser.ID === tab.uploader_ID" class="btn btn-red">
+				<img src="static/img/icons/pencil.png" /> Редактирай
 			</button>
 			
 			<div class="clearfix"></div>

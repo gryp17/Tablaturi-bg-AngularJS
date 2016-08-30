@@ -33,9 +33,11 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 	 * Watch for user login/logout and update the user favourites list accordingly
 	 */
 	$rootScope.$watch('loggedInUser', function (){
+		$scope.loggedInUser = $rootScope.loggedInUser;
+		
 		//if the user is logged in - fetch all favourites
-		if(angular.isDefined($rootScope.loggedInUser)){
-			UserFavouriteService.getUserFavourites($rootScope.loggedInUser.ID, 999999, 0).then(function (result){
+		if(angular.isDefined($scope.loggedInUser)){
+			UserFavouriteService.getUserFavourites($scope.loggedInUser.ID, 999999, 0).then(function (result){
 				$scope.favouriteTabs = result.data.data.map(function (tab){
 					return tab.ID;
 				});
