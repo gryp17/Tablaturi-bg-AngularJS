@@ -89,10 +89,10 @@
 		
 		<!-- guitar pro tab -->
 		<div ng-if="tab.type === 'gp'" class="gp">
-			<button class="btn btn-red download-button" ng-click="downloadGpTab(tab.ID)">
+			<a class="btn btn-red download-button" href="Tab/getGpTabFile?tab_id={{tab.ID}}" target="_blank">
 				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 				Свали Guitar Pro таблатурата
-			</button>
+			</a>
 			
 			<div class="hint">
 				Таблатурата е тип Guitar Pro. За повече информация за програмата кликнете <a class="red-link" href="#guitar-pro">тук</a>.
@@ -116,11 +116,11 @@
 			</pre>
 			
 			<div class="download-text-wrapper">
-				<button class="btn btn-red download-button" ng-click="downloadTextTab(tab.ID)">
+				<a class="btn btn-red download-button" href="Tab/getTextTabFile?tab_id={{tab.ID}}" target="_blank">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 					Свали като .txt
-				</button>
-
+				</a>
+				
 				<div class="hint">
 					Ако имате проблем с четенето на таблатурата, кликнете <a class="red-link" href="#usefull">тук</a> за да разгледате уроците за начинаещи.
 				</div>

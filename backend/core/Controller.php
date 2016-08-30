@@ -143,6 +143,18 @@ class Controller {
 		header('Content-Type: application/json');
 		die(json_encode($response));
 	}
+	
+	/**
+	 * Outputs the file download response
+	 * @param string $content_type
+	 * @param string $filename
+	 * @param string $content
+	 */
+	public function sendFileResponse($content_type, $filename, $content) {
+		header('Content-type: '.$content_type);
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		die($content);
+	}
 
 	/**
 	 * Returns new instance of the specified model

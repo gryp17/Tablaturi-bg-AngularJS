@@ -68,7 +68,20 @@ class Tab extends Controller {
 			'rateTab' => array(
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
+					'tab_id' => 'int',
 					'rating' => 'int, in[1,2,3,4,5]'
+				)
+			),
+			'getTextTabFile' => array(
+				'required_role' => self::PUBLIC_ACCESS,
+				'params' => array(
+					'tab_id' => 'int'
+				)
+			),
+			'getGpTabFile' => array(
+				'required_role' => self::PUBLIC_ACCESS,
+				'params' => array(
+					'tab_id' => 'int'
 				)
 			)
 		);
@@ -173,6 +186,65 @@ class Tab extends Controller {
 		}
 		
 		$this->sendResponse(1, $result);
+	}
+	
+	/**
+	 * Downloads a txt file version of the tab 
+	 */
+	public function getTextTabFile() {
+		$tab_model = $this->load_model('TabModel');
+		$tab = $tab_model->getTab($this->params['tab_id']);
+		
+		//if there is such tab and it's type is not guitar pro
+		if($tab !== null && $tab['type'] !== 'gp'){
+			
+			//build and sanitize the filename
+			$filename = $tab['band'].' - '.$tab['song'].'.txt';
+			$filename = preg_replace('/(,|\\\|\/|\||\*|\?|\:|\'|\"|>|<)/', '', $filename);
+
+			$tunning = isset($tab['tunning']) ? $tab['tunning'] : 'Няма информация';
+			$difficulty = isset($tab['difficulty']) ? $tab['difficulty'] : 'Няма информация';
+			
+			//build the tab header
+			$br = "\r\n";
+			$header = $tab['band'].' - '.$tab['song'];
+			$header .= $br.$br;
+			$header .= 'Автор: '.$tab['username'];
+			$header .= $br;
+			$header .= 'Тунинг: '.$tunning;
+			$header .= $br;
+			$header .= 'Трудност: '.$difficulty;
+			$header .= $br.'----------------------------------------------------------------------'.$br.$br;
+
+			$this->sendFileResponse('text/plain', $filename, $header.$tab['content']);
+		}else{
+			$this->sendResponse(1, Controller::NOT_FOUND);
+		}
+	}
+	
+	/**
+	 * Downloads a guitar pro file version of the tab 
+	 */
+	public function getGpTabFile() {
+		$tab_model = $this->load_model('TabModel');
+		$tab = $tab_model->getTab($this->params['tab_id']);
+		
+		//if there is such tab and it's type is guitar pro
+		if($tab !== null && $tab['type'] === 'gp'){
+			
+			//build and sanitize the filename
+			preg_match('/\.([^\.]+?)$/', $tab['path'], $matches);
+			$extension = strtolower($matches[1]);
+			
+			$filename = $tab['band'].' - '.$tab['song'].'.'.$extension;
+			$filename = preg_replace('/(,|\\\|\/|\||\*|\?|\:|\'|\"|>|<)/', '', $filename);
+
+			$content = file_get_contents(CONFIG::TABS_DIR.$tab['path']);
+
+			$this->sendFileResponse('application/octet-stream', $filename, $content);
+		}else{
+			$this->sendResponse(1, Controller::NOT_FOUND);
+		}
 	}
 
 }

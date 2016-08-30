@@ -211,21 +211,5 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 		fontSize = parseInt(fontSize.replace('px', ''));
 		$('pre').css('font-size', fontSize + amount);
 	};
-	
-	/**
-	 * Requests the guitar pro file for the provided tab id
-	 * @param {int} tabId
-	 */
-	$scope.downloadGpTab = function (tabId){
-		
-	};
-	
-	/**
-	 * Requests the text file version of the provided tab id
-	 * @param {int} tabId
-	 */
-	$scope.downloadTextTab = function (tabId){
-		
-	};
-	
+			
 });
