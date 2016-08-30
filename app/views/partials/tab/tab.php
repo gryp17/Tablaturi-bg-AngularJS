@@ -48,7 +48,7 @@
 			
 			<div ng-if="loggedInUser.ID !== tab.uploader_ID">
 				<!-- add to favourites button -->
-				<button ng-if="favouriteTabs.indexOf(tab.ID) === -1" class="btn btn-red outline" ng-click="addToFavourites(tab.ID)">
+				<button ng-if="favouriteTabs.indexOf(tab.ID) === -1" id="add-to-favourites-button" class="btn btn-red outline" ng-click="addToFavourites(tab.ID)">
 					<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Добави в любими
 				</button>
 
@@ -58,7 +58,7 @@
 				</button>
 
 				<!-- report tab button -->
-				<button class="btn btn-red outline" ng-click="openReportTabModal()">
+				<button class="btn btn-red outline" id="report-tab-button" ng-click="openReportTabModal()">
 					<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> Докладвай
 				</button>
 			</div>
@@ -78,7 +78,7 @@
 			
 			<div class="rating">
 				Оцени:
-				<div stars-rating current-rating="{{tab.rating}}" callback="rateTab(rating)"></div>
+				<div tabindex="-1" stars-rating current-rating="{{tab.rating}}" callback="rateTab(rating)"></div>
 			</div>
 		
 			
@@ -176,6 +176,30 @@
 			<button ng-click="addComment()" class="btn btn-red">Коментирай</button>
 		</div>
 	</div>
+	
+	<script id="add-to-favourites-login-message" type="text/ng-template">
+		<a class="red-link" data-toggle="modal" href="#signup-modal" target="_self">Регистрирай се</a>
+		или <a class="red-link" data-toggle="modal" href="#login-modal" target="_self">Влез</a>, за да добавиш таблатурата в любими.
+	</script>
+	
+	<script id="report-tab-login-message" type="text/ng-template">
+		<a class="red-link" data-toggle="modal" href="#signup-modal" target="_self">Регистрирай се</a>
+		или <a class="red-link" data-toggle="modal" href="#login-modal" target="_self">Влез</a>, за да докладваш таблатурата.
+	</script>
+	
+	<script id="rate-tab-login-message" type="text/ng-template">
+		<a class="red-link" data-toggle="modal" href="#signup-modal" target="_self">Регистрирай се</a>
+		или <a class="red-link" data-toggle="modal" href="#login-modal" target="_self">Влез</a>, за да оцениш таблатурата.
+	</script>
+	
+	<script id="rate-tab-already-rated-message" type="text/ng-template">
+		Вече си оценил таблатурата.
+	</script>
+	
+	<script id="rate-tab-success-message" type="text/ng-template">
+		 Таблатурата беше оценена успешно. Получихте +1 репутация.
+	</script>
+	
 	
 	<?php include "_report-tab.php" ?>
 	

@@ -8,6 +8,13 @@ $gray: #E4E4E4;
 	display: none !important;
 }
 
+:focus {
+	outline:none;
+}
+::-moz-focus-inner {
+	border:0;
+}
+
 body{
 	background: url('../../img/background.jpg') fixed no-repeat;
 	color: $blue;

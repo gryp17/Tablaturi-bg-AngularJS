@@ -84,6 +84,26 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 		});
 	};
 	
+	$scope.showPopover = function (selector, message){
+		$(selector).on('blur', function (){
+			$(selector).popover('hide');
+		});
+		
+		$(selector).popover({
+			container: '.tab',
+			trigger: 'manual',
+			placement: 'top',
+			html: true,
+			content: message
+		});
+		
+		//hack for dynamically changing the content 
+		var popover = $(selector).data('bs.popover');
+		popover.options.content = message;
+		
+		$(selector).popover('show');
+	};
+	
 	/**
 	 * Adds the tab to the favourites list
 	 * @param {int} tabId
@@ -91,7 +111,7 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 	$scope.addToFavourites = function (tabId){
 		UserFavouriteService.addFavouriteTab(tabId).then(function (result){
 			if(result.data.error === 'access_denied'){
-				alert('login or signup');
+				$scope.showPopover('#add-to-favourites-button', $('#add-to-favourites-login-message').html());
 			}else{
 				$scope.favouriteTabs.push(tabId);
 			}			
@@ -133,7 +153,7 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 
 			$('#report-tab-modal').modal('show');
 		}else{
-			alert('login or signup');
+			$scope.showPopover('#report-tab-button', $('#report-tab-login-message').html());
 		}
 	};
 	
@@ -170,12 +190,12 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 		TabService.rateTab($scope.tabId, rating).then(function (result){
 			
 			if(result.data.error === 'access_denied'){
-				alert('login or signup');
+				$scope.showPopover('.stars-rating', $('#rate-tab-login-message').html());
 			}else{
 				if(result.data.data === true){
-					alert('thank you. you have been awarded +1 reputation');
+					$scope.showPopover('.stars-rating', $('#rate-tab-success-message').html());
 				}else{
-					alert('you have already rated this tab');
+					$scope.showPopover('.stars-rating', $('#rate-tab-already-rated-message').html());
 				}
 			}
 
