@@ -30,7 +30,7 @@ class Tab extends Controller {
 			'search' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'type' => 'in[all,tab,chord,gp,bt]',
+					'type' => 'in[all,tab,chord,gp,bass,bt]',
 					'band' => 'required[band,song]',
 					'song' => 'required[band,song]',
 					'limit' => 'int',
@@ -40,7 +40,7 @@ class Tab extends Controller {
 			'getSearchTotal' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'type' => 'in[all,tab,chord,gp,bt]',
+					'type' => 'in[all,tab,chord,gp,bass,bt]',
 					'band' => 'required[band,song]',
 					'song' => 'required[band,song]'
 				)

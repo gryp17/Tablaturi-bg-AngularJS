@@ -7,6 +7,7 @@
 			<option value="all">Тип</option>
 			<option value="tab">Таблатури</option>
 			<option value="chord">Акорди</option>
+			<option value="bass">Бас</option>
 			<option value="gp">Guitar Pro</option>
 			<option value="bt">Backing Tracks</option>
 		</select>

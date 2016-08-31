@@ -408,6 +408,7 @@ app.run(function($rootScope, LoadingService) {
 			'/contact-us',
 			'/guitar-pro',
 			'/usefull',
+			'/add-tab',
 			'/copyright',
 			'/forbidden',
 			'/not-found'
@@ -470,6 +471,12 @@ app.config(['$routeProvider', function($routeProvider) {
 		controller: 'tabController',
 		resolve: {
 			factory: updateAuthStatus
+		}
+	}).when('/add-tab', {
+		templateUrl: 'app/views/partials/add-tab.php',
+		controller: 'addTabController',
+		resolve: {
+			factory: authRequired
 		}
 	}).when('/search/:type/:band?/:song?', {
 		templateUrl: 'app/views/partials/search.php',
@@ -596,6 +603,15 @@ function redirectTab ($window, $q, $location) {
 	
 	return deferred.promise;
 }
+app.controller('addTabController', function ($scope, TabService, LoadingService) {
+
+	$scope.tab = {
+		type: 'tab'
+	};
+
+	console.log('add tab');
+	
+});
 app.controller('articleController', function($scope, $rootScope, $routeParams, $location, $sce, $q, $filter, ArticleService, ArticleCommentService, LoadingService, ValidationService) {
 	$scope.limit = 6;
 	$scope.offset = 0;

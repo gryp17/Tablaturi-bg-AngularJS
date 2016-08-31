@@ -11,6 +11,7 @@ app.run(function($rootScope, LoadingService) {
 			'/contact-us',
 			'/guitar-pro',
 			'/usefull',
+			'/add-tab',
 			'/copyright',
 			'/forbidden',
 			'/not-found'
