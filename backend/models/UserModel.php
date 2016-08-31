@@ -109,6 +109,8 @@ class UserModel {
         $result = $query->fetch(PDO::FETCH_ASSOC);
 		
         if ($result) {
+			unset($result['password']);
+			
 			//convert the dates to javascript friendly format
 			$result['birthday'] = Utils::formatDate($result['birthday']);
 			$result['last_active_date'] = Utils::formatDate($result['last_active_date']);
