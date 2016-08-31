@@ -69,7 +69,7 @@ class Tab extends Controller {
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
 					'tab_id' => 'int',
-					'rating' => 'int, in[1,2,3,4,5]'
+					'rating' => array('int', 'in[1,2,3,4,5]')
 				)
 			),
 			'getTextTabFile' => array(
@@ -82,6 +82,30 @@ class Tab extends Controller {
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
 					'tab_id' => 'int'
+				)
+			),
+			'addTextTab' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'type' => 'in[tab,chord,gp,bass]',
+					'band' => array('required', 'max-200'),
+					'song' => array('required', 'max-200'),
+					'tunning' => array('required', 'max-40'),
+					'tab_type' => 'in[full song,intro,solo]',
+					'difficulty' => 'in[Ниска,Средна,Висока]',
+					'content' => array('min-50', 'max-25000'),
+				)
+			),
+			'addGpTab' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'type' => 'in[gp]',
+					'band' => array('required', 'max-200'),
+					'song' => array('required', 'max-200'),
+					'tunning' => array('required', 'max-40'),
+					'tab_type' => 'in[full song,intro,solo]',
+					'difficulty' => 'in[Ниска,Средна,Висока]',
+					'gp_file' => array('required', 'valid-file-extensions[gp,gp3,gp4,gp5,gp6,gpx]', 'max-file-size-1000')
 				)
 			)
 		);
@@ -218,7 +242,7 @@ class Tab extends Controller {
 
 			$this->sendFileResponse('text/plain', $filename, $header.$tab['content']);
 		}else{
-			$this->sendResponse(1, Controller::NOT_FOUND);
+			$this->sendResponse(0, Controller::NOT_FOUND);
 		}
 	}
 	
@@ -243,8 +267,28 @@ class Tab extends Controller {
 
 			$this->sendFileResponse('application/octet-stream', $filename, $content);
 		}else{
-			$this->sendResponse(1, Controller::NOT_FOUND);
+			$this->sendResponse(0, Controller::NOT_FOUND);
 		}
 	}
+	
+	/**
+	 * Adds new tab
+	 */
+	public function addTextTab(){
+		$tab_model = $this->load_model('TabModel');
+		
+		$this->sendResponse(1, 'dsada');
+	}
+	
+	/**
+	 * Adds new guitar pro tab
+	 */
+	public function addGpTab(){
+		$tab_model = $this->load_model('TabModel');
+		
+		$this->sendResponse(1, 'dsada');
+	}
+	
+	
 
 }

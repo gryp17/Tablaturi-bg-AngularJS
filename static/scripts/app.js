@@ -605,11 +605,32 @@ function redirectTab ($window, $q, $location) {
 }
 app.controller('addTabController', function ($scope, TabService, LoadingService) {
 
-	$scope.tab = {
-		type: 'tab'
+	$scope.formData = {
+		type: 'tab',
+		tunning: {
+			type: 'Стандартен (EBGDAE)'
+		},
+		tab_type: 'full song',
+		difficulty: 'Средна'
 	};
 
-	console.log('add tab');
+	$scope.addTab = function (){
+
+		var formData = new FormData(document.getElementById('add-tab-form'));
+		
+		if(formData.get('tunning') === 'other'){
+			formData.set('tunning', formData.get('other_tunning'));
+		}
+		
+		formData.delete('other_tunning');
+		
+		TabService.addTab(formData).then(function (result){
+			
+			console.log(result.data);
+			
+		});
+		
+	};
 	
 });
 app.controller('articleController', function($scope, $rootScope, $routeParams, $location, $sce, $q, $filter, ArticleService, ArticleCommentService, LoadingService, ValidationService) {
@@ -2491,6 +2512,24 @@ app.factory('TabService', function($http) {
 					tab_id: tabId,
 					rating: rating
 				}
+			});
+		},
+		addTab: function (formData){
+			var url = '';
+			
+			if(formData.get('type') === 'gp'){
+				url = 'Tab/addGpTab';
+			}else{
+				url = 'Tab/addTextTab';
+			}
+			
+			return $http({
+				method: 'POST',
+				url: url,
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
 			});
 		}
 	};
