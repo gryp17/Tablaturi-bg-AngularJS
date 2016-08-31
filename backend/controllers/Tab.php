@@ -4,6 +4,30 @@ class Tab extends Controller {
 
 	public function __construct() {
 
+		//common checks done to all tabs
+		$common_tab_params = array(
+			'band' => array('required', 'max-200'),
+			'song' => array('required', 'max-200'),
+			'tunning' => array('required', 'max-40'),
+			'tab_type' => 'in[full song,intro,solo]',
+			'difficulty' => 'in[Ниска,Средна,Висока]',
+		);
+		
+		//checks done only to the text tabs
+		$text_tab_params = array(
+			'type' => 'in[tab,chord,gp,bass]',
+			'content' => array('min-50', 'max-25000')
+		);
+		
+		//checks done only to the guitar pro tabs
+		$gp_tab_params = array(
+			'type' => 'in[gp]',
+			'gp_file' => array('required', 'valid-file-extensions[gp,gp3,gp4,gp5,gp6,gpx]', 'max-file-size-1000')
+		);
+		
+		$text_tab_params = array_merge($common_tab_params, $text_tab_params);
+		$gp_tab_params = array_merge($common_tab_params, $gp_tab_params);
+
 		/**
 		 * List of required parameters and permissions for each API endpoint
 		 * also indicates the parameter type
@@ -86,27 +110,11 @@ class Tab extends Controller {
 			),
 			'addTextTab' => array(
 				'required_role' => self::LOGGED_IN_USER,
-				'params' => array(
-					'type' => 'in[tab,chord,gp,bass]',
-					'band' => array('required', 'max-200'),
-					'song' => array('required', 'max-200'),
-					'tunning' => array('required', 'max-40'),
-					'tab_type' => 'in[full song,intro,solo]',
-					'difficulty' => 'in[Ниска,Средна,Висока]',
-					'content' => array('min-50', 'max-25000'),
-				)
+				'params' => $text_tab_params
 			),
 			'addGpTab' => array(
 				'required_role' => self::LOGGED_IN_USER,
-				'params' => array(
-					'type' => 'in[gp]',
-					'band' => array('required', 'max-200'),
-					'song' => array('required', 'max-200'),
-					'tunning' => array('required', 'max-40'),
-					'tab_type' => 'in[full song,intro,solo]',
-					'difficulty' => 'in[Ниска,Средна,Висока]',
-					'gp_file' => array('required', 'valid-file-extensions[gp,gp3,gp4,gp5,gp6,gpx]', 'max-file-size-1000')
-				)
+				'params' => $gp_tab_params
 			)
 		);
 
