@@ -4,30 +4,6 @@ class Tab extends Controller {
 
 	public function __construct() {
 
-		//common checks done to all tabs
-		$common_tab_params = array(
-			'band' => array('required', 'max-200'),
-			'song' => array('required', 'max-200'),
-			'tunning' => array('required', 'max-40'),
-			'tab_type' => 'in[full song,intro,solo]',
-			'difficulty' => 'in[Ниска,Средна,Висока]',
-		);
-		
-		//checks done only to the text tabs
-		$text_tab_params = array(
-			'type' => 'in[tab,chord,gp,bass]',
-			'content' => array('min-50', 'max-25000')
-		);
-		
-		//checks done only to the guitar pro tabs
-		$gp_tab_params = array(
-			'type' => 'in[gp]',
-			'gp_file' => array('required', 'valid-file-extensions[gp,gp3,gp4,gp5,gp6,gpx]', 'max-file-size-1000')
-		);
-		
-		$text_tab_params = array_merge($common_tab_params, $text_tab_params);
-		$gp_tab_params = array_merge($common_tab_params, $gp_tab_params);
-
 		/**
 		 * List of required parameters and permissions for each API endpoint
 		 * also indicates the parameter type
@@ -108,13 +84,16 @@ class Tab extends Controller {
 					'tab_id' => 'int'
 				)
 			),
-			'addTextTab' => array(
+			'addTab' => array(
 				'required_role' => self::LOGGED_IN_USER,
-				'params' => $text_tab_params
-			),
-			'addGpTab' => array(
-				'required_role' => self::LOGGED_IN_USER,
-				'params' => $gp_tab_params
+				'params' => array(
+					'type' => 'in[tab,chord,bass,gp]',
+					'band' => array('required', 'max-200'),
+					'song' => array('required', 'max-200'),
+					'tunning' => array('required', 'max-40'),
+					'tab_type' => 'in[full song,intro,solo]',
+					'difficulty' => 'in[Ниска,Средна,Висока]',
+				)
 			)
 		);
 
@@ -277,6 +256,37 @@ class Tab extends Controller {
 		}else{
 			$this->sendResponse(0, Controller::NOT_FOUND);
 		}
+	}
+	
+	/**
+	 * Adds new tab
+	 */
+	public function addTab(){
+		$tab_model = $this->load_model('TabModel');
+				
+		//guitar pro tab
+		if($this->params['type'] === 'gp'){
+			$content_check = Validator::checkParam('gp_file', $this->params['gp_file'], array('required', 'valid-file-extensions[gp,gp3,gp4,gp5,gp6,gpx]', 'max-file-size-1000'), null);
+			if($content_check !== true){
+				$this->sendResponse(0, $content_check);
+			}
+			
+			//TODO: insert tab
+			
+		}
+		//text tab
+		else{
+			$content_check = Validator::checkParam('content', $this->params['content'], array('min-50', 'max-25000'), null);
+			if($content_check !== true){
+				$this->sendResponse(0, $content_check);
+			}
+			
+			//TODO: insert tab
+			
+		}
+		
+		
+		$this->sendResponse(1, 'dsada');
 	}
 	
 	/**

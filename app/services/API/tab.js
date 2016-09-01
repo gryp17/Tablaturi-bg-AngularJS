@@ -91,17 +91,9 @@ app.factory('TabService', function($http) {
 			});
 		},
 		addTab: function (formData){
-			var url = '';
-			
-			if(formData.get('type') === 'gp'){
-				url = 'Tab/addGpTab';
-			}else{
-				url = 'Tab/addTextTab';
-			}
-			
 			return $http({
 				method: 'POST',
-				url: url,
+				url: 'Tab/addTab',
 				headers: {
 					'Content-Type': undefined 
 				},
