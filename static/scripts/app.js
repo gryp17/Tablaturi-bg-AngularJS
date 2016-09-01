@@ -603,7 +603,7 @@ function redirectTab ($window, $q, $location) {
 	
 	return deferred.promise;
 }
-app.controller('addTabController', function ($scope, TabService, LoadingService) {
+app.controller('addTabController', function ($scope, $location, TabService, ValidationService) {
 
 	$scope.formData = {
 		type: 'tab',
@@ -624,9 +624,17 @@ app.controller('addTabController', function ($scope, TabService, LoadingService)
 		
 		formData.delete('other_tunning');
 		
-		TabService.addTab(formData).then(function (result){
+		TabService.addTab(formData).success(function (result){
 			
-			console.log(result.data);
+			if (result.status === 0) {
+				if (result.error) {
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			} else {
+				//redirect to the newly added tab
+				$location.path('/tab/'+result.data.tab_id);
+			}
 			
 		});
 		
@@ -1388,6 +1396,277 @@ app.controller('tabsController', function ($scope, $q, TabService, LoadingServic
 		LoadingService.doneLoading();
 	});
 	
+});
+app.directive('article', function($filter, $location) {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/article.php',
+		replace: true,
+		scope: {
+		    articleData: '='
+		},
+		link: function(scope, element, attrs) {
+			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
+			var limit = 210 - scope.articleData.title.length;			
+			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
+			
+			/**
+			 * Redirects to the article page
+			 * @param {int} articleId
+			 */
+			scope.open = function (articleId){
+				$location.path('article/'+articleId);
+			};
+			
+		}
+	};
+});
+app.directive('autocomplete', function(TabService) {
+	return {
+		restrict: 'A',
+		scope: {
+		    autocomplete: '@', //band | song
+			band: '=' //optional parameter that is used when autocompleting the 'song' field 
+		},
+		link: function(scope, element, attrs) {
+			element.autocomplete({
+				minLength: 1,
+				delay: 300,
+				source: function(request, responseCallback) {
+					TabService.autocomplete(scope.autocomplete, request.term, scope.band).then(function (result){
+						//pass the data to the jqueryUI responseCallback function
+						responseCallback(result.data.data);
+					});
+				}
+			});
+		}
+	};
+});
+app.directive('clickableEmoticon', function() {
+	return {
+		restrict: 'C',
+		scope: {
+			model: '='
+		},
+		link: function(scope, element, attrs) {
+			element.on('click', function (){
+				if(angular.isUndefined(scope.model)){
+					scope.model = attrs.title;
+				} else {
+					scope.model =  scope.model + ' ' + attrs.title;
+				}
+				scope.$apply();
+			});
+		}
+	};
+});
+app.directive('comment', function() {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/comment.php',
+		scope: {
+		    commentData: '='
+		}
+	};
+});
+app.directive('enterClick', function() {
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs) {
+			element.on('keypress', function(e) {
+				if (e.which === 13){
+					$(attrs.enterClick).click();					
+				}
+			});
+		}
+	};
+}); 
+app.directive('pagination', function() {
+	return {
+		restrict: 'C',
+		templateUrl: 'app/views/directives/pagination.php',
+		replace: true,
+		scope: {
+			limit: '=',
+			offset: '=',
+			totalItems: '=',
+			range: '=',
+			callback: '&'
+		},
+		link: function(scope, element, attrs) {
+			
+			//initialize the pagination when scope.totalItems is set
+			scope.$watch('totalItems', function (){
+				if(angular.isDefined(scope.totalItems)){
+					
+					//initialize the currentPage if it's not set yet
+					if(angular.isUndefined(scope.currentPage)){
+						scope.currentPage = 1;
+					}
+
+					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
+					scope.generatePages();
+				}
+			});
+			
+			/**
+			 * Calculates the number of visible pages (it's a magic)
+			 */
+			scope.generatePages = function (){
+				scope.pages = [];
+				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
+					if ((i > 0) && (i <= scope.totalPages)) {
+						scope.pages.push(i);
+					}
+				}
+			};
+			
+			/**
+			 * Changes the current page
+			 * @param {int} page
+			 */
+			scope.goTo = function(page){
+				scope.currentPage = page;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the first page as current page
+			 */
+			scope.goToFirst = function (){
+				scope.currentPage = 1;
+				scope.generatePages();
+				scope.getPageData();
+				
+			};
+			
+			/**
+			 * Sets the last page as current page
+			 */
+			scope.goToLast = function (){
+				scope.currentPage = scope.totalPages;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the previous page as current page
+			 */
+			scope.goToPrevious = function (){
+				if(scope.currentPage > 1){
+					scope.currentPage = scope.currentPage - 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Sets the next page as current page
+			 */
+			scope.goToNext = function (){
+				if(scope.currentPage < scope.totalPages){
+					scope.currentPage = scope.currentPage + 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Calls the specified callback with the new offset
+			 */
+			scope.getPageData = function (){
+				scope.offset = (scope.currentPage - 1) * scope.limit;
+				scope.callback({limit: scope.limit, offset: scope.offset});
+			};
+			
+		}
+	};
+});
+app.directive('starsRating', function() {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/stars-rating.php',
+		replace: true,
+		scope: {
+			currentRating: '@',
+			callback: '&'
+		},
+		link: function(scope, element, attrs) {
+			
+			scope.stars = [
+				{
+					text: 'Зле',
+					filled: false
+				},
+				{
+					text: 'Слабо',
+					filled: false
+				},
+				{
+					text: 'Бива',
+					filled: false
+				},
+				{
+					text: 'Доста добре',
+					filled: false
+				},
+				{
+					text: 'Супер!',
+					filled: false
+				}
+			];
+			
+			scope.$watch('currentRating', function (){
+				//if the currentRating is set - fill the stars
+				if(angular.isDefined(scope.currentRating)){	
+					var starIndex = Math.round(scope.currentRating) - 1;
+					scope.highlightStar(starIndex, false);
+				}
+			});
+			
+			/**
+			 * Fills all stars up to the provided index and shows the selected star text
+			 * @param {int} index
+			 */
+			scope.highlightStar = function (index, showStarText){
+				
+				if(showStarText){
+					//set the correct star text
+					scope.selectedStarText = scope.stars[index].text;
+				}
+				
+				//fill/unfill the stars
+				scope.stars = scope.stars.map(function (star, currentIndex){
+					if(currentIndex <= index){
+						star.filled = true;
+					}else{
+						star.filled = false;
+					}
+					return star;
+				});
+			};
+			
+			/**
+			 * Selects the provided index and calls the callback
+			 * @param {int} index
+			 */
+			scope.selectStar = function (index){
+				scope.callback({rating: index + 1});
+			};
+
+		}
+	};
+});
+app.directive('validation', function() {
+	return {
+		restrict: 'C',
+		link: function(scope, element, attrs) {
+			element.on('focus click keypress', function (){
+				element.closest('.field-box').removeClass('error');
+			});
+		}
+	};
 });
 app.filter('age', function() {
 	return function(dateString) {
@@ -2410,277 +2689,6 @@ app.factory('UserService', function($http) {
 				data: {
 					keyword: keyword
 				}
-			});
-		}
-	};
-});
-app.directive('article', function($filter, $location) {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/article.php',
-		replace: true,
-		scope: {
-		    articleData: '='
-		},
-		link: function(scope, element, attrs) {
-			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
-			var limit = 210 - scope.articleData.title.length;			
-			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
-			
-			/**
-			 * Redirects to the article page
-			 * @param {int} articleId
-			 */
-			scope.open = function (articleId){
-				$location.path('article/'+articleId);
-			};
-			
-		}
-	};
-});
-app.directive('autocomplete', function(TabService) {
-	return {
-		restrict: 'A',
-		scope: {
-		    autocomplete: '@', //band | song
-			band: '=' //optional parameter that is used when autocompleting the 'song' field 
-		},
-		link: function(scope, element, attrs) {
-			element.autocomplete({
-				minLength: 1,
-				delay: 300,
-				source: function(request, responseCallback) {
-					TabService.autocomplete(scope.autocomplete, request.term, scope.band).then(function (result){
-						//pass the data to the jqueryUI responseCallback function
-						responseCallback(result.data.data);
-					});
-				}
-			});
-		}
-	};
-});
-app.directive('clickableEmoticon', function() {
-	return {
-		restrict: 'C',
-		scope: {
-			model: '='
-		},
-		link: function(scope, element, attrs) {
-			element.on('click', function (){
-				if(angular.isUndefined(scope.model)){
-					scope.model = attrs.title;
-				} else {
-					scope.model =  scope.model + ' ' + attrs.title;
-				}
-				scope.$apply();
-			});
-		}
-	};
-});
-app.directive('comment', function() {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/comment.php',
-		scope: {
-		    commentData: '='
-		}
-	};
-});
-app.directive('enterClick', function() {
-	return {
-		restrict: 'A',
-		link: function(scope, element, attrs) {
-			element.on('keypress', function(e) {
-				if (e.which === 13){
-					$(attrs.enterClick).click();					
-				}
-			});
-		}
-	};
-}); 
-app.directive('pagination', function() {
-	return {
-		restrict: 'C',
-		templateUrl: 'app/views/directives/pagination.php',
-		replace: true,
-		scope: {
-			limit: '=',
-			offset: '=',
-			totalItems: '=',
-			range: '=',
-			callback: '&'
-		},
-		link: function(scope, element, attrs) {
-			
-			//initialize the pagination when scope.totalItems is set
-			scope.$watch('totalItems', function (){
-				if(angular.isDefined(scope.totalItems)){
-					
-					//initialize the currentPage if it's not set yet
-					if(angular.isUndefined(scope.currentPage)){
-						scope.currentPage = 1;
-					}
-
-					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
-					scope.generatePages();
-				}
-			});
-			
-			/**
-			 * Calculates the number of visible pages (it's a magic)
-			 */
-			scope.generatePages = function (){
-				scope.pages = [];
-				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
-					if ((i > 0) && (i <= scope.totalPages)) {
-						scope.pages.push(i);
-					}
-				}
-			};
-			
-			/**
-			 * Changes the current page
-			 * @param {int} page
-			 */
-			scope.goTo = function(page){
-				scope.currentPage = page;
-				scope.generatePages();
-				scope.getPageData();
-			};
-			
-			/**
-			 * Sets the first page as current page
-			 */
-			scope.goToFirst = function (){
-				scope.currentPage = 1;
-				scope.generatePages();
-				scope.getPageData();
-				
-			};
-			
-			/**
-			 * Sets the last page as current page
-			 */
-			scope.goToLast = function (){
-				scope.currentPage = scope.totalPages;
-				scope.generatePages();
-				scope.getPageData();
-			};
-			
-			/**
-			 * Sets the previous page as current page
-			 */
-			scope.goToPrevious = function (){
-				if(scope.currentPage > 1){
-					scope.currentPage = scope.currentPage - 1;
-					scope.generatePages();
-					scope.getPageData();
-				}
-			};
-			
-			/**
-			 * Sets the next page as current page
-			 */
-			scope.goToNext = function (){
-				if(scope.currentPage < scope.totalPages){
-					scope.currentPage = scope.currentPage + 1;
-					scope.generatePages();
-					scope.getPageData();
-				}
-			};
-			
-			/**
-			 * Calls the specified callback with the new offset
-			 */
-			scope.getPageData = function (){
-				scope.offset = (scope.currentPage - 1) * scope.limit;
-				scope.callback({limit: scope.limit, offset: scope.offset});
-			};
-			
-		}
-	};
-});
-app.directive('starsRating', function() {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/stars-rating.php',
-		replace: true,
-		scope: {
-			currentRating: '@',
-			callback: '&'
-		},
-		link: function(scope, element, attrs) {
-			
-			scope.stars = [
-				{
-					text: 'Зле',
-					filled: false
-				},
-				{
-					text: 'Слабо',
-					filled: false
-				},
-				{
-					text: 'Бива',
-					filled: false
-				},
-				{
-					text: 'Доста добре',
-					filled: false
-				},
-				{
-					text: 'Супер!',
-					filled: false
-				}
-			];
-			
-			scope.$watch('currentRating', function (){
-				//if the currentRating is set - fill the stars
-				if(angular.isDefined(scope.currentRating)){	
-					var starIndex = Math.round(scope.currentRating) - 1;
-					scope.highlightStar(starIndex, false);
-				}
-			});
-			
-			/**
-			 * Fills all stars up to the provided index and shows the selected star text
-			 * @param {int} index
-			 */
-			scope.highlightStar = function (index, showStarText){
-				
-				if(showStarText){
-					//set the correct star text
-					scope.selectedStarText = scope.stars[index].text;
-				}
-				
-				//fill/unfill the stars
-				scope.stars = scope.stars.map(function (star, currentIndex){
-					if(currentIndex <= index){
-						star.filled = true;
-					}else{
-						star.filled = false;
-					}
-					return star;
-				});
-			};
-			
-			/**
-			 * Selects the provided index and calls the callback
-			 * @param {int} index
-			 */
-			scope.selectStar = function (index){
-				scope.callback({rating: index + 1});
-			};
-
-		}
-	};
-});
-app.directive('validation', function() {
-	return {
-		restrict: 'C',
-		link: function(scope, element, attrs) {
-			element.on('focus click keypress', function (){
-				element.closest('.field-box').removeClass('error');
 			});
 		}
 	};

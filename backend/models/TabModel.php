@@ -256,7 +256,7 @@ class TabModel {
 	public function getTabsByUploader($uploader_id, $limit, $offset){
 		$data = array();
 
-		$query = $this->connection->prepare('SELECT * FROM tab WHERE uploader_ID = :uploader_id ORDER BY upload_date LIMIT :limit OFFSET :offset');
+		$query = $this->connection->prepare('SELECT * FROM tab WHERE uploader_ID = :uploader_id ORDER BY upload_date DESC LIMIT :limit OFFSET :offset');
 		$params = array('uploader_id' => $uploader_id ,'limit' => $limit, 'offset' => $offset);
 
 		$query->execute($params);
@@ -369,6 +369,45 @@ class TabModel {
 	private function calculateTabRating($tab_id){
 		$query = $this->connection->prepare('UPDATE tab SET rating = (SELECT AVG(rating) FROM tab_rating WHERE tab_ID = :tab_id) WHERE ID = :update_tab_id');
 		return $query->execute(array('tab_id' => $tab_id, 'update_tab_id' => $tab_id));
+	}
+	
+	
+	/**
+	 * Adds new tab
+	 * @param string $type
+	 * @param string $band
+	 * @param string $song
+	 * @param string $tab_type
+	 * @param string $content
+	 * @param string $path
+	 * @param int $uploader_ID
+	 * @param string $tunning
+	 * @param string $difficulty
+	 * @return boolean
+	 */
+	public function addTab($type, $band, $song, $tab_type, $content, $path, $uploader_ID, $tunning, $difficulty){
+		$query = $this->connection->prepare('INSERT INTO tab '
+				. '(type, band, song, tab_type, content, path, rating, downloads, upload_date, modified_date, uploader_ID, tunning, difficulty)'
+				. ' VALUES '
+				. '(:type, :band, :song, :tab_type, :content, :path, 0, 0, now(), now(), :uploader_ID, :tunning, :difficulty)');
+		
+		$params = array(
+			'type' => $type,
+			'band' => $band,
+			'song' => $song,
+			'tab_type' => $tab_type,
+			'content' => $content,
+			'path' => $path,
+			'uploader_ID' => $uploader_ID,
+			'tunning' => $tunning,
+			'difficulty' => $difficulty
+		);
+		
+		if($query->execute($params)){
+			return $this->connection->lastInsertId();
+		}else{
+			return null;
+		}
 	}
 	
 }

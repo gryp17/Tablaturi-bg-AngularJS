@@ -111,9 +111,7 @@
 				</button>
 			</div>
 			
-			<pre>
-				{{tab.content}}
-			</pre>
+			<pre ng-bind="tab.content"></pre>
 			
 			<div class="download-text-wrapper">
 				<a class="btn btn-red download-button" href="Tab/getTextTabFile?tab_id={{tab.ID}}" target="_blank">

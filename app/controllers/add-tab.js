@@ -1,4 +1,4 @@
-app.controller('addTabController', function ($scope, TabService, LoadingService) {
+app.controller('addTabController', function ($scope, $location, TabService, ValidationService) {
 
 	$scope.formData = {
 		type: 'tab',
@@ -19,9 +19,17 @@ app.controller('addTabController', function ($scope, TabService, LoadingService)
 		
 		formData.delete('other_tunning');
 		
-		TabService.addTab(formData).then(function (result){
+		TabService.addTab(formData).success(function (result){
 			
-			console.log(result.data);
+			if (result.status === 0) {
+				if (result.error) {
+					//show the error
+					ValidationService.showError(result.error.field, result.error.error_code);
+				}
+			} else {
+				//redirect to the newly added tab
+				$location.path('/tab/'+result.data.tab_id);
+			}
 			
 		});
 		

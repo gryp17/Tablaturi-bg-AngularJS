@@ -263,6 +263,8 @@ class Tab extends Controller {
 	 */
 	public function addTab(){
 		$tab_model = $this->load_model('TabModel');
+		$user_model = $this->load_model('UserModel');
+		$filename = null;
 				
 		//guitar pro tab
 		if($this->params['type'] === 'gp'){
@@ -271,8 +273,7 @@ class Tab extends Controller {
 				$this->sendResponse(0, $content_check);
 			}
 			
-			//TODO: insert tab
-			
+			$filename = $this->uploadGpFile('gp_file', $this->params['band'], $this->params['song']);			
 		}
 		//text tab
 		else{
@@ -280,33 +281,40 @@ class Tab extends Controller {
 			if($content_check !== true){
 				$this->sendResponse(0, $content_check);
 			}
-			
-			//TODO: insert tab
-			
 		}
 		
+		//insert the tab into the database
+		$tab_id = $tab_model->addTab($this->params['type'], $this->params['band'], $this->params['song'], $this->params['tab_type'], $this->params['content'], $filename, $_SESSION['user']['ID'], $this->params['tunning'], $this->params['difficulty']);
 		
-		$this->sendResponse(1, 'dsada');
+		//on success give the user 10 reputation and return the inserted id
+		if($tab_id !== null){
+			$user_model->giveReputation($_SESSION['user']['ID'], 10);
+			$this->sendResponse(1, array('tab_id' => $tab_id));
+		}else{
+			$this->sendResponse(0, Controller::DB_ERROR);
+		}
 	}
 	
 	/**
-	 * Adds new tab
+	 * Uploads the guitar pro file to the file system
+	 * It returns the tab filename
+	 * @param string $field_name
+	 * @return string
 	 */
-	public function addTextTab(){
-		$tab_model = $this->load_model('TabModel');
+	private function uploadGpFile($field_name, $band, $song){
+		$tabs_dir = Config::TABS_DIR;
 		
-		$this->sendResponse(1, 'dsada');
-	}
-	
-	/**
-	 * Adds new guitar pro tab
-	 */
-	public function addGpTab(){
-		$tab_model = $this->load_model('TabModel');
+		preg_match('/\.([^\.]+?)$/', $_FILES[$field_name]['name'], $matches);
+		$extension = strtolower($matches[1]);
+		$extension = '.' . $extension;
 		
-		$this->sendResponse(1, 'dsada');
+		$filename = md5("$band - $song - " . date('YmdHis'));
+        $filename = $filename . $extension;
+		
+		#upload the file to the server
+		move_uploaded_file($_FILES[$field_name]['tmp_name'], $tabs_dir . $filename);
+		
+		return $filename;
 	}
-	
-	
 
 }
