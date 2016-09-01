@@ -1,3 +1,11 @@
 > .add-tab{
 	
+	.field-box .text-control, .field-box .custom-dropdown {
+		display: block;
+		
+		> select{
+			width: 100%;
+		}
+	}
+	
 }

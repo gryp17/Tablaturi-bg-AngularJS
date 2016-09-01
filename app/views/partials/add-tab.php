@@ -7,34 +7,47 @@
 			<div class="col-xs-6">
 
 				type:
-				<label class="custom-dropdown">
-					<select ng-model="formData.type" name="type">
-						<option value="tab">Текстова таблатура</option>
-						<option value="chord">Акорди</option>
-						<option value="bass">Бас</option>
-						<option value="gp">Guitar Pro</option>
-					</select>
-				</label>
+				<div class="field-box">
+					<label class="custom-dropdown">
+						<select ng-model="formData.type" name="type">
+							<option value="tab">Текстова таблатура</option>
+							<option value="chord">Акорди</option>
+							<option value="bass">Бас</option>
+							<option value="gp">Guitar Pro</option>
+						</select>
+					</label>
+				</div>
 
 				<br><br>
 
-				<input class="text-control" type="text" name="band" placeholder="Група" autocomplete="band"/>
+				<div class="field-box">
+					<input class="text-control validation" type="text" name="band" placeholder="Група" autocomplete="band"/>
+					<span class="error-msg"></span>
+				</div>
 				<br><br>
-				<input class="text-control" type="text" name="song" placeholder="Песен" autocomplete="song"/>
+				<div class="field-box">
+					<input class="text-control validation" type="text" name="song" placeholder="Песен" autocomplete="song"/>
+					<span class="error-msg"></span>
+				</div>
 				<br><br>
 
 				tunning:
-				<label class="custom-dropdown">
-					<select ng-model="formData.tunning.type" name="tunning">
-						<option value="Стандартен (EBGDAE)">Стандартен (EBGDAE)</option>
-						<option value="Drop D">Drop D</option>
-						<option value="Drop C">Drop C</option>
-						<option value="other">Друг</option>
-					</select>
-				</label>
+				<div class="field-box">
+					<label class="custom-dropdown">
+						<select ng-model="formData.tunning.type" name="tunning" ng-click="clearTunningErrors()">
+							<option value="Стандартен (EBGDAE)">Стандартен (EBGDAE)</option>
+							<option value="Drop D">Drop D</option>
+							<option value="Drop C">Drop C</option>
+							<option value="other">Друг</option>
+						</select>
+					</label>
+				</div>
 
 				<br><br>
-				<input ng-if="formData.tunning.type === 'other'" class="text-control" type="text" name="other_tunning" placeholder="Друг тунинг"/>
+				<div class="field-box">
+					<input ng-if="formData.tunning.type === 'other'" class="text-control validation" type="text" name="other_tunning" placeholder="Друг тунинг"/>
+					<span class="error-msg"></span>
+				</div>
 
 
 			</div>
@@ -56,13 +69,15 @@
 				<br><br>
 
 				difficulty:
-				<label class="custom-dropdown">
-					<select ng-model="formData.difficulty" name="difficulty">
-						<option value="Ниска">Ниска</option>
-						<option value="Средна">Средна</option>
-						<option value="Висока">Висока</option>
-					</select>
-				</label>
+				<div class="field-box">
+					<label class="custom-dropdown">
+						<select ng-model="formData.difficulty" name="difficulty">
+							<option value="Ниска">Ниска</option>
+							<option value="Средна">Средна</option>
+							<option value="Висока">Висока</option>
+						</select>
+					</label>
+				</div>
 
 			</div>
 		</div>
@@ -70,12 +85,18 @@
 		<hr/>
 
 		<div ng-if="formData.type !== 'gp'">
-			<textarea class="text-control" name="content" placeholder="Текстова таблатура"></textarea>
+			<div class="field-box">
+				<textarea class="text-control validation" name="content" placeholder="Текстова таблатура"></textarea>
+				<span class="error-msg"></span>
+			</div>
 		</div>
 
 		<div ng-if="formData.type === 'gp'">
 			Guitar Pro файл
-			<input type="file" name="gp_file"/>
+			<div class="field-box">
+				<input type="file" name="gp_file" class="validation"/>
+				<span class="error-msg"></span>
+			</div>
 		</div>
 
 		<hr/>
