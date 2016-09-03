@@ -50,4 +50,30 @@ app.controller('addTabController', function ($scope, $location, TabService, Vali
 		});
 	};
 	
+	/**
+	 * Opens the hidden file input
+	 */
+	$scope.browse = function() {
+		$('.file').click();
+	};
+	
+	/*
+	 * On file change
+	 */
+	$(document).on('change', '.file', function (event){
+		var file = event.target.files[0];
+		var extension = file.name.replace(/.+\./, '');
+		var validExtensions = ['gp','gp3','gp4','gp5','gp6','gpx'];
+		
+		// Check file extension
+		if(validExtensions.indexOf(extension) === -1) {
+			ValidationService.showError('gp_file', 'invalid_file_extension');
+		} else {
+			// Check file size
+			if((file.size / 1024) > 1000) {
+				ValidationService.showError('gp_file', 'exceeds_max_file_size');
+			}
+		}
+	});
+	
 });

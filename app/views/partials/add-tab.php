@@ -1,12 +1,12 @@
 <div class="add-tab">
-
+	<h2 class="title">Качи таблатура:</h2>
 	<form id="add-tab-form" name="add-tab-form" enctype="multipart/form-data">
 
 		<div class="row">
 			<!-- left column -->
 			<div class="col-xs-6">
 
-				type:
+				<div class="field-label">Вид таблатура:</div>
 				<div class="field-box">
 					<label class="custom-dropdown">
 						<select ng-model="formData.type" name="type">
@@ -18,20 +18,17 @@
 					</label>
 				</div>
 
-				<br><br>
-
 				<div class="field-box">
-					<input class="text-control validation" type="text" name="band" placeholder="Група" autocomplete="band"/>
+					<input class="text-control validation" type="text" name="band" placeholder="Група" autocomplete="band" band="autocompleteBand" ng-model="autocompleteBand"/>
 					<span class="error-msg"></span>
 				</div>
-				<br><br>
+				
 				<div class="field-box">
-					<input class="text-control validation" type="text" name="song" placeholder="Песен" autocomplete="song"/>
+					<input class="text-control validation" type="text" name="song" placeholder="Песен" autocomplete="song" band="autocompleteBand"/>
 					<span class="error-msg"></span>
 				</div>
-				<br><br>
 
-				tunning:
+				<div class="field-label">Тунинг:</div>
 				<div class="field-box">
 					<label class="custom-dropdown">
 						<select ng-model="formData.tunning.type" name="tunning" ng-click="clearTunningErrors()">
@@ -43,9 +40,8 @@
 					</label>
 				</div>
 
-				<br><br>
-				<div class="field-box">
-					<input ng-if="formData.tunning.type === 'other'" class="text-control validation" type="text" name="other_tunning" placeholder="Друг тунинг"/>
+				<div ng-if="formData.tunning.type === 'other'" class="field-box">
+					<input class="text-control validation" type="text" name="other_tunning" placeholder="Друг тунинг"/>
 					<span class="error-msg"></span>
 				</div>
 
@@ -55,20 +51,21 @@
 			<!-- right column -->
 			<div class="col-xs-6">
 
-				tab type:
-				<br>
-				<input type="radio" id="full" value="full song" name="tab_type" ng-model="formData.tab_type"> 
-				<label for="full">Цяла песен</label>
-				<br>
-				<input type="radio" id="intro" value="intro" name="tab_type" ng-model="formData.tab_type">
-				<label for="intro">Интро</label>
-				<br>
-				<input type="radio" id="solo" value="solo" name="tab_type" ng-model="formData.tab_type">
-				<label for="solo">Соло</label>
+				<div class="field-label">Тип таблатура:</div>
+				<div class="radio-box">
+					<input type="radio" id="full" value="full song" name="tab_type" ng-model="formData.tab_type"> 
+					<label for="full">Цяла песен</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="intro" value="intro" name="tab_type" ng-model="formData.tab_type">
+					<label for="intro">Интро</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="solo" value="solo" name="tab_type" ng-model="formData.tab_type">
+					<label for="solo">Соло</label>
+				</div>
 
-				<br><br>
-
-				difficulty:
+				<div class="field-label">Трудност:</div>
 				<div class="field-box">
 					<label class="custom-dropdown">
 						<select ng-model="formData.difficulty" name="difficulty">
@@ -82,8 +79,6 @@
 			</div>
 		</div>
 
-		<hr/>
-
 		<div ng-if="formData.type !== 'gp'">
 			<div class="field-box">
 				<textarea class="text-control validation" name="content" placeholder="Текстова таблатура"></textarea>
@@ -91,17 +86,23 @@
 			</div>
 		</div>
 
-		<div ng-if="formData.type === 'gp'">
-			Guitar Pro файл
+		<div ng-if="formData.type === 'gp'" >
+			
+			
+			<div class="field-label">Guitar Pro файл:</div>
 			<div class="field-box">
-				<input type="file" name="gp_file" class="validation"/>
+				<button class="btn btn-red browse-btn" ng-click="browse()">
+					<span class="glyphicon glyphicon-open" aria-hidden="true"></span> Избери файл...
+				</button>
+				<div class="file-hint">
+					Позволени формати: gp, gp3, gp4, gp5, gp6 и gpx под 1MB
+				</div>
+				<input type="file" name="gp_file" class="validation file"/>
 				<span class="error-msg"></span>
 			</div>
 		</div>
 
-		<hr/>
-
-		<button class="btn btn-red" ng-click="addTab()">Качи таблатурата</button>
+		<button class="btn btn-red upload-btn" ng-click="addTab()">Качи таблатурата</button>
 
 	</form>
 

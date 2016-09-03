@@ -128,7 +128,8 @@ class Tab extends Controller {
 	 */
 	public function autocomplete() {
 		$tab_model = $this->load_model('TabModel');
-		$data = $tab_model->getAutocompleteResults($this->params['type'], $this->params['term'], $this->params['band']);
+		$band = isset($this->params['band']) ? $this->params['band'] : '';
+		$data = $tab_model->getAutocompleteResults($this->params['type'], $this->params['term'], $band);
 		$this->sendResponse(1, $data);
 	}
 
@@ -265,10 +266,11 @@ class Tab extends Controller {
 		$tab_model = $this->load_model('TabModel');
 		$user_model = $this->load_model('UserModel');
 		$filename = null;
+		$content = isset($this->params['content']) ? $this->params['content'] : '';
 				
 		//guitar pro tab
 		if($this->params['type'] === 'gp'){
-			$content_check = Validator::checkParam('gp_file', $this->params['gp_file'], array('required', 'valid-file-extensions[gp,gp3,gp4,gp5,gp6,gpx]', 'max-file-size-1000'), null);
+			$content_check = Validator::checkParam('gp_file', null, array('required', 'valid-file-extensions[gp,gp3,gp4,gp5,gp6,gpx]', 'max-file-size-1000'), null);
 			if($content_check !== true){
 				$this->sendResponse(0, $content_check);
 			}
@@ -277,14 +279,14 @@ class Tab extends Controller {
 		}
 		//text tab
 		else{
-			$content_check = Validator::checkParam('content', $this->params['content'], array('min-50', 'max-25000'), null);
+			$content_check = Validator::checkParam('content', $content, array('min-50', 'max-25000'), null);
 			if($content_check !== true){
 				$this->sendResponse(0, $content_check);
 			}
 		}
 		
 		//insert the tab into the database
-		$tab_id = $tab_model->addTab($this->params['type'], $this->params['band'], $this->params['song'], $this->params['tab_type'], $this->params['content'], $filename, $_SESSION['user']['ID'], $this->params['tunning'], $this->params['difficulty']);
+		$tab_id = $tab_model->addTab($this->params['type'], $this->params['band'], $this->params['song'], $this->params['tab_type'], $content, $filename, $_SESSION['user']['ID'], $this->params['tunning'], $this->params['difficulty']);
 		
 		//on success give the user 10 reputation and return the inserted id
 		if($tab_id !== null){
