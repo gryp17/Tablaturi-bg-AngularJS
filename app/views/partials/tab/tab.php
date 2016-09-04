@@ -64,9 +64,9 @@
 			</div>
 						
 			<!-- edit tab button -->
-			<button ng-if="loggedInUser.ID === tab.uploader_ID" class="btn btn-red">
+			<a ng-if="loggedInUser.ID === tab.uploader_ID" class="btn btn-red" href="#edit-tab/{{tab.ID}}">
 				<img src="static/img/icons/pencil.png" /> Редактирай
-			</button>
+			</a>
 			
 			<div class="clearfix"></div>
 			
@@ -120,7 +120,7 @@
 				</a>
 				
 				<div class="hint">
-					Ако имате проблем с четенето на таблатурата, кликнете <a class="red-link" href="#usefull">тук</a> за да разгледате уроците за начинаещи.
+					Ако имате проблем с четенето на таблатурата, кликнете <a class="red-link" href="content/downloads/tabs.pdf" target="_blank">тук</a> за да разгледате уроците за начинаещи.
 				</div>
 			</div>
 			

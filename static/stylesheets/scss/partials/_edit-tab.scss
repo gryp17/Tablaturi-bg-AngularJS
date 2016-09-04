@@ -1,0 +1,63 @@
+> .edit-tab {
+	.title {
+		margin-top: 0;
+		font-size: 17px;
+		text-align: center;
+	}
+
+	#edit-tab-form {
+		margin-top: 15px;
+
+		.field-label {
+			margin-top: 25px;
+			margin-bottom: 5px;
+		}
+
+		.field-box + .field-box {
+			margin-top: 25px;
+		}
+
+		.field-box .text-control, .field-box .custom-dropdown {
+			display: block;
+			width: 100%;
+
+			> select{
+				width: 100%;
+			}
+		}
+
+		.radio-box {
+			display: block;
+
+			input {
+				margin: 0px;
+			}
+		}
+
+		textarea {
+			resize: vertical;
+			min-height: 250px;
+			margin-top: 25px;
+		}
+		
+		.file-hint {
+			font-size: 10px;
+			font-style: italic;
+			margin-top: 5px;
+		}
+		
+		.browse-btn {
+			display: block;
+		}
+		
+		.file {
+			display: none;
+		}
+		
+		.update-btn {
+			display: block;
+			margin: auto;
+			margin-top: 25px;
+		}
+	}
+}

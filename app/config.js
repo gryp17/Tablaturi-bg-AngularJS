@@ -47,6 +47,12 @@ app.config(['$routeProvider', function($routeProvider) {
 		resolve: {
 			factory: authRequired
 		}
+	}).when('/edit-tab/:id', {
+		templateUrl: 'app/views/partials/edit-tab.php',
+		controller: 'editTabController',
+		resolve: {
+			factory: authRequired
+		}
 	}).when('/search/:type/:band?/:song?', {
 		templateUrl: 'app/views/partials/search.php',
 		controller: 'searchController',

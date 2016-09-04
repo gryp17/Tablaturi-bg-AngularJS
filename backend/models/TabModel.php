@@ -410,4 +410,45 @@ class TabModel {
 		}
 	}
 	
+	/**
+	 * Updates the tab
+	 * @param int $tab_id
+	 * @param string $type
+	 * @param string $band
+	 * @param string $song
+	 * @param string $tab_type
+	 * @param string $content
+	 * @param string $path
+	 * @param string $tunning
+	 * @param string $difficulty
+	 * @return boolean
+	 */
+	public function updateTab($tab_id, $type, $band, $song, $tab_type, $content, $path, $tunning, $difficulty){
+		$query = $this->connection->prepare('UPDATE tab SET '
+				. 'type = :type, '
+				. 'band = :band, '
+				. 'song = :song, '
+				. 'tab_type = :tab_type, '
+				. 'content = :content, '
+				. 'path = :path, '
+				. 'modified_date = now(), '
+				. 'tunning = :tunning, '
+				. 'difficulty = :difficulty '
+				. 'WHERE ID = :tab_id');
+		
+		$params = array(
+			'tab_id' => $tab_id,
+			'type' => $type,
+			'band' => $band,
+			'song' => $song,
+			'tab_type' => $tab_type,
+			'content' => $content,
+			'path' => $path,
+			'tunning' => $tunning,
+			'difficulty' => $difficulty
+		);
+		
+		return $query->execute($params);
+	}
+	
 }

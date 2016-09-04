@@ -99,6 +99,16 @@ app.factory('TabService', function($http) {
 				},
 				data: formData
 			});
+		},
+		updateTab: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'Tab/updateTab',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
 		}
 	};
 });
