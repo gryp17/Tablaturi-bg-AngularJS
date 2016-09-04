@@ -86,6 +86,11 @@ app.config(['$routeProvider', function($routeProvider) {
 		resolve: {
 			factory: updateAuthStatus
 		}
+	}).when('/about-us', {
+		templateUrl: 'app/views/partials/about-us.php',
+		resolve: {
+			factory: updateAuthStatus
+		}
 	}).when('/forbidden', {
 		templateUrl: 'app/views/partials/forbidden.php',
 		resolve: {

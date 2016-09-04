@@ -405,7 +405,8 @@ app.run(function($rootScope, LoadingService) {
 			'/add-tab',
 			'/copyright',
 			'/forbidden',
-			'/not-found'
+			'/not-found',
+			'/about-us'
 		];
 		
 		if (next.$$route) {			
@@ -508,6 +509,11 @@ app.config(['$routeProvider', function($routeProvider) {
 		}
 	}).when('/copyright', {
 		templateUrl: 'app/views/partials/copyright.php',
+		resolve: {
+			factory: updateAuthStatus
+		}
+	}).when('/about-us', {
+		templateUrl: 'app/views/partials/about-us.php',
 		resolve: {
 			factory: updateAuthStatus
 		}

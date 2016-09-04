@@ -14,7 +14,8 @@ app.run(function($rootScope, LoadingService) {
 			'/add-tab',
 			'/copyright',
 			'/forbidden',
-			'/not-found'
+			'/not-found',
+			'/about-us'
 		];
 		
 		if (next.$$route) {			
