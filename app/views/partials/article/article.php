@@ -18,7 +18,7 @@
 		<div class="clearfix"></div>
 		<div class="share">
 			Сподели в: 
-			<hr/>
+			<div class="red-line"></div>
 			<span class='st_fblike_hcount' displayText='Facebook Like'></span>
 			<span class='st_facebook_hcount' displayText='Facebook'></span>
 			<span class='st_twitter_hcount' displayText='Tweet'></span>

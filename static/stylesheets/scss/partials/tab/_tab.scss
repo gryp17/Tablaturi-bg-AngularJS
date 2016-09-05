@@ -1,9 +1,5 @@
 > .tab{
 
-	hr{
-		border-color: $red;
-	}
-
 	.tab-info{
 		margin-top: 10px;
 		text-align: center;
@@ -47,7 +43,7 @@
 				&:nth-child(2){
 					margin-top: 5px;
 				}
-				
+
 				> img{
 					width: 16px;
 					margin-right: 2px;
@@ -112,20 +108,16 @@
 
 	.share{
 		margin-top: 10px;
-		
-		hr{
-			margin: 10px 0px;
-		}
 
 		span{
 			height: 22px;
 		}
 	}
-	
+
 	.comments-wrapper{
 		margin-top: 20px;
 	}
-	
+
 	@import "_report-tab";
 
 }

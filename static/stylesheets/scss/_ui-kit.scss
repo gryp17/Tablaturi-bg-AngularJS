@@ -12,13 +12,13 @@
 
 	&.btn-red{
 		background-color: $red;
-		
+
 		&.outline {
 			background-color: #fff;
 			color: $red;
 			border: 1px solid $red;
 		}
-		
+
 		&:hover{
 			color: #fff;
 			background-color: darken($red, 15%);
@@ -122,22 +122,22 @@ a {
 .ui-datepicker{
 	border-radius: 0px;
 	font-weight: bold;
-	
+
 	.ui-corner-all{
 		border-radius: 0px;
 	}
-	
+
 	.ui-datepicker-prev, .ui-datepicker-next{
 		border: none;
 		cursor: pointer;
-		
+
 		span{
 			background-image: url('../../img/icons/arrow.png');
 			background-size: 16px;
 			background-position: 0 0;
 		}
 	}
-	
+
 	.ui-datepicker-prev{
 		&:hover {
 			left: 2px;
@@ -145,12 +145,12 @@ a {
 			border: none;
 			background: transparent;
 		}
-		
+
 		span{
 			transform: rotate(180deg);
 		}
 	}
-	
+
 	.ui-datepicker-next {
 		&:hover {
 			right: 2px;
@@ -159,25 +159,25 @@ a {
 			background: transparent;
 		}
 	}
-	
+
 	.ui-widget-header{
 		background: $red;
 	}
-	
+
 	.ui-datepicker-calendar {
 		th {
 			font-weight: normal;
 			color: $blue;
 		}
-		
+
 		td {
 			min-width: 35px;
-			
+
 			a, span {
 				padding: 2px 4px;
 				font-weight: normal;
 				color: $blue;
-				
+
 				&.ui-state-active {
 					background: lighten($red, 20%);
 					border-color: $red;
@@ -185,7 +185,7 @@ a {
 			}
 		}
 	}
-	
+
 	select{
 		color: $blue;
 		font-weight: normal;
@@ -218,14 +218,14 @@ a {
 	@extend .table;
 	@extend .table-striped;	
 	width: 100%;
-	
+
 	thead {
 		font-weight: 600;
 	}
-	
+
 	a {
 		text-decoration: none;
-		
+
 		&:hover {
 			text-decoration: underline;
 		}
@@ -234,7 +234,7 @@ a {
 
 .ui-autocomplete {
 	border-radius: 0px;
-	
+
 	.ui-state-focus {
 		border-radius: 0px;
 	}
@@ -243,7 +243,7 @@ a {
 .custom-tabs{
 	@extend .nav;
 	@extend .nav-tabs;
-	
+
 	> li{
 		text-align: center;
 
@@ -299,4 +299,10 @@ a {
 			margin-top: 20px;
 		}
 	}
+}
+
+.red-line{
+	margin: 10px 0px;
+	height: 1px;
+	background: linear-gradient(to right, rgba(248,65,65,1) 0%, rgba(248,65,65,1) 49%, rgba(249,249,249,1) 100%);
 }

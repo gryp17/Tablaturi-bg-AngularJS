@@ -72,7 +72,7 @@
 	</div>
 	
 	<div class="info-box">
-		<div class="border"></div>
+		<div class="red-line"></div>
 		<div class="info">
 			<span class="info-label">За мен:</span>
 			{{userData.about_me || 'Няма информация'}}
@@ -80,7 +80,7 @@
 	</div>
 	
 	<div class="info-box">
-		<div class="border"></div>
+		<div class="red-line"></div>
 		<div class="info">
 			<span class="info-label">Инструменти/Екипировка:</span>
 			{{userData.instrument || 'Няма информация'}}
@@ -88,7 +88,7 @@
 	</div>
 	
 	<div class="info-box">
-		<div class="border"></div>
+		<div class="red-line"></div>
 		<div class="info">
 			<span class="info-label">Любими групи/музиканти:</span>
 			{{userData.favourite_bands || 'Няма информация'}}
