@@ -4,7 +4,9 @@
 		
 	</div>
 	<div class="content">
-		<h3 ng-click="open(articleData.ID)" ng-bind="articleData.title"></h3>
+		<h3>
+			<a href="#article/{{articleData.ID}}" ng-attr-title="{{articleData.title}}">{{articleData.title}}</a>
+		</h3>
 		<div class="short" ng-bind-html="articleData.content">
 		</div>
 		<a href="#article/{{articleData.ID}}" class="btn btn-red" type="button">Прочети още</a>

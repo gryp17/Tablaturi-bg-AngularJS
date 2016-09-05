@@ -24,12 +24,12 @@
 			<tbody>
 				<tr ng-repeat="track in backingTracks">
 					<td>
-						<a class="red-link" href="#search-backing-tracks/bt/{{track.band}}//">
+						<a class="red-link" href="#search-backing-tracks/bt/{{track.band}}//" ng-attr-title="Всичко от {{track.band}}">
 							{{track.band}}
 						</a>
 					</td>
 					<td>
-						<a class="red-link" href="javascript:void(0)" ng-click="getMP3(track.link)">
+						<a class="red-link" href="javascript:void(0)" ng-click="getMP3(track.link)" ng-attr-title="{{track.band}} - {{track.song}}">
 							{{track.song}}
 						</a>
 					</td>

@@ -4,7 +4,10 @@
 		<!-- left -->
 		<div class="left">
 			<div class="title">
-				<a class="red-link" href="#search/all/{{tab.band}}//">{{tab.band}}</a> - {{tab.song}}
+				<a class="red-link" href="#search/all/{{tab.band}}//" ng-attr-title="Всичко от {{tab.band}}">
+					{{tab.band}}
+				</a>
+				- {{tab.song}}
 			</div>
 			<div class="author">
 
@@ -103,11 +106,11 @@
 		<div ng-if="tab.type !== 'gp'" class="text">
 			
 			<div class="tools">
-				<button class="btn btn-red" ng-click="zoom(1)">
-					<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+				<button class="btn btn-red" ng-click="zoom(1)" title="Уголеми шрифта">
+					<img src="static/img/icons/zoom-in.png"/>
 				</button>
-				<button class="btn btn-red" ng-click="zoom(-1)">
-					<span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+				<button class="btn btn-red" ng-click="zoom(-1)" title="Намали шрифта">
+					<img src="static/img/icons/zoom-out.png"/>
 				</button>
 			</div>
 			

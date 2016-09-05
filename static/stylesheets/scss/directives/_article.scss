@@ -36,12 +36,16 @@
 
 		h3 {
 			margin: 0;
-			font-size: 15px;
-			font-weight: 600;
-			cursor: pointer;
-
-			&:hover{
-				text-decoration: underline;
+			line-height: 17px;
+			
+			a{
+				font-size: 15px;
+				font-weight: 600;
+				color: #fff;
+				
+				&:hover{
+					text-decoration: underline;
+				}
 			}
 		}
 

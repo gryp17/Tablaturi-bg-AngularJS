@@ -19,7 +19,11 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="tab in mostPopular">
-					<td><a class="red-link" href="#tab/{{tab.ID}}">{{tab.band}} - {{tab.song}}</a></td>
+					<td>
+						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+							{{tab.band}} - {{tab.song}}
+						</a>
+					</td>
 					<td class="visits">{{tab.downloads}}</td>
 				</tr>
 			</tbody>
@@ -46,7 +50,11 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="tab in mostLiked">
-					<td><a class="red-link" href="#tab/{{tab.ID}}">{{tab.band}} - {{tab.song}}</a></td>
+					<td>
+						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+							{{tab.band}} - {{tab.song}}
+						</a>
+					</td>
 					<td class="rating">
 						<span ng-repeat="star in tab.rating | ratingStars track by $index" 
 							  ng-class="{'star': star === 1, 'empty-star': star === 0}"></span>
@@ -76,7 +84,11 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="tab in mostRecent">
-					<td><a class="red-link" href="#tab/{{tab.ID}}">{{tab.band}} - {{tab.song}}</a></td>
+					<td>
+						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+							{{tab.band}} - {{tab.song}}
+						</a>
+					</td>
 					<td class="date">{{tab.upload_date | date : 'yyyy-MM-dd'}}</td>
 				</tr>
 			</tbody>
@@ -103,7 +115,11 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="tab in mostCommented">
-					<td><a class="red-link" href="#tab/{{tab.ID}}">{{tab.band}} - {{tab.song}}</a></td>
+					<td>
+						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+							{{tab.band}} - {{tab.song}}
+						</a>
+					</td>
 					<td class="comments">{{tab.comments}}</td>
 				</tr>
 			</tbody>

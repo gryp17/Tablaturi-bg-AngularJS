@@ -5,9 +5,11 @@
 	<div class="item">
 		<a href="mailto:reklama@tablaturi-bg.com" title="За реклама">За реклама</a>
 	</div>
+	<!--
 	<div class="item">
 		<a href="" title="Партньори">Партньори</a>
 	</div>
+	-->
 	<div class="item">
 		<a href="#about-us" title="За нас">За нас</a>
 	</div>
