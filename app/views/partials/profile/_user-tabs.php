@@ -28,7 +28,7 @@
 					<td>
 						<a class="red-link" href="#tab/{{tab.ID}}">
 							{{tab.song}}
-							<span ng-show="tab.tab_type !== 'full song'">({{tab.tab_type}})</span>
+							<span ng-show="tab.tab_type !== 'full song'">({{tab.tab_type | tabContentType}})</span>
 						</a>
 					</td>
 					<td ng-bind="tab.type | tabType"></td>
@@ -37,7 +37,9 @@
 							  ng-class="{'star': star === 1, 'empty-star': star === 0}"></span>
 					</td>
 					<td ng-if="loggedInUser.ID === profileId" class="edit-tab">
-						<span title="Редактирай таблатурата" class="glyphicon glyphicon-pencil"></span>
+						<a href="#edit-tab/{{tab.ID}}">
+							<span title="Редактирай таблатурата" class="glyphicon glyphicon-pencil"></span>
+						</a>
 					</td>
 				</tr>
 			</tbody>

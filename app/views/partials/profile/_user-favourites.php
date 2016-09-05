@@ -27,7 +27,7 @@
 					<td>
 						<a class="red-link" href="#tab/{{tab.ID}}">
 							{{tab.song}}
-							<span ng-show="tab.tab_type !== 'full song'">({{tab.tab_type}})</span>
+							<span ng-show="tab.tab_type !== 'full song'">({{tab.tab_type | tabContentType}})</span>
 						</a>
 					</td>
 					<td ng-bind="tab.type | tabType"></td>

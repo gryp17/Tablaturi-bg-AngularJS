@@ -21,16 +21,19 @@
 			width: 120px;
 			text-align: center;
 			
-			span{
-				cursor: pointer;
-				font-size: 17px;
-				padding: 0px 15px;
+			a{
+				color: $blue;
 				
-				&:hover{
-					color: $red;
+				span{
+					cursor: pointer;
+					font-size: 17px;
+					padding: 0px 15px;
+
+					&:hover{
+						color: $red;
+					}
 				}
 			}
 		}
 	}
-	
 }

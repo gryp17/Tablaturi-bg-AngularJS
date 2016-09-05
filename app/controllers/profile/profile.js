@@ -22,6 +22,14 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 			$location.path('/not-found');
 		}
 	});
+	
+	$('.glyphicon-info-sign').popover({
+		container: 'body',
+		trigger: 'hover',
+		placement: 'right',
+		html: true,
+		content: $('#reputation-popover-message').html()
+	});
 
 	/**
 	 * Add new comment

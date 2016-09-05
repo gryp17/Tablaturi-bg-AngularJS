@@ -67,6 +67,8 @@
 	<div class="reputation">
 		<span class="info-label">Репутация:</span>
 		{{userData.reputation}}
+		
+		<span class="glyphicon glyphicon-info-sign"></span>
 	</div>
 	
 	<div class="info-box">
@@ -125,6 +127,15 @@
 			<button ng-click="addComment()" class="btn btn-red">Коментирай</button>
 		</div>
 	</div>
+	
+	<script id="reputation-popover-message" type="text/ng-template">
+		<div>
+			<strong>Репутация се натрупва чрез:</strong>
+		</div>
+		- писане на коментар 1 точка <br/>
+		- оценка на таблатура 1 точка <br/>
+		- качване на таблатура 10 точки
+	</script>
 	
 	<?php include "_edit-profile.php" ?>
 	<?php include "_report-profile.php" ?>
