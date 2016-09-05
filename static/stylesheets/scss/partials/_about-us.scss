@@ -6,8 +6,16 @@
 	}
 	
 	.content {
+		margin-top: 20px;
+		
 		span {
 			font-weight: bold;
+		}
+		
+		.logo {
+			display: block;
+			margin: 50px auto auto;
+			width: 350px;
 		}
 	}
 }
