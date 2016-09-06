@@ -73,6 +73,14 @@ class UserComment extends Controller {
 			$user_model = $this->load_model('UserModel');
 			$user_model->giveReputation($_SESSION['user']['ID'], 1);
 			
+			//send notification email
+			if($this->params['user_id'] !== $_SESSION['user']['ID']){
+				$recipient = $user_model->getUser($this->params['user_id']);			
+				if($recipient !== null){
+					Utils::sendProfileCommentEmail($recipient, $_SESSION['user'], $this->params['content']);
+				}
+			}
+			
 			$this->sendResponse(1, $result);
 		} else {
 			$this->sendResponse(0, Controller::DB_ERROR);

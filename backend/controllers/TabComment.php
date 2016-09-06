@@ -73,6 +73,17 @@ class TabComment extends Controller {
 			$user_model = $this->load_model('UserModel');
 			$user_model->giveReputation($_SESSION['user']['ID'], 1);
 			
+			//send notification email
+			$tab_model = $this->load_model('TabModel');
+			$tab = $tab_model->getTab($this->params['tab_id']);
+			
+			if($tab !== null){
+				if($tab['uploader_ID'] !== $_SESSION['user']['ID']){
+					$recipient = $user_model->getUser($tab['uploader_ID']);
+					Utils::sendTabCommentEmail($tab, $recipient, $_SESSION['user'], $this->params['content']);
+				}
+			}
+			
 			$this->sendResponse(1, $result);
 		} else {
 			$this->sendResponse(0, Controller::DB_ERROR);

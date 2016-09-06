@@ -11,5 +11,6 @@ class Config {
 	const ARTICLES_DIR = 'content/articles/';
 	const AVATARS_DIR = 'content/avatars/';
 	const TABS_DIR = 'content/tabs/';
+	const EMAIL_TEMPLATES_DIR = 'app/views/email-templates/';
 
 }

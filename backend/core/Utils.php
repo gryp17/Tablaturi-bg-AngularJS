@@ -27,6 +27,28 @@ class Utils {
 	}
 	
 	/**
+	 * Loads the email template
+	 * @param string $template_file
+	 * @param array $data
+	 * @return string
+	 */
+	private static function loadEmailTemplate($template_file, $data){
+		$email_templates_dir = Config::EMAIL_TEMPLATES_DIR;
+		
+		//load the template file
+		ob_start();
+		include $email_templates_dir.$template_file.'.php';
+		$template = ob_get_clean();
+		
+		//replace all placeholders with actual data
+		foreach($data as $label => $value){
+			$template = str_replace('{{'.$label.'}}', $value, $template);
+		}
+		
+		return $template;
+	}
+	
+	/**
 	 * Sends the contact us email message
 	 * @param string $name
 	 * @param string $email
@@ -39,11 +61,14 @@ class Utils {
 		$subject = 'Таблатури-BG запитване';
 
 		$message = htmlspecialchars($message);
-
-		$template = file_get_contents('app/views/email-templates/contact-us.php');
-		$template = str_replace('{{name}}', $name, $template);
-		$template = str_replace('{{email}}', $email, $template);
-		$template = str_replace('{{message}}', $message, $template);
+		
+		$data = array(
+			'name' => $name,
+			'email' => $email,
+			'message' => $message
+		);
+		
+		self::loadEmailTemplate('contact-us', $data);
 
 		return self::sendEmail($from, $to, $subject, $template);
 	}
@@ -73,9 +98,12 @@ class Utils {
 		$subject = 'Таблатури-BG активация';
 		$link = self::generateActivationLink($name, $email);
 		
-		$template = file_get_contents('app/views/email-templates/confirmation.php');
-		$template = str_replace('{{name}}', $name, $template);
-		$template = str_replace('{{link}}', $link, $template);
+		$data = array(
+			'name' => $name,
+			'link' => $link
+		);
+		
+		$template = self::loadEmailTemplate('confirmation', $data);
 		
 		return self::sendEmail($from, $to, $subject, $template);
 	}
@@ -94,16 +122,26 @@ class Utils {
 		
 		$report = htmlspecialchars($report);
 		
-		$template = file_get_contents('app/views/email-templates/user-report.php');
-		$template = str_replace('{{reported_username}}', $reported_user['username'], $template);
-		$template = str_replace('{{reported_id}}', $reported_user['ID'], $template);
-		$template = str_replace('{{reporter_username}}', $reporter_user['username'], $template);
-		$template = str_replace('{{reporter_id}}', $reporter_user['ID'], $template);
-		$template = str_replace('{{report}}', $report, $template);
-				
+		$data = array(
+			'reported_username' => $reported_user['username'],
+			'reported_id' => $reported_user['ID'],
+			'reporter_username' => $reporter_user['username'],
+			'reporter_id' => $reporter_user['ID'],
+			'report' => $report
+		);
+		
+		$template = self::loadEmailTemplate('user-report', $data);
+		
 		return self::sendEmail($from, $to, $subject, $template);
 	}
 	
+	/**
+	 * Sends a tab report email to the administrator
+	 * @param array $reported_tab
+	 * @param array $reporter_user
+	 * @param string $report
+	 * @return boolean
+	 */
 	public static function sendTabReportEmail($reported_tab, $reporter_user, $report){
 		$from = 'reports@tablaturi-bg.com';
 		$to = 'admin@tablaturi-bg.com';
@@ -111,14 +149,70 @@ class Utils {
 		
 		$report = htmlspecialchars($report);
 		
-		$template = file_get_contents('app/views/email-templates/tab-report.php');
-		$template = str_replace('{{reported_tab_id}}', $reported_tab['ID'], $template);
-		$template = str_replace('{{reported_tab_song}}', $reported_tab['song'], $template);
-		$template = str_replace('{{reported_tab_band}}', $reported_tab['band'], $template);
-		$template = str_replace('{{reporter_username}}', $reporter_user['username'], $template);
-		$template = str_replace('{{reporter_id}}', $reporter_user['ID'], $template);
-		$template = str_replace('{{report}}', $report, $template);
+		$data = array(
+			'reported_tab_id' => $reported_tab['ID'],
+			'reported_tab_song' => $reported_tab['song'],
+			'reported_tab_band' => $reported_tab['band'],
+			'reporter_username' => $reporter_user['username'],
+			'reporter_id' => $reporter_user['ID'],
+			'report' => $report
+		);
+		
+		$template = self::loadEmailTemplate('tab-report', $data);
 				
+		return self::sendEmail($from, $to, $subject, $template);
+	}
+	
+	/**
+	 * Sends a profile comment notification to the user
+	 * @param array $recipient
+	 * @param array $author
+	 * @param string $content
+	 * @return boolean
+	 */
+	public static function sendProfileCommentEmail($recipient, $author, $content){
+		$from = 'admin@tablaturi-bg.com';
+		$to = $recipient['email'];
+		$subject = "Таблатури-BG - нов коментар на профила Ви";
+		
+		$content = htmlspecialchars($content);
+		
+		$data = array(
+			'author_username' => $author['username'],
+			'author_id' => $author['ID'],
+			'recipient_id' => $recipient['ID'],
+			'content' => $content
+		);
+		
+		$template = self::loadEmailTemplate('profile-comment-notification', $data);
+		
+		return self::sendEmail($from, $to, $subject, $template);
+	}
+	
+	/**
+	 * Sends a tab comment notification to the user
+	 * @param array $tab
+	 * @param array $recipient
+	 * @param array $author
+	 * @param string $content
+	 * @return boolean
+	 */
+	public static function sendTabCommentEmail($tab, $recipient, $author, $content){
+		$from = 'admin@tablaturi-bg.com';
+		$to = $recipient['email'];
+		$subject = "Таблатури-BG - нов коментар на таблатура";
+		
+		$content = htmlspecialchars($content);
+		
+		$data = array(
+			'author_username' => $author['username'],
+			'author_id' => $author['ID'],
+			'tab_id' => $tab['ID'],
+			'content' => $content
+		);
+		
+		$template = self::loadEmailTemplate('tab-comment-notification', $data);
+		
 		return self::sendEmail($from, $to, $subject, $template);
 	}
 	
