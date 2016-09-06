@@ -64,7 +64,8 @@ class Controller {
 	 * @param array $params
 	 */
 	private function validateParams($params) {
-		$function = array_pop(explode('/', $params['url']));
+		$url_segments = explode('/', $params['url']);
+		$function = array_pop($url_segments);
 
 		#check all params
 		if (isset($this->endpoints[$function])) {
@@ -96,7 +97,8 @@ class Controller {
 	private function checkPermissions($params) {
 		$result = false;
 
-		$function = array_pop(explode('/', $params['url']));
+		$url_segments = explode('/', $params['url']);
+		$function = array_pop($url_segments);
 
 		#check if the required permissions for that api endpoint are met
 		if (isset($this->endpoints[$function])) {
