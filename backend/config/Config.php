@@ -12,5 +12,8 @@ class Config {
 	const AVATARS_DIR = 'content/avatars/';
 	const TABS_DIR = 'content/tabs/';
 	const EMAIL_TEMPLATES_DIR = 'app/views/email-templates/';
+	
+	#domain
+	const DOMAIN = 'tablaturi-bg.com';
 
 }

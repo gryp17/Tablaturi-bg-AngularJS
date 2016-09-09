@@ -85,13 +85,29 @@ class UserModel {
 	 * @param string $gender
 	 * @param string $photo
 	 * @param string $type
-	 * @return boolean
+	 * @return int
 	 */
 	public function insertUser($username, $password, $email, $birthday, $gender, $photo, $type){
 		$password = md5($password);
-		$result = $this->connection->prepare('insert into user (username, password, email, birthday, register_date, gender, photo, type, last_active_date, reputation, activated) values (:username, :password, :email, :birthday, now(), :gender, :photo, :type, now(), 0, 0)');
-		if($result->execute(array('username' => $username, 'password' => $password, 'email' => $email, 'birthday' => $birthday, 'gender' => $gender, 'photo' => $photo, 'type' => $type))){
-			return true;
+		$query = $this->connection->prepare('INSERT INTO user '
+				. '(username, password, email, birthday, register_date, gender, photo, type, last_active_date, reputation, activated) '
+				. 'VALUES '
+				. '(:username, :password, :email, :birthday, now(), :gender, :photo, :type, now(), 0, 0)');
+		
+		$params = array(
+			'username' => $username,
+			'password' => $password,
+			'email' => $email,
+			'birthday' => $birthday,
+			'gender' => $gender,
+			'photo' => $photo,
+			'type' => $type
+		);
+		
+		if($query->execute($params)){
+			return $this->connection->lastInsertId();
+		}else{
+			return null;
 		}
 	}
 	

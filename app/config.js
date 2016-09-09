@@ -12,6 +12,12 @@ app.config(['$routeProvider', function($routeProvider) {
 		resolve: {
 			factory: updateAuthStatus
 		}
+	}).when('/activate/:userId/:hash', {
+		templateUrl: 'app/views/partials/user-activation.php',
+		controller: 'userActivationController',
+		resolve: {
+			factory: updateAuthStatus
+		}
 	}).when('/articles', {
 		templateUrl: 'app/views/partials/articles.php',
 		controller: 'articlesController',

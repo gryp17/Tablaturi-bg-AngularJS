@@ -383,7 +383,7 @@ class Tab extends Controller {
 		$extension = strtolower($matches[1]);
 		$extension = '.' . $extension;
 		
-		$filename = md5("$band - $song - " . date('YmdHis'));
+		$filename = md5("$band - $song - " . time()).'-'.time();
         $filename = $filename . $extension;
 		
 		#upload the file to the server

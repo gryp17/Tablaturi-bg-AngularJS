@@ -132,13 +132,42 @@ class User extends Controller {
 	 */
 	public function signup() {
 		$user_model = $this->load_model('UserModel');
-		$user_model->insertUser($this->params['signup_username'], $this->params['signup_password'], $this->params['signup_email'], $this->params['signup_birthday'], $this->params['signup_gender'], null, 'user');
+		$user_id = $user_model->insertUser($this->params['signup_username'], $this->params['signup_password'], $this->params['signup_email'], $this->params['signup_birthday'], $this->params['signup_gender'], null, 'user');
 
-		if (Utils::sendConfirmationEmail($this->params['signup_username'], $this->params['signup_email'])) {
-			$this->sendResponse(1, true);
-		} else {
-			$this->sendResponse(0, Controller::EMAIL_ERROR);
+		if($user_id !== null){
+			$activation = $this->generateActivationLink($user_id, $this->params['signup_email']);
+
+			//insert the activation data into the database
+			$user_activation_model = $this->load_model('UserActivationModel');
+			$user_activation_model->insertHash($user_id, $activation['hash']);
+			
+			//send the confirmation email
+			if (Utils::sendConfirmationEmail($this->params['signup_username'], $this->params['signup_email'], $activation['link'])) {
+				$this->sendResponse(1, true);
+			} else {
+				$this->sendResponse(0, Controller::EMAIL_ERROR);
+			}
+		}else{
+			$this->sendResponse(0, Controller::DB_ERROR);
 		}
+	}
+	
+	/**
+	 * Generates an activation link
+	 * @param int $user_id
+	 * @param string $email
+	 * @return array
+	 */
+	private function generateActivationLink($user_id, $email){
+		$domain = Config::DOMAIN;
+		
+		$hash = md5($email) . md5(mt_rand(0, 999999));
+		$link = "http://$domain/activate/$user_id/$hash";
+
+		return array(
+			'link' => $link,
+			'hash' => $hash
+		);
 	}
 
 	/**

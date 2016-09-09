@@ -72,31 +72,17 @@ class Utils {
 
 		return self::sendEmail($from, $to, $subject, $template);
 	}
-	
-	/**
-	 * Generates an activation link
-	 * @param string $name
-	 * @param string $email
-	 * @return string
-	 */
-	public static function generateActivationLink($name, $email){
-		$escaped_user = urlencode($name);
-		$link = "http://tablaturi-bg.com/activate.php?user=$escaped_user&link=";
-		$query = md5($name) . md5($email);
-		return $link . $query;
-	}
-	
+		
 	/**
 	 * Sends a confirmation email
 	 * @param string $name
 	 * @param string $email
 	 * @return boolean
 	 */
-	public static function sendConfirmationEmail($name, $email){
+	public static function sendConfirmationEmail($name, $email, $link){
 		$from = 'admin@tablaturi-bg.com';
 		$to = $email;
 		$subject = 'Таблатури-BG активация';
-		$link = self::generateActivationLink($name, $email);
 		
 		$data = array(
 			'name' => $name,
@@ -104,7 +90,7 @@ class Utils {
 		);
 		
 		$template = self::loadEmailTemplate('confirmation', $data);
-		
+				
 		return self::sendEmail($from, $to, $subject, $template);
 	}
 	

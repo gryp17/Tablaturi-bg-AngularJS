@@ -185,3 +185,17 @@ CREATE TABLE IF NOT EXISTS `user_favourite` (
   KEY `fk_favourite_tab_id` (`tab_ID`),
   KEY `fk_favourite_user_id` (`user_ID`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `user_activation`
+--
+
+CREATE TABLE IF NOT EXISTS `user_activation` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `user_ID` int(11) DEFAULT NULL,
+  `hash` varchar(200) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_activation_user_id` (`user_ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

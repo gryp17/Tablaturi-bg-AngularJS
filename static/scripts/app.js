@@ -440,6 +440,12 @@ app.config(['$routeProvider', function($routeProvider) {
 		resolve: {
 			factory: updateAuthStatus
 		}
+	}).when('/activate/:userId/:hash', {
+		templateUrl: 'app/views/partials/user-activation.php',
+		controller: 'userActivationController',
+		resolve: {
+			factory: updateAuthStatus
+		}
 	}).when('/articles', {
 		templateUrl: 'app/views/partials/articles.php',
 		controller: 'articlesController',
@@ -1526,6 +1532,14 @@ app.controller('tabsController', function ($scope, $q, TabService, LoadingServic
 		LoadingService.doneLoading();
 	});
 	
+});
+app.controller('userActivationController', function ($scope, $routeParams, $location, $q, UserActivationService, LoadingService) {
+		
+	UserActivationService.activateUser($routeParams.userId, $routeParams.hash).then(function (result){
+		$scope.success = result.data.data
+		LoadingService.doneLoading();
+	});
+		
 });
 app.directive('article', function($filter, $location) {
 	return {
@@ -2678,6 +2692,20 @@ app.factory('TabService', function($http) {
 					'Content-Type': undefined 
 				},
 				data: formData
+			});
+		}
+	};
+});
+app.factory('UserActivationService', function($http) {
+	return {
+		activateUser: function(userId, hash) {
+			return $http({
+				method: 'POST',
+				url: 'UserActivation/activateUser',
+				data: {
+					user_id: userId,
+					hash: hash
+				}
 			});
 		}
 	};
