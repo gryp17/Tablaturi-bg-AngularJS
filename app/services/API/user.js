@@ -7,6 +7,15 @@ app.factory('UserService', function($http) {
 				data: loginData
 			});
 		},
+		resetPassword: function(email) {
+			return $http({
+				method: 'POST',
+				url: 'User/resetPassword',
+				data: {
+					forgotten_password_email: email
+				}
+			});
+		},
 		logout: function (){
 			return $http({
 				method: 'POST',

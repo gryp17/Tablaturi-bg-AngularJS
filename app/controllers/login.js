@@ -1,5 +1,6 @@
 app.controller('loginController', function($scope, $rootScope, $window, $route, UserService, ValidationService) {
 	$scope.loginData = {};
+	$scope.view = 'login';
 	
 	/**
 	 * Callback function that is called when the login button is pressed
@@ -25,5 +26,38 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 			}
 		});
 	};
+	
+	/**
+	 * Changes the current visible view
+	 * @param {string} view
+	 */
+	$scope.changeView = function(view) {
+		$scope.view = view;
+	};
+	
+	/**
+	 * Resets the user password
+	 */
+	$scope.resetPassword = function() {		
+		UserService.resetPassword($scope.forgottenPasswordEmail).then(function(result) {
+			if(result.data.status === 0){
+				if(result.data.error){
+					//show the error
+					ValidationService.showError(result.data.error.field, result.data.error.error_code);
+				}
+			}else{
+				$scope.changeView('reset-password-success');
+			}
+		});
+	};
+	
+	/**
+	 * Before opening the modal reset the visible view and the forgotten password input
+	 */
+	$('#login-modal').on('show.bs.modal', function() {
+		$scope.view = 'login';
+		$scope.forgottenPasswordEmail = '';
+		$scope.$apply();
+	});
 	
 });

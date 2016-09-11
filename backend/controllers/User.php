@@ -17,6 +17,12 @@ class User extends Controller {
 					'login_remember_me' => 'in[1,0,]' //(1 or 0 or empty space) boolean?
 				)
 			),
+			'resetPassword' => array(
+				'required_role' => self::PUBLIC_ACCESS,
+				'params' => array(
+					'forgotten_password_email' => array('required', 'valid-email')
+				)
+			),
 			'logout' => array(
 				'required_role' => self::PUBLIC_ACCESS
 			),
@@ -101,6 +107,25 @@ class User extends Controller {
 
 			$_SESSION['user'] = $data;
 			$this->sendResponse(1, $data);
+		}
+	}
+	
+	/**
+	 * Resets the user password and sends it via email
+	 */
+	public function resetPassword() {
+		$user_model = $this->load_model('UserModel');
+		$new_password = $user_model->resetPassword($this->params['forgotten_password_email']);
+		
+		//send the new password via email
+		if($new_password !== null){
+			if(Utils::sendResetPasswordEmail($this->params['forgotten_password_email'], $new_password)){
+				$this->sendResponse(1, true);
+			} else {
+				$this->sendResponse(0, Controller::EMAIL_ERROR);
+			}
+		}else{
+			$this->sendResponse(0, array('field' => 'forgotten_password_email', 'error_code' => 'email_not_found'));
 		}
 	}
 

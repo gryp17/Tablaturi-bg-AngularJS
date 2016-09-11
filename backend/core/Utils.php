@@ -203,6 +203,26 @@ class Utils {
 	}
 	
 	/**
+	 * Sends a reset password email containing the new user password
+	 * @param string $email
+	 * @param string $new_password
+	 * @return boolean
+	 */
+	public static function sendResetPasswordEmail($email, $new_password){
+		$from = 'admin@tablaturi-bg.com';
+		$to = $email;
+		$subject = "Таблатури-BG - сменена парола";
+				
+		$data = array(
+			'new_password' => $new_password
+		);
+		
+		$template = self::loadEmailTemplate('reset-password', $data);
+		
+		return self::sendEmail($from, $to, $subject, $template);
+	}
+	
+	/**
 	 * Formats the date into javascript friendly format (from "2016-01-01 15:00:00" into "2016-01-01T15:00:00")
 	 * @param string $input
 	 * @return string

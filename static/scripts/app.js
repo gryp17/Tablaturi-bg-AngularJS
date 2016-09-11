@@ -617,6 +617,976 @@ function redirectTab ($window, $q, $location) {
 	
 	return deferred.promise;
 }
+app.directive('article', function($filter, $location) {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/article.php',
+		replace: true,
+		scope: {
+		    articleData: '='
+		},
+		link: function(scope, element, attrs) {
+			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
+			var limit = 210 - scope.articleData.title.length;			
+			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
+			
+			/**
+			 * Redirects to the article page
+			 * @param {int} articleId
+			 */
+			scope.open = function (articleId){
+				$location.path('article/'+articleId);
+			};
+			
+		}
+	};
+});
+app.directive('autocomplete', function(TabService) {
+	return {
+		restrict: 'A',
+		scope: {
+		    autocomplete: '@', //band | song
+			band: '=' //optional parameter that is used when autocompleting the 'song' field 
+		},
+		link: function(scope, element, attrs) {
+			element.autocomplete({
+				minLength: 1,
+				delay: 300,
+				source: function(request, responseCallback) {
+					TabService.autocomplete(scope.autocomplete, request.term, scope.band).then(function (result){
+						//pass the data to the jqueryUI responseCallback function
+						responseCallback(result.data.data);
+					});
+				}
+			});
+		}
+	};
+});
+app.directive('clickableEmoticon', function() {
+	return {
+		restrict: 'C',
+		scope: {
+			model: '='
+		},
+		link: function(scope, element, attrs) {
+			element.on('click', function (){
+				if(angular.isUndefined(scope.model)){
+					scope.model = attrs.title;
+				} else {
+					scope.model =  scope.model + ' ' + attrs.title;
+				}
+				scope.$apply();
+			});
+		}
+	};
+});
+app.directive('comment', function() {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/comment.php',
+		scope: {
+		    commentData: '='
+		}
+	};
+});
+app.directive('enterClick', function() {
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs) {
+			element.on('keypress', function(e) {
+				if (e.which === 13){
+					$(attrs.enterClick).click();					
+				}
+			});
+		}
+	};
+}); 
+app.directive('pagination', function() {
+	return {
+		restrict: 'C',
+		templateUrl: 'app/views/directives/pagination.php',
+		replace: true,
+		scope: {
+			limit: '=',
+			offset: '=',
+			totalItems: '=',
+			range: '=',
+			callback: '&'
+		},
+		link: function(scope, element, attrs) {
+			
+			//initialize the pagination when scope.totalItems is set
+			scope.$watch('totalItems', function (){
+				if(angular.isDefined(scope.totalItems)){
+					
+					//initialize the currentPage if it's not set yet
+					if(angular.isUndefined(scope.currentPage)){
+						scope.currentPage = 1;
+					}
+
+					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
+					scope.generatePages();
+				}
+			});
+			
+			/**
+			 * Calculates the number of visible pages (it's a magic)
+			 */
+			scope.generatePages = function (){
+				scope.pages = [];
+				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
+					if ((i > 0) && (i <= scope.totalPages)) {
+						scope.pages.push(i);
+					}
+				}
+			};
+			
+			/**
+			 * Changes the current page
+			 * @param {int} page
+			 */
+			scope.goTo = function(page){
+				scope.currentPage = page;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the first page as current page
+			 */
+			scope.goToFirst = function (){
+				scope.currentPage = 1;
+				scope.generatePages();
+				scope.getPageData();
+				
+			};
+			
+			/**
+			 * Sets the last page as current page
+			 */
+			scope.goToLast = function (){
+				scope.currentPage = scope.totalPages;
+				scope.generatePages();
+				scope.getPageData();
+			};
+			
+			/**
+			 * Sets the previous page as current page
+			 */
+			scope.goToPrevious = function (){
+				if(scope.currentPage > 1){
+					scope.currentPage = scope.currentPage - 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Sets the next page as current page
+			 */
+			scope.goToNext = function (){
+				if(scope.currentPage < scope.totalPages){
+					scope.currentPage = scope.currentPage + 1;
+					scope.generatePages();
+					scope.getPageData();
+				}
+			};
+			
+			/**
+			 * Calls the specified callback with the new offset
+			 */
+			scope.getPageData = function (){
+				scope.offset = (scope.currentPage - 1) * scope.limit;
+				scope.callback({limit: scope.limit, offset: scope.offset});
+			};
+			
+		}
+	};
+});
+app.directive('starsRating', function() {
+	return {
+		restrict: 'A',
+		templateUrl: 'app/views/directives/stars-rating.php',
+		replace: true,
+		scope: {
+			currentRating: '@',
+			callback: '&'
+		},
+		link: function(scope, element, attrs) {
+			
+			scope.stars = [
+				{
+					text: 'Зле',
+					filled: false
+				},
+				{
+					text: 'Слабо',
+					filled: false
+				},
+				{
+					text: 'Бива',
+					filled: false
+				},
+				{
+					text: 'Доста добре',
+					filled: false
+				},
+				{
+					text: 'Супер!',
+					filled: false
+				}
+			];
+			
+			scope.$watch('currentRating', function (){
+				//if the currentRating is set - fill the stars
+				if(angular.isDefined(scope.currentRating)){	
+					var starIndex = Math.round(scope.currentRating) - 1;
+					scope.highlightStar(starIndex, false);
+				}
+			});
+			
+			/**
+			 * Fills all stars up to the provided index and shows the selected star text
+			 * @param {int} index
+			 */
+			scope.highlightStar = function (index, showStarText){
+				
+				if(showStarText){
+					//set the correct star text
+					scope.selectedStarText = scope.stars[index].text;
+				}
+				
+				//fill/unfill the stars
+				scope.stars = scope.stars.map(function (star, currentIndex){
+					if(currentIndex <= index){
+						star.filled = true;
+					}else{
+						star.filled = false;
+					}
+					return star;
+				});
+			};
+			
+			/**
+			 * Selects the provided index and calls the callback
+			 * @param {int} index
+			 */
+			scope.selectStar = function (index){
+				scope.callback({rating: index + 1});
+			};
+
+		}
+	};
+});
+app.directive('validation', function() {
+	return {
+		restrict: 'C',
+		link: function(scope, element, attrs) {
+			element.on('focus click keypress', function (){
+				element.closest('.field-box').removeClass('error');
+			});
+		}
+	};
+});
+app.factory('LoadingService', function() {
+	
+	var contentElement = '#view-wrapper';
+	var loadingElement = '#content-wrapper > .loading-placeholder';
+	
+	return {
+		/**
+		 * Shows the loading placeholder
+		 */
+		showLoadingPlaceholder: function (){
+			$(loadingElement).fadeIn(0);
+		},
+		/**
+		 * Hides the loading placeholder
+		 */
+		hideLoadingPlaceholder: function (){
+			$(loadingElement).fadeOut(0);
+		},
+		/**
+		 * Shows the ng-view content
+		 */
+		showContent: function (){
+			$(contentElement).css('visibility', 'visible');
+		},
+		/**
+		 * Hides the ng-view content
+		 */
+		hideContent: function (){
+			$(contentElement).css('visibility', 'hidden');
+		},
+		/**
+		 * Hides the ng-view content and shows the loading placeholder
+		 */
+		startLoading: function() {
+			var self = this;
+			
+			self.hideContent();
+			setTimeout(function (){
+				self.showLoadingPlaceholder();
+			}, 200);
+		},
+		/**
+		 * Hides the loading placeholder and shows the ng-view content
+		 */
+		doneLoading: function() {
+			var self = this;
+			
+			setTimeout(function (){
+				self.hideLoadingPlaceholder();
+				self.showContent();
+			}, 300);
+		}
+	};
+});
+app.factory('ValidationService', function($filter) {
+	return {
+		showError: function(field, errorCode) {
+			var errorMessage = $filter('errors')(errorCode);
+			var fieldBox = $('input[name="' + field + '"], textarea[name="' + field + '"], select[name="' + field + '"]').closest('.field-box');
+			fieldBox.find('.error-msg').html(errorMessage);
+			fieldBox.addClass('error');
+		}
+	};
+});
+app.filter('age', function() {
+	return function(dateString) {
+		if (angular.isDefined(dateString)) {
+			var today = new Date();
+			var birthDate = new Date(dateString);
+			var age = today.getFullYear() - birthDate.getFullYear();
+			var m = today.getMonth() - birthDate.getMonth();
+			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+				age--;
+			}
+			return age;
+		}
+	};
+});
+app.filter('emoticons', function() {
+	return function(content) {
+		
+		var emoticonsPath = "static/img/emoticons/";
+		var emoticonsClass = "emoticon";
+
+		var emoticons = [
+			{
+				regexp: /:\)/,
+				title: ':)',
+				img: 'smile.png'
+			},
+			{
+				regexp: /:\(/,
+				title: ':(',
+				img: 'undecided.png'
+			},
+			{
+				regexp: /:D/,
+				title: ':D',
+				img: 'laugh.png'
+			},
+			{
+				regexp: /:P/,
+				title: ':P',
+				img: 'stickingout.png'
+			},
+			{
+				regexp: /8-\)/,
+				title: '8-)',
+				img: 'hot.png'
+			},
+			{
+				regexp: /\|-\(/,
+				title: '|-(',
+				img: 'ambivalent.png'
+			},
+			{
+				regexp: /:O/,
+				title: ':O',
+				img: 'largegasp.png'
+			},
+			{
+				regexp: /\(up\)/,
+				title: '(up)',
+				img: 'thumbsup.png'
+			},
+			{
+				regexp: /\(down\)/,
+				title: '(down)',
+				img: 'thumbsdown.png'
+			},
+			{
+				regexp: /:\@/,
+				title: ':@',
+				img: 'veryangry.png'
+			}
+		];
+		
+		//replace all emoticons with their images
+		emoticons.forEach(function (emoticon){
+			var regexp = new RegExp(emoticon.regexp, "ig");
+			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
+		});
+
+		return content;
+	};
+});
+app.filter('errors', function () {
+	return function (errorCode) {
+
+		var errors = {
+			invalid_login: 'Грешно име или парола',
+			empty_field: 'Празно поле',
+			invalid_int: 'Невалидно число',
+			invalid_date: 'Невалидна дата',
+			invalid_email: 'Невалиден имейл',
+			weak_password: 'Паролата не съдържа поне едно число и буква',
+			no_match: 'Полетата не съвпадат',
+			username_in_use: 'Потребителското име е заето',
+			email_in_use: 'Имейлът е зает',
+			email_not_found: 'Несъществуващ имейл',
+			not_in_list: 'Невалидно поле',
+			invalid_captcha: 'Captcha-та не съвпада',
+			invalid_file_extension: 'Невалиден формат',
+			exceeds_max_file_size: 'Файлът надвишава максималния размер'
+		};
+		
+		if(angular.isUndefined(errors[errorCode])){
+			//max-\d+ rule
+			if(/exceeds_characters_(\d+)/.exec(errorCode)){
+				var results = /exceeds_characters_(\d+)/.exec(errorCode);
+				return 'Полето надвишава '+results[1]+' символа';
+			}
+			
+			//min-\d+ rule
+			if(/below_characters_(\d+)/.exec(errorCode)){
+				var results = /below_characters_(\d+)/.exec(errorCode);
+				return 'Полето е под '+results[1]+' символа';
+			}
+		}
+
+		return errors[errorCode];
+	};
+});
+app.filter('ratingStars', function() {
+	return function(rating) {
+		var result = [];
+		var stars = Math.floor(rating);
+
+		//generates an array of integers based on the tab rating
+		//1 - star
+		//0 - empty star
+		for (var i = 1; i <= 5; i++) {
+			if (i <= stars) {
+				result.push(1);
+			} else {
+				result.push(0);
+			}
+		}
+
+		return result;
+	};
+});
+app.filter('tabContentType', function () {
+	return function (tabType) {
+
+		var tabContentTypes = {
+			'full song': 'Цяла песен',
+			intro: 'интро',
+			solo: 'соло'
+		};
+		
+		if(angular.isUndefined(tabContentTypes[tabType])){
+			return tabType;
+		}else{
+			return tabContentTypes[tabType];
+		}
+
+	};
+});
+app.filter('tabType', function () {
+	return function (tabType) {
+
+		var tabTypes = {
+			tab: "Tab",
+			gp: "Guitar Pro",
+			chord: "Акорди",
+			bt: "Backing Track",
+			bass: "Bass"
+		};
+		
+		if(angular.isUndefined(tabTypes[tabType])){
+			return tabType;
+		}else{
+			return tabTypes[tabType];
+		}
+
+	};
+});
+app.factory('ArticleCommentService', function($http) {
+	return {
+		getArticleComments: function(articleId, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'ArticleComment/getArticleComments',
+				data: {
+					article_id: articleId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalArticleComments: function(articleId) {
+			return $http({
+				method: 'POST',
+				url: 'ArticleComment/getTotalArticleComments',
+				data: {
+					article_id: articleId
+				}
+			});
+		},
+		addArticleComment: function(articleId, content) {
+			return $http({
+				method: 'POST',
+				url: 'ArticleComment/addArticleComment',
+				data: {
+					article_id: articleId,
+					content: content
+				}
+			});
+		}
+	};
+});
+app.factory('ArticleService', function($http) {
+	return {
+		getArticles: function(limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'Article/getArticles',
+				data: {
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getArticle: function(id) {
+			return $http({
+				method: 'POST',
+				url: 'Article/getArticle',
+				data: {
+					id: id
+				}
+			});
+		},
+		addArticle: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'Article/addArticle',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
+		},
+		updateArticle: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'Article/updateArticle',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
+		}
+	};
+});
+app.factory('BackingTrackService', function($http) {
+	return {
+		search: function(band, song) {
+			return $http({
+				method: 'POST',
+				url: 'BackingTrack/search',
+				data: {
+					band: band,
+					song: song
+				}
+			});
+		},
+		getMP3: function (link){
+			return $http({
+				method: 'POST',
+				url: 'BackingTrack/getMP3',
+				data: {
+					link: link
+				}
+			});
+		}
+	};
+});
+app.factory('MiscService', function($http) {
+	return {
+		generateCaptcha: function (){
+			return $http({
+				method: 'POST',
+				url: 'Misc/generateCaptcha'
+			});
+		},
+		contactUs: function(contactUsData) {
+			return $http({
+				method: 'POST',
+				url: 'Misc/contactUs',
+				data: contactUsData
+			});
+		}
+	};
+});
+app.factory('TabCommentService', function($http) {
+	return {
+		getTabComments: function(tabId, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'TabComment/getTabComments',
+				data: {
+					tab_id: tabId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalTabComments: function(tabId) {
+			return $http({
+				method: 'POST',
+				url: 'TabComment/getTotalTabComments',
+				data: {
+					tab_id: tabId
+				}
+			});
+		},
+		addTabComment: function(tabId, content) {
+			return $http({
+				method: 'POST',
+				url: 'TabComment/addTabComment',
+				data: {
+					tab_id: tabId,
+					content: content
+				}
+			});
+		}
+	};
+});
+app.factory('TabReportService', function($http) {
+	return {
+		reportTab: function(tabId, report) {
+			return $http({
+				method: 'POST',
+				url: 'TabReport/reportTab',
+				data: {
+					tab_id: tabId,
+					report: report
+				}
+			});
+		}
+	};
+});
+app.factory('TabService', function($http) {
+	return {
+		getTabsCount: function() {
+			return $http({
+				method: 'GET',
+				url: 'Tab/getTabsCount'
+			});
+		},
+		getMost: function(type, limit) {
+			return $http({
+				method: 'POST',
+				url: 'Tab/getMost',
+				data: {
+					type: type,
+					limit: limit
+				}
+			});
+		},
+		autocomplete: function(type, term, band) {
+			return $http({
+				method: 'POST',
+				url: 'Tab/autocomplete',
+				data: {
+					type: type,
+					term: term,
+					band: band
+				}
+			});
+		},
+		search: function(type, band, song, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'Tab/search',
+				data: {
+					type: type,
+					band: band,
+					song: song,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getSearchTotal: function (type, band, song){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getSearchTotal',
+				data: {
+					type: type,
+					band: band,
+					song: song
+				}
+			});
+		},
+		getTabsByUploader: function (uploaderId, limit, offset){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getTabsByUploader',
+				data: {
+					uploader_id: uploaderId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalTabsByUploader: function (uploaderId){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getTotalTabsByUploader',
+				data: {
+					uploader_id: uploaderId
+				}
+			});
+		},
+		getTab: function (id){
+			return $http({
+				method: 'POST',
+				url: 'Tab/getTab',
+				data: {
+					id: id
+				}
+			});
+		},
+		rateTab: function (tabId, rating){
+			return $http({
+				method: 'POST',
+				url: 'Tab/rateTab',
+				data: {
+					tab_id: tabId,
+					rating: rating
+				}
+			});
+		},
+		addTab: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'Tab/addTab',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
+		},
+		updateTab: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'Tab/updateTab',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
+		}
+	};
+});
+app.factory('UserActivationService', function($http) {
+	return {
+		activateUser: function(userId, hash) {
+			return $http({
+				method: 'POST',
+				url: 'UserActivation/activateUser',
+				data: {
+					user_id: userId,
+					hash: hash
+				}
+			});
+		}
+	};
+});
+app.factory('UserCommentService', function($http) {
+	return {
+		getUserComments: function(userId, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'UserComment/getUserComments',
+				data: {
+					user_id: userId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalUserComments: function(userId) {
+			return $http({
+				method: 'POST',
+				url: 'UserComment/getTotalUserComments',
+				data: {
+					user_id: userId
+				}
+			});
+		},
+		addUserComment: function(userId, content) {
+			return $http({
+				method: 'POST',
+				url: 'UserComment/addUserComment',
+				data: {
+					user_id: userId,
+					content: content
+				}
+			});
+		}
+	};
+});
+app.factory('UserFavouriteService', function($http) {
+	return {
+		getUserFavourites: function(userId, limit, offset) {
+			return $http({
+				method: 'POST',
+				url: 'UserFavourite/getUserFavourites',
+				data: {
+					user_id: userId,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalUserFavourites: function(userId) {
+			return $http({
+				method: 'POST',
+				url: 'UserFavourite/getTotalUserFavourites',
+				data: {
+					user_id: userId
+				}
+			});
+		},
+		deleteFavouriteTab: function(tabId) {
+			return $http({
+				method: 'POST',
+				url: 'UserFavourite/deleteFavouriteTab',
+				data: {
+					tab_id: tabId
+				}
+			});
+		},
+		addFavouriteTab: function(tabId) {
+			return $http({
+				method: 'POST',
+				url: 'UserFavourite/addFavouriteTab',
+				data: {
+					tab_id: tabId
+				}
+			});
+		}
+	};
+});
+app.factory('UserReportService', function($http) {
+	return {
+		reportUser: function(userId, report) {
+			return $http({
+				method: 'POST',
+				url: 'UserReport/reportUser',
+				data: {
+					user_id: userId,
+					report: report
+				}
+			});
+		}
+	};
+});
+app.factory('UserService', function($http) {
+	return {
+		login: function(loginData) {
+			return $http({
+				method: 'POST',
+				url: 'User/login',
+				data: loginData
+			});
+		},
+		resetPassword: function(email) {
+			return $http({
+				method: 'POST',
+				url: 'User/resetPassword',
+				data: {
+					forgotten_password_email: email
+				}
+			});
+		},
+		logout: function (){
+			return $http({
+				method: 'POST',
+				url: 'User/logout'
+			});
+		},
+		isLoggedIn: function (){
+			return $http({
+				method: 'POST',
+				url: 'User/isLoggedIn'
+			});
+		},
+		signup: function (userData){
+			return $http({
+				method: 'POST',
+				url: 'User/signup',
+				data: userData
+			});
+		},
+		getUser: function (id){
+			return $http({
+				method: 'POST',
+				url: 'User/getUser',
+				data: {
+					id: id
+				}
+			});
+		},
+		updateUser: function (formData){
+			return $http({
+				method: 'POST',
+				url: 'User/updateUser',
+				headers: {
+					'Content-Type': undefined 
+				},
+				data: formData
+			});
+		},
+		search: function(keyword, limit, offset){
+			return $http({
+				method: 'POST',
+				url: 'User/search',
+				data: {
+					keyword: keyword,
+					limit: limit,
+					offset: offset
+				}
+			});
+		},
+		getTotalSearchResults: function(keyword){
+			return $http({
+				method: 'POST',
+				url: 'User/getTotalSearchResults',
+				data: {
+					keyword: keyword
+				}
+			});
+		}
+	};
+});
 app.controller('addTabController', function ($scope, $location, TabService, ValidationService) {
 
 	//default tab data
@@ -1103,6 +2073,7 @@ app.controller('layoutController', function($scope, $rootScope, $location, $rout
 });
 app.controller('loginController', function($scope, $rootScope, $window, $route, UserService, ValidationService) {
 	$scope.loginData = {};
+	$scope.view = 'login';
 	
 	/**
 	 * Callback function that is called when the login button is pressed
@@ -1128,6 +2099,39 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 			}
 		});
 	};
+	
+	/**
+	 * Changes the current visible view
+	 * @param {string} view
+	 */
+	$scope.changeView = function(view) {
+		$scope.view = view;
+	};
+	
+	/**
+	 * Resets the user password
+	 */
+	$scope.resetPassword = function() {		
+		UserService.resetPassword($scope.forgottenPasswordEmail).then(function(result) {
+			if(result.data.status === 0){
+				if(result.data.error){
+					//show the error
+					ValidationService.showError(result.data.error.field, result.data.error.error_code);
+				}
+			}else{
+				$scope.changeView('reset-password-success');
+			}
+		});
+	};
+	
+	/**
+	 * Before opening the modal reset the visible view and the forgotten password input
+	 */
+	$('#login-modal').on('show.bs.modal', function() {
+		$scope.view = 'login';
+		$scope.forgottenPasswordEmail = '';
+		$scope.$apply();
+	});
 	
 });
 app.controller('searchBackingTracksController', function ($scope, $routeParams, $window, BackingTrackService, LoadingService) {
@@ -1541,514 +2545,6 @@ app.controller('userActivationController', function ($scope, $routeParams, $loca
 	});
 		
 });
-app.directive('article', function($filter, $location) {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/article.php',
-		replace: true,
-		scope: {
-		    articleData: '='
-		},
-		link: function(scope, element, attrs) {
-			var sanitizedContent = scope.articleData.content.replace(/<[^>]+>/gm, '');
-			var limit = 210 - scope.articleData.title.length;			
-			scope.articleData.content = $filter('limitTo')(sanitizedContent, limit) + '...';
-			
-			/**
-			 * Redirects to the article page
-			 * @param {int} articleId
-			 */
-			scope.open = function (articleId){
-				$location.path('article/'+articleId);
-			};
-			
-		}
-	};
-});
-app.directive('autocomplete', function(TabService) {
-	return {
-		restrict: 'A',
-		scope: {
-		    autocomplete: '@', //band | song
-			band: '=' //optional parameter that is used when autocompleting the 'song' field 
-		},
-		link: function(scope, element, attrs) {
-			element.autocomplete({
-				minLength: 1,
-				delay: 300,
-				source: function(request, responseCallback) {
-					TabService.autocomplete(scope.autocomplete, request.term, scope.band).then(function (result){
-						//pass the data to the jqueryUI responseCallback function
-						responseCallback(result.data.data);
-					});
-				}
-			});
-		}
-	};
-});
-app.directive('clickableEmoticon', function() {
-	return {
-		restrict: 'C',
-		scope: {
-			model: '='
-		},
-		link: function(scope, element, attrs) {
-			element.on('click', function (){
-				if(angular.isUndefined(scope.model)){
-					scope.model = attrs.title;
-				} else {
-					scope.model =  scope.model + ' ' + attrs.title;
-				}
-				scope.$apply();
-			});
-		}
-	};
-});
-app.directive('comment', function() {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/comment.php',
-		scope: {
-		    commentData: '='
-		}
-	};
-});
-app.directive('enterClick', function() {
-	return {
-		restrict: 'A',
-		link: function(scope, element, attrs) {
-			element.on('keypress', function(e) {
-				if (e.which === 13){
-					$(attrs.enterClick).click();					
-				}
-			});
-		}
-	};
-}); 
-app.directive('pagination', function() {
-	return {
-		restrict: 'C',
-		templateUrl: 'app/views/directives/pagination.php',
-		replace: true,
-		scope: {
-			limit: '=',
-			offset: '=',
-			totalItems: '=',
-			range: '=',
-			callback: '&'
-		},
-		link: function(scope, element, attrs) {
-			
-			//initialize the pagination when scope.totalItems is set
-			scope.$watch('totalItems', function (){
-				if(angular.isDefined(scope.totalItems)){
-					
-					//initialize the currentPage if it's not set yet
-					if(angular.isUndefined(scope.currentPage)){
-						scope.currentPage = 1;
-					}
-
-					scope.totalPages = Math.ceil(scope.totalItems / scope.limit);
-					scope.generatePages();
-				}
-			});
-			
-			/**
-			 * Calculates the number of visible pages (it's a magic)
-			 */
-			scope.generatePages = function (){
-				scope.pages = [];
-				for (var i = (scope.currentPage - scope.range); i < (scope.currentPage + scope.range) + 1; i++) {
-					if ((i > 0) && (i <= scope.totalPages)) {
-						scope.pages.push(i);
-					}
-				}
-			};
-			
-			/**
-			 * Changes the current page
-			 * @param {int} page
-			 */
-			scope.goTo = function(page){
-				scope.currentPage = page;
-				scope.generatePages();
-				scope.getPageData();
-			};
-			
-			/**
-			 * Sets the first page as current page
-			 */
-			scope.goToFirst = function (){
-				scope.currentPage = 1;
-				scope.generatePages();
-				scope.getPageData();
-				
-			};
-			
-			/**
-			 * Sets the last page as current page
-			 */
-			scope.goToLast = function (){
-				scope.currentPage = scope.totalPages;
-				scope.generatePages();
-				scope.getPageData();
-			};
-			
-			/**
-			 * Sets the previous page as current page
-			 */
-			scope.goToPrevious = function (){
-				if(scope.currentPage > 1){
-					scope.currentPage = scope.currentPage - 1;
-					scope.generatePages();
-					scope.getPageData();
-				}
-			};
-			
-			/**
-			 * Sets the next page as current page
-			 */
-			scope.goToNext = function (){
-				if(scope.currentPage < scope.totalPages){
-					scope.currentPage = scope.currentPage + 1;
-					scope.generatePages();
-					scope.getPageData();
-				}
-			};
-			
-			/**
-			 * Calls the specified callback with the new offset
-			 */
-			scope.getPageData = function (){
-				scope.offset = (scope.currentPage - 1) * scope.limit;
-				scope.callback({limit: scope.limit, offset: scope.offset});
-			};
-			
-		}
-	};
-});
-app.directive('starsRating', function() {
-	return {
-		restrict: 'A',
-		templateUrl: 'app/views/directives/stars-rating.php',
-		replace: true,
-		scope: {
-			currentRating: '@',
-			callback: '&'
-		},
-		link: function(scope, element, attrs) {
-			
-			scope.stars = [
-				{
-					text: 'Зле',
-					filled: false
-				},
-				{
-					text: 'Слабо',
-					filled: false
-				},
-				{
-					text: 'Бива',
-					filled: false
-				},
-				{
-					text: 'Доста добре',
-					filled: false
-				},
-				{
-					text: 'Супер!',
-					filled: false
-				}
-			];
-			
-			scope.$watch('currentRating', function (){
-				//if the currentRating is set - fill the stars
-				if(angular.isDefined(scope.currentRating)){	
-					var starIndex = Math.round(scope.currentRating) - 1;
-					scope.highlightStar(starIndex, false);
-				}
-			});
-			
-			/**
-			 * Fills all stars up to the provided index and shows the selected star text
-			 * @param {int} index
-			 */
-			scope.highlightStar = function (index, showStarText){
-				
-				if(showStarText){
-					//set the correct star text
-					scope.selectedStarText = scope.stars[index].text;
-				}
-				
-				//fill/unfill the stars
-				scope.stars = scope.stars.map(function (star, currentIndex){
-					if(currentIndex <= index){
-						star.filled = true;
-					}else{
-						star.filled = false;
-					}
-					return star;
-				});
-			};
-			
-			/**
-			 * Selects the provided index and calls the callback
-			 * @param {int} index
-			 */
-			scope.selectStar = function (index){
-				scope.callback({rating: index + 1});
-			};
-
-		}
-	};
-});
-app.directive('validation', function() {
-	return {
-		restrict: 'C',
-		link: function(scope, element, attrs) {
-			element.on('focus click keypress', function (){
-				element.closest('.field-box').removeClass('error');
-			});
-		}
-	};
-});
-app.filter('age', function() {
-	return function(dateString) {
-		if (angular.isDefined(dateString)) {
-			var today = new Date();
-			var birthDate = new Date(dateString);
-			var age = today.getFullYear() - birthDate.getFullYear();
-			var m = today.getMonth() - birthDate.getMonth();
-			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-				age--;
-			}
-			return age;
-		}
-	};
-});
-app.filter('emoticons', function() {
-	return function(content) {
-		
-		var emoticonsPath = "static/img/emoticons/";
-		var emoticonsClass = "emoticon";
-
-		var emoticons = [
-			{
-				regexp: /:\)/,
-				title: ':)',
-				img: 'smile.png'
-			},
-			{
-				regexp: /:\(/,
-				title: ':(',
-				img: 'undecided.png'
-			},
-			{
-				regexp: /:D/,
-				title: ':D',
-				img: 'laugh.png'
-			},
-			{
-				regexp: /:P/,
-				title: ':P',
-				img: 'stickingout.png'
-			},
-			{
-				regexp: /8-\)/,
-				title: '8-)',
-				img: 'hot.png'
-			},
-			{
-				regexp: /\|-\(/,
-				title: '|-(',
-				img: 'ambivalent.png'
-			},
-			{
-				regexp: /:O/,
-				title: ':O',
-				img: 'largegasp.png'
-			},
-			{
-				regexp: /\(up\)/,
-				title: '(up)',
-				img: 'thumbsup.png'
-			},
-			{
-				regexp: /\(down\)/,
-				title: '(down)',
-				img: 'thumbsdown.png'
-			},
-			{
-				regexp: /:\@/,
-				title: ':@',
-				img: 'veryangry.png'
-			}
-		];
-		
-		//replace all emoticons with their images
-		emoticons.forEach(function (emoticon){
-			var regexp = new RegExp(emoticon.regexp, "ig");
-			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
-		});
-
-		return content;
-	};
-});
-app.filter('errors', function () {
-	return function (errorCode) {
-
-		var errors = {
-			invalid_login: 'Грешно име или парола',
-			empty_field: 'Празно поле',
-			invalid_int: 'Невалидно число',
-			invalid_date: 'Невалидна дата',
-			invalid_email: 'Невалиден имейл',
-			weak_password: 'Паролата не съдържа поне едно число и буква',
-			no_match: 'Полетата не съвпадат',
-			username_in_use: 'Потребителското име е заето',
-			email_in_use: 'Имейлът е зает',
-			not_in_list: 'Невалидно поле',
-			invalid_captcha: 'Captcha-та не съвпада',
-			invalid_file_extension: 'Невалиден формат',
-			exceeds_max_file_size: 'Файлът надвишава максималния размер'
-		};
-		
-		if(angular.isUndefined(errors[errorCode])){
-			//max-\d+ rule
-			if(/exceeds_characters_(\d+)/.exec(errorCode)){
-				var results = /exceeds_characters_(\d+)/.exec(errorCode);
-				return 'Полето надвишава '+results[1]+' символа';
-			}
-			
-			//min-\d+ rule
-			if(/below_characters_(\d+)/.exec(errorCode)){
-				var results = /below_characters_(\d+)/.exec(errorCode);
-				return 'Полето е под '+results[1]+' символа';
-			}
-		}
-
-		return errors[errorCode];
-	};
-});
-app.filter('ratingStars', function() {
-	return function(rating) {
-		var result = [];
-		var stars = Math.floor(rating);
-
-		//generates an array of integers based on the tab rating
-		//1 - star
-		//0 - empty star
-		for (var i = 1; i <= 5; i++) {
-			if (i <= stars) {
-				result.push(1);
-			} else {
-				result.push(0);
-			}
-		}
-
-		return result;
-	};
-});
-app.filter('tabContentType', function () {
-	return function (tabType) {
-
-		var tabContentTypes = {
-			'full song': 'Цяла песен',
-			intro: 'интро',
-			solo: 'соло'
-		};
-		
-		if(angular.isUndefined(tabContentTypes[tabType])){
-			return tabType;
-		}else{
-			return tabContentTypes[tabType];
-		}
-
-	};
-});
-app.filter('tabType', function () {
-	return function (tabType) {
-
-		var tabTypes = {
-			tab: "Tab",
-			gp: "Guitar Pro",
-			chord: "Акорди",
-			bt: "Backing Track",
-			bass: "Bass"
-		};
-		
-		if(angular.isUndefined(tabTypes[tabType])){
-			return tabType;
-		}else{
-			return tabTypes[tabType];
-		}
-
-	};
-});
-app.factory('LoadingService', function() {
-	
-	var contentElement = '#view-wrapper';
-	var loadingElement = '#content-wrapper > .loading-placeholder';
-	
-	return {
-		/**
-		 * Shows the loading placeholder
-		 */
-		showLoadingPlaceholder: function (){
-			$(loadingElement).fadeIn(0);
-		},
-		/**
-		 * Hides the loading placeholder
-		 */
-		hideLoadingPlaceholder: function (){
-			$(loadingElement).fadeOut(0);
-		},
-		/**
-		 * Shows the ng-view content
-		 */
-		showContent: function (){
-			$(contentElement).css('visibility', 'visible');
-		},
-		/**
-		 * Hides the ng-view content
-		 */
-		hideContent: function (){
-			$(contentElement).css('visibility', 'hidden');
-		},
-		/**
-		 * Hides the ng-view content and shows the loading placeholder
-		 */
-		startLoading: function() {
-			var self = this;
-			
-			self.hideContent();
-			setTimeout(function (){
-				self.showLoadingPlaceholder();
-			}, 200);
-		},
-		/**
-		 * Hides the loading placeholder and shows the ng-view content
-		 */
-		doneLoading: function() {
-			var self = this;
-			
-			setTimeout(function (){
-				self.hideLoadingPlaceholder();
-				self.showContent();
-			}, 300);
-		}
-	};
-});
-app.factory('ValidationService', function($filter) {
-	return {
-		showError: function(field, errorCode) {
-			var errorMessage = $filter('errors')(errorCode);
-			var fieldBox = $('input[name="' + field + '"], textarea[name="' + field + '"], select[name="' + field + '"]').closest('.field-box');
-			fieldBox.find('.error-msg').html(errorMessage);
-			fieldBox.addClass('error');
-		}
-	};
-});
 app.controller('addArticleController', function ($scope, $location, ArticleService, ValidationService) {
 	
 	/**
@@ -2416,456 +2912,4 @@ app.controller('userTabsController', function ($rootScope, $scope, $routeParams,
 	//get the first batch of tabs
 	$scope.getUserTabs($scope.limit, $scope.offset);
 
-});
-app.factory('ArticleCommentService', function($http) {
-	return {
-		getArticleComments: function(articleId, limit, offset) {
-			return $http({
-				method: 'POST',
-				url: 'ArticleComment/getArticleComments',
-				data: {
-					article_id: articleId,
-					limit: limit,
-					offset: offset
-				}
-			});
-		},
-		getTotalArticleComments: function(articleId) {
-			return $http({
-				method: 'POST',
-				url: 'ArticleComment/getTotalArticleComments',
-				data: {
-					article_id: articleId
-				}
-			});
-		},
-		addArticleComment: function(articleId, content) {
-			return $http({
-				method: 'POST',
-				url: 'ArticleComment/addArticleComment',
-				data: {
-					article_id: articleId,
-					content: content
-				}
-			});
-		}
-	};
-});
-app.factory('ArticleService', function($http) {
-	return {
-		getArticles: function(limit, offset) {
-			return $http({
-				method: 'POST',
-				url: 'Article/getArticles',
-				data: {
-					limit: limit,
-					offset: offset
-				}
-			});
-		},
-		getArticle: function(id) {
-			return $http({
-				method: 'POST',
-				url: 'Article/getArticle',
-				data: {
-					id: id
-				}
-			});
-		},
-		addArticle: function (formData){
-			return $http({
-				method: 'POST',
-				url: 'Article/addArticle',
-				headers: {
-					'Content-Type': undefined 
-				},
-				data: formData
-			});
-		},
-		updateArticle: function (formData){
-			return $http({
-				method: 'POST',
-				url: 'Article/updateArticle',
-				headers: {
-					'Content-Type': undefined 
-				},
-				data: formData
-			});
-		}
-	};
-});
-app.factory('BackingTrackService', function($http) {
-	return {
-		search: function(band, song) {
-			return $http({
-				method: 'POST',
-				url: 'BackingTrack/search',
-				data: {
-					band: band,
-					song: song
-				}
-			});
-		},
-		getMP3: function (link){
-			return $http({
-				method: 'POST',
-				url: 'BackingTrack/getMP3',
-				data: {
-					link: link
-				}
-			});
-		}
-	};
-});
-app.factory('MiscService', function($http) {
-	return {
-		generateCaptcha: function (){
-			return $http({
-				method: 'POST',
-				url: 'Misc/generateCaptcha'
-			});
-		},
-		contactUs: function(contactUsData) {
-			return $http({
-				method: 'POST',
-				url: 'Misc/contactUs',
-				data: contactUsData
-			});
-		}
-	};
-});
-app.factory('TabCommentService', function($http) {
-	return {
-		getTabComments: function(tabId, limit, offset) {
-			return $http({
-				method: 'POST',
-				url: 'TabComment/getTabComments',
-				data: {
-					tab_id: tabId,
-					limit: limit,
-					offset: offset
-				}
-			});
-		},
-		getTotalTabComments: function(tabId) {
-			return $http({
-				method: 'POST',
-				url: 'TabComment/getTotalTabComments',
-				data: {
-					tab_id: tabId
-				}
-			});
-		},
-		addTabComment: function(tabId, content) {
-			return $http({
-				method: 'POST',
-				url: 'TabComment/addTabComment',
-				data: {
-					tab_id: tabId,
-					content: content
-				}
-			});
-		}
-	};
-});
-app.factory('TabReportService', function($http) {
-	return {
-		reportTab: function(tabId, report) {
-			return $http({
-				method: 'POST',
-				url: 'TabReport/reportTab',
-				data: {
-					tab_id: tabId,
-					report: report
-				}
-			});
-		}
-	};
-});
-app.factory('TabService', function($http) {
-	return {
-		getTabsCount: function() {
-			return $http({
-				method: 'GET',
-				url: 'Tab/getTabsCount'
-			});
-		},
-		getMost: function(type, limit) {
-			return $http({
-				method: 'POST',
-				url: 'Tab/getMost',
-				data: {
-					type: type,
-					limit: limit
-				}
-			});
-		},
-		autocomplete: function(type, term, band) {
-			return $http({
-				method: 'POST',
-				url: 'Tab/autocomplete',
-				data: {
-					type: type,
-					term: term,
-					band: band
-				}
-			});
-		},
-		search: function(type, band, song, limit, offset) {
-			return $http({
-				method: 'POST',
-				url: 'Tab/search',
-				data: {
-					type: type,
-					band: band,
-					song: song,
-					limit: limit,
-					offset: offset
-				}
-			});
-		},
-		getSearchTotal: function (type, band, song){
-			return $http({
-				method: 'POST',
-				url: 'Tab/getSearchTotal',
-				data: {
-					type: type,
-					band: band,
-					song: song
-				}
-			});
-		},
-		getTabsByUploader: function (uploaderId, limit, offset){
-			return $http({
-				method: 'POST',
-				url: 'Tab/getTabsByUploader',
-				data: {
-					uploader_id: uploaderId,
-					limit: limit,
-					offset: offset
-				}
-			});
-		},
-		getTotalTabsByUploader: function (uploaderId){
-			return $http({
-				method: 'POST',
-				url: 'Tab/getTotalTabsByUploader',
-				data: {
-					uploader_id: uploaderId
-				}
-			});
-		},
-		getTab: function (id){
-			return $http({
-				method: 'POST',
-				url: 'Tab/getTab',
-				data: {
-					id: id
-				}
-			});
-		},
-		rateTab: function (tabId, rating){
-			return $http({
-				method: 'POST',
-				url: 'Tab/rateTab',
-				data: {
-					tab_id: tabId,
-					rating: rating
-				}
-			});
-		},
-		addTab: function (formData){
-			return $http({
-				method: 'POST',
-				url: 'Tab/addTab',
-				headers: {
-					'Content-Type': undefined 
-				},
-				data: formData
-			});
-		},
-		updateTab: function (formData){
-			return $http({
-				method: 'POST',
-				url: 'Tab/updateTab',
-				headers: {
-					'Content-Type': undefined 
-				},
-				data: formData
-			});
-		}
-	};
-});
-app.factory('UserActivationService', function($http) {
-	return {
-		activateUser: function(userId, hash) {
-			return $http({
-				method: 'POST',
-				url: 'UserActivation/activateUser',
-				data: {
-					user_id: userId,
-					hash: hash
-				}
-			});
-		}
-	};
-});
-app.factory('UserCommentService', function($http) {
-	return {
-		getUserComments: function(userId, limit, offset) {
-			return $http({
-				method: 'POST',
-				url: 'UserComment/getUserComments',
-				data: {
-					user_id: userId,
-					limit: limit,
-					offset: offset
-				}
-			});
-		},
-		getTotalUserComments: function(userId) {
-			return $http({
-				method: 'POST',
-				url: 'UserComment/getTotalUserComments',
-				data: {
-					user_id: userId
-				}
-			});
-		},
-		addUserComment: function(userId, content) {
-			return $http({
-				method: 'POST',
-				url: 'UserComment/addUserComment',
-				data: {
-					user_id: userId,
-					content: content
-				}
-			});
-		}
-	};
-});
-app.factory('UserFavouriteService', function($http) {
-	return {
-		getUserFavourites: function(userId, limit, offset) {
-			return $http({
-				method: 'POST',
-				url: 'UserFavourite/getUserFavourites',
-				data: {
-					user_id: userId,
-					limit: limit,
-					offset: offset
-				}
-			});
-		},
-		getTotalUserFavourites: function(userId) {
-			return $http({
-				method: 'POST',
-				url: 'UserFavourite/getTotalUserFavourites',
-				data: {
-					user_id: userId
-				}
-			});
-		},
-		deleteFavouriteTab: function(tabId) {
-			return $http({
-				method: 'POST',
-				url: 'UserFavourite/deleteFavouriteTab',
-				data: {
-					tab_id: tabId
-				}
-			});
-		},
-		addFavouriteTab: function(tabId) {
-			return $http({
-				method: 'POST',
-				url: 'UserFavourite/addFavouriteTab',
-				data: {
-					tab_id: tabId
-				}
-			});
-		}
-	};
-});
-app.factory('UserReportService', function($http) {
-	return {
-		reportUser: function(userId, report) {
-			return $http({
-				method: 'POST',
-				url: 'UserReport/reportUser',
-				data: {
-					user_id: userId,
-					report: report
-				}
-			});
-		}
-	};
-});
-app.factory('UserService', function($http) {
-	return {
-		login: function(loginData) {
-			return $http({
-				method: 'POST',
-				url: 'User/login',
-				data: loginData
-			});
-		},
-		logout: function (){
-			return $http({
-				method: 'POST',
-				url: 'User/logout'
-			});
-		},
-		isLoggedIn: function (){
-			return $http({
-				method: 'POST',
-				url: 'User/isLoggedIn'
-			});
-		},
-		signup: function (userData){
-			return $http({
-				method: 'POST',
-				url: 'User/signup',
-				data: userData
-			});
-		},
-		getUser: function (id){
-			return $http({
-				method: 'POST',
-				url: 'User/getUser',
-				data: {
-					id: id
-				}
-			});
-		},
-		updateUser: function (formData){
-			return $http({
-				method: 'POST',
-				url: 'User/updateUser',
-				headers: {
-					'Content-Type': undefined 
-				},
-				data: formData
-			});
-		},
-		search: function(keyword, limit, offset){
-			return $http({
-				method: 'POST',
-				url: 'User/search',
-				data: {
-					keyword: keyword,
-					limit: limit,
-					offset: offset
-				}
-			});
-		},
-		getTotalSearchResults: function(keyword){
-			return $http({
-				method: 'POST',
-				url: 'User/getTotalSearchResults',
-				data: {
-					keyword: keyword
-				}
-			});
-		}
-	};
 });

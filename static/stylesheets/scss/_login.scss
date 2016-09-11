@@ -30,6 +30,18 @@
 				margin-top: 20px;
 				width: 200px;
 			}
+			
+			&.reset-password-success{
+				img{
+					display: block;
+					margin: auto;
+				}
+				
+				.message{
+					margin-top: 20px;
+					text-align: center;
+				}
+			}
 		}
 	}
 }

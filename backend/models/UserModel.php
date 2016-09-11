@@ -37,6 +37,26 @@ class UserModel {
 	}
 	
 	/**
+	 * Resets the user password
+	 * Returns the new password if an user with that email was found - null otherwise
+	 * @param string $email
+	 * @return string
+	 */
+	public function resetPassword($email){
+		$password = substr(str_shuffle(md5(mt_rand(1, 999999).time())), 0, 10);
+		
+		$query = $this->connection->prepare('UPDATE user SET password = :password WHERE email = :email');
+		$params = array('password' => md5($password), 'email' => $email);
+		$query->execute($params);
+		
+		if($query->rowCount() === 0){
+			return null;
+		}else{
+			return $password;
+		}
+	}
+	
+	/**
 	 * Updates the last_active_date of the user
 	 * @param int $user_id
 	 * @return boolean

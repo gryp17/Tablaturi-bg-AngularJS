@@ -11,6 +11,7 @@ app.filter('errors', function () {
 			no_match: 'Полетата не съвпадат',
 			username_in_use: 'Потребителското име е заето',
 			email_in_use: 'Имейлът е зает',
+			email_not_found: 'Несъществуващ имейл',
 			not_in_list: 'Невалидно поле',
 			invalid_captcha: 'Captcha-та не съвпада',
 			invalid_file_extension: 'Невалиден формат',
