@@ -45,13 +45,12 @@
 					<span class="error-msg"></span>
 				</div>
 
-				<input class="btn btn-red" type="button" value="Изпрати" ng-click="resetPassword()"/>
-				
+				<input class="btn btn-red" type="button" value="Изпрати" ng-click="sendPasswordResetRequest()"/>
 			</div>
 		</div>
 		
 		<!-- reset password success view -->
-		<div class="modal-content" ng-show="view === 'reset-password-success'">
+		<div class="modal-content" ng-show="view === 'request-sent-success'">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title">Забравена парола:</h4>
@@ -59,8 +58,8 @@
 			<div class="modal-body reset-password-success">
 				<img src="static/img/icons/success-icon.png"/>
 				<div class="message">
-					<h4>Паролата беше сменена успешно.</h4>
-					До няколко минути ще получите имейл с новата си парола.
+					<h4>Заявката за смяна на парола беше изпратена успешно.</h4>
+					До няколко минути ще получите имейл с линк, от който да смените паролата си.
 				</div>
 			</div>
 		</div>

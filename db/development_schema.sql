@@ -157,6 +157,17 @@ create table user_activation(
 )
 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+create table password_reset(
+	ID int AUTO_INCREMENT,
+	user_ID int,
+	hash varchar(200),
+	date datetime,
+	constraint fk_password_reset_user_id foreign key(user_ID) references user(ID),
+	constraint pk_password_reset primary key(ID)
+)
+CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
 #data
 
 insert into user values(1,'plamen', '81dc9bdb52d04dc20036dbd8313ed055', 'skate_mania@abv.bg', now(), now(), 'm', '', 'admin', 1, '','','','','','',1,now());

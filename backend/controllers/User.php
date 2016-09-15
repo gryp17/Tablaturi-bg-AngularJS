@@ -17,10 +17,13 @@ class User extends Controller {
 					'login_remember_me' => 'in[1,0,]' //(1 or 0 or empty space) boolean?
 				)
 			),
-			'resetPassword' => array(
+			'updatePassword' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'forgotten_password_email' => array('required', 'valid-email')
+					'user_id' => 'required',
+					'hash' => 'required',
+					'password' => array('min-6', 'max-20', 'strong-password'),
+					'repeat_password' => 'matches[password]'
 				)
 			),
 			'logout' => array(
@@ -111,21 +114,24 @@ class User extends Controller {
 	}
 	
 	/**
-	 * Resets the user password and sends it via email
+	 * Changes the user password if the provided userId/hash combination is valid
 	 */
-	public function resetPassword() {
-		$user_model = $this->load_model('UserModel');
-		$new_password = $user_model->resetPassword($this->params['forgotten_password_email']);
+	public function updatePassword() {
+		$password_reset_model = $this->load_model('PasswordResetModel');
 		
-		//send the new password via email
-		if($new_password !== null){
-			if(Utils::sendResetPasswordEmail($this->params['forgotten_password_email'], $new_password)){
+		//check the hash
+		if($password_reset_model->checkHash($this->params['user_id'], $this->params['hash'])){
+			$user_model = $this->load_model('UserModel');
+			
+			if($user_model->updatePassword($this->params['user_id'], $this->params['password'])){
+				//delete all password reset hashes related to the user_id
+				$password_reset_model->deleteHash($this->params['user_id']);
 				$this->sendResponse(1, true);
-			} else {
-				$this->sendResponse(0, Controller::EMAIL_ERROR);
+			}else{
+				$this->sendResponse(0, Controller::DB_ERROR);
 			}
 		}else{
-			$this->sendResponse(0, array('field' => 'forgotten_password_email', 'error_code' => 'email_not_found'));
+			$this->sendResponse(0, array('field' => 'hash', 'error_code' => 'invalid_or_expired_token'));
 		}
 	}
 
@@ -185,8 +191,8 @@ class User extends Controller {
 	 */
 	private function generateActivationLink($user_id, $email){
 		$domain = Config::DOMAIN;
-		
-		$hash = md5($email) . md5(mt_rand(0, 999999));
+
+		$hash = Utils::generateRandomToken($email);
 		$link = "http://$domain/activate/$user_id/$hash";
 
 		return array(

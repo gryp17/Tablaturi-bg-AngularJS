@@ -199,3 +199,17 @@ CREATE TABLE IF NOT EXISTS `user_activation` (
   PRIMARY KEY (`ID`),
   KEY `fk_activation_user_id` (`user_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `password_reset`
+--
+
+CREATE TABLE IF NOT EXISTS `password_reset` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `user_ID` int(11) DEFAULT NULL,
+  `hash` varchar(200) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_password_reset_user_id` (`user_ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

@@ -13,47 +13,39 @@ class UserModel {
 	 * Checks if there is an user with the provided credentials
 	 * @param string $username
 	 * @param string $password
-	 * @param string $password_type
 	 * @return boolean
 	 */
-	public function checkLogin($username, $password, $password_type = null) {
-		
-		if ($password_type != 'hashed') {
-            $password = md5($password);
-        }
-		
+	public function checkLogin($username, $password) {		
 		$query = $this->connection->prepare('SELECT * FROM user WHERE username = :username AND password = :password AND activated = 1');
-		$params = array('username' => $username, 'password' => $password);
+		$params = array('username' => $username, 'password' => md5($password));
 		$query->execute($params);
 
         $result = $query->fetch(PDO::FETCH_ASSOC);
 		
         if ($result) {
 			unset($result['password']);
+			
+			//convert the dates to javascript friendly format
+			$result['birthday'] = Utils::formatDate($result['birthday']);
+			$result['last_active_date'] = Utils::formatDate($result['last_active_date']);
+			$result['register_date'] = Utils::formatDate($result['register_date']);
+			
             return $result;
 		}else{
 			return false;
 		}
 	}
-	
+		
 	/**
-	 * Resets the user password
-	 * Returns the new password if an user with that email was found - null otherwise
-	 * @param string $email
-	 * @return string
+	 * Changes the user password
+	 * @param int $user_id
+	 * @param string $new_password
+	 * @return boolean
 	 */
-	public function resetPassword($email){
-		$password = substr(str_shuffle(md5(mt_rand(1, 999999).time())), 0, 10);
-		
-		$query = $this->connection->prepare('UPDATE user SET password = :password WHERE email = :email');
-		$params = array('password' => md5($password), 'email' => $email);
-		$query->execute($params);
-		
-		if($query->rowCount() === 0){
-			return null;
-		}else{
-			return $password;
-		}
+	public function updatePassword($user_id, $new_password){
+		$query = $this->connection->prepare('UPDATE user SET password = :password WHERE ID = :user_id');
+		$params = array('password' => md5($new_password), 'user_id' => $user_id);
+		return $query->execute($params);
 	}
 	
 	/**
@@ -140,6 +132,31 @@ class UserModel {
 	public function getUser($id){
 		$query = $this->connection->prepare('SELECT * FROM user WHERE ID = :id AND activated = 1');
 		$params = array('id' => $id);
+		$query->execute($params);
+
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+		
+        if ($result) {
+			unset($result['password']);
+			
+			//convert the dates to javascript friendly format
+			$result['birthday'] = Utils::formatDate($result['birthday']);
+			$result['last_active_date'] = Utils::formatDate($result['last_active_date']);
+			$result['register_date'] = Utils::formatDate($result['register_date']);
+            return $result;
+		}else{
+			return null;
+		}
+	}
+	
+	/**
+	 * Returns the user data
+	 * @param string $email
+	 * @return array
+	 */
+	public function getUserByEmail($email){
+		$query = $this->connection->prepare('SELECT * FROM user WHERE email = :email AND activated = 1');
+		$params = array('email' => $email);
 		$query->execute($params);
 
         $result = $query->fetch(PDO::FETCH_ASSOC);

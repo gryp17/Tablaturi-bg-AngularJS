@@ -1,4 +1,4 @@
-app.controller('loginController', function($scope, $rootScope, $window, $route, UserService, ValidationService) {
+app.controller('loginController', function($scope, $rootScope, $window, $route, $location, UserService, PasswordResetService, ValidationService) {
 	$scope.loginData = {};
 	$scope.view = 'login';
 	
@@ -17,10 +17,16 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 				$rootScope.loggedInUser = result.data;
 				$('#login-modal').modal('hide');
 				
-				//if the user has logged in successfully and is on the "/forbidden" route redirect to the last route
 				if($route.current && $route.current.$$route){
-					if($route.current.$$route.originalPath === "/forbidden"){
+					//if the user has logged in successfully and is on the "/forbidden" route redirect to the last route
+					if($route.current.$$route.originalPath === '/forbidden'){
 						$window.history.back();
+					}
+					//if the user is on the "/change-password" page redirect to the home page
+					else{
+						if($route.current.$$route.originalPath === '/change-password/:userId/:hash'){
+							$location.path('/home');
+						}
 					}
 				}
 			}
@@ -38,15 +44,15 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 	/**
 	 * Resets the user password
 	 */
-	$scope.resetPassword = function() {		
-		UserService.resetPassword($scope.forgottenPasswordEmail).then(function(result) {
+	$scope.sendPasswordResetRequest = function() {		
+		PasswordResetService.sendPasswordResetRequest($scope.forgottenPasswordEmail).then(function(result) {
 			if(result.data.status === 0){
 				if(result.data.error){
 					//show the error
 					ValidationService.showError(result.data.error.field, result.data.error.error_code);
 				}
 			}else{
-				$scope.changeView('reset-password-success');
+				$scope.changeView('request-sent-success');
 			}
 		});
 	};

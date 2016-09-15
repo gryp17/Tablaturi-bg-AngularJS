@@ -19,7 +19,7 @@
 					<span class="error-msg"></span>
 				</div>
 				<div class="field-box">
-					<input class="text-control validation" type="password" placeholder="Повтори парола" name="signup_repeat_password" ng-model="userData.signup_repeat_password"/>
+					<input class="text-control validation" type="password" placeholder="Повтори паролата" name="signup_repeat_password" ng-model="userData.signup_repeat_password"/>
 					<span class="error-msg"></span>
 				</div>
 				<div class="field-box">

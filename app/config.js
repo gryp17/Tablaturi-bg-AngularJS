@@ -18,6 +18,12 @@ app.config(['$routeProvider', function($routeProvider) {
 		resolve: {
 			factory: updateAuthStatus
 		}
+	}).when('/change-password/:userId/:hash', {
+		templateUrl: 'app/views/partials/change-password.php',
+		controller: 'changePasswordController',
+		resolve: {
+			factory: updateAuthStatus
+		}
 	}).when('/articles', {
 		templateUrl: 'app/views/partials/articles.php',
 		controller: 'articlesController',

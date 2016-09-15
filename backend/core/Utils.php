@@ -203,21 +203,21 @@ class Utils {
 	}
 	
 	/**
-	 * Sends a reset password email containing the new user password
+	 * Sends a reset password email containing a link from which the user can change their password
 	 * @param string $email
-	 * @param string $new_password
+	 * @param string $link
 	 * @return boolean
 	 */
-	public static function sendResetPasswordEmail($email, $new_password){
+	public static function sendPasswordResetEmail($email, $link){
 		$from = 'admin@tablaturi-bg.com';
 		$to = $email;
-		$subject = "Таблатури-BG - сменена парола";
+		$subject = "Таблатури-BG - смяна на паролата";
 				
 		$data = array(
-			'new_password' => $new_password
+			'link' => $link
 		);
 		
-		$template = self::loadEmailTemplate('reset-password', $data);
+		$template = self::loadEmailTemplate('password-reset', $data);
 		
 		return self::sendEmail($from, $to, $subject, $template);
 	}
@@ -229,6 +229,21 @@ class Utils {
 	 */
 	public static function formatDate($input){
 		return preg_replace('/\s/', 'T', $input);
+	}
+	
+	/**
+	 * Generates a random token using the provided $input string
+	 * @param string $input
+	 * @return string
+	 */
+	public static function generateRandomToken($input){
+		$input = md5($input.time().md5(mt_rand(0, 999999)));
+		$input = str_split($input);
+		$timestamp = str_split(md5(time()));
+		$input = array_merge($input, $timestamp);
+		shuffle($input);
+		$input = implode('', $input);
+		return $input;
 	}
 	
 	/**
