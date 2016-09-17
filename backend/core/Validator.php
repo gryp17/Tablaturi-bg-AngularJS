@@ -6,7 +6,31 @@ require_once 'backend/models/UserModel.php';
  * Validator class used for user input validations
  */
 class Validator {
-
+	
+	/**
+	 * Error codes:
+	 * 
+	 * empty_field
+	 * at_least_one_field_required
+	 * invalid_int
+	 * invalid_date
+	 * exceeds_characters_(\d+)
+	 * below_characters_(\d+)
+	 * (field)_in_use
+	 * invalid_email
+	 * invalid_url
+	 * weak_password
+	 * invalid_characters
+	 * no_match
+	 * not_in_list
+	 * invalid_captcha
+	 * exceeds_max_file_size
+	 * invalid_file_extension
+	 * email_not_found
+	 * invalid_login
+	 * invalid_or_expired_token
+	 */
+	
 	/**
 	 * Checks if the passed value meets matches the rule's requirements
 	 * @param string $field
