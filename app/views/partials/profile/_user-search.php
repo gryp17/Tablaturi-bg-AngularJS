@@ -2,7 +2,7 @@
 
 	<div class="search-wrapper">
 		<div class="field-box">
-			<input class="text-control validation" enter-click=".search-wrapper .btn" type="text" name="keyword" placeholder="Ключова дума" ng-model="keyword"/>
+			<input class="text-control validation" enter-click="newSearch()" type="text" name="keyword" placeholder="Ключова дума" ng-model="keyword"/>
 			<div class="error-wrapper">
 				<span class="error-msg"></span>
 			</div>

@@ -1,10 +1,14 @@
 app.directive('enterClick', function() {
 	return {
 		restrict: 'A',
-		link: function(scope, element, attrs) {
-			element.on('keypress', function(e) {
+		scope: {
+			enterClick: '&'
+		},
+		link: function(scope, element) {
+			element.on('keyup', function(e) {				
 				if (e.which === 13){
-					$(attrs.enterClick).click();					
+					scope.enterClick();
+					scope.$apply();
 				}
 			});
 		}

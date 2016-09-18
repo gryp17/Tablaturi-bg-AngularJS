@@ -19,12 +19,12 @@
 				</div>
 
 				<div class="field-box">
-					<input class="text-control validation" type="text" name="band" placeholder="Група" autocomplete="band" band="autocompleteBand" ng-model="autocompleteBand"/>
+					<input class="text-control validation" type="text" name="band" placeholder="Група" autocomplete="band" band="{{autocompleteBand}}" ng-model="autocompleteBand"/>
 					<span class="error-msg"></span>
 				</div>
 				
 				<div class="field-box">
-					<input class="text-control validation" type="text" name="song" placeholder="Песен" autocomplete="song" band="autocompleteBand"/>
+					<input class="text-control validation" type="text" name="song" placeholder="Песен" autocomplete="song" band="{{autocompleteBand}}" ng-model="autocompleteSong"/>
 					<span class="error-msg"></span>
 				</div>
 

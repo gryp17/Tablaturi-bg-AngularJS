@@ -1120,13 +1120,13 @@ app.controller('layoutController', function($scope, $rootScope, $location, $rout
 	 * Callback function that is called when the search button is pressed
 	 * It redirects to the search page
 	 */
-	$scope.search = function (){
+	$scope.redirectSearch = function (){
 		var url = '/search/'; 
 		var regexp = '\/search\/';
 		var type = $scope.searchParams.type;
 		var band = $scope.searchParams.band || '';
 		var song = $scope.searchParams.song || '';
-		
+				
 		if(band !== '' || song !== ''){
 			//if the search type is bt (backing tracks) redirect to the backing tracks search page
 			if(type === 'bt'){
@@ -1656,27 +1656,37 @@ app.directive('article', function($filter, $location) {
 		}
 	};
 });
-app.directive('autocomplete', function(TabService) {
+app.directive('autocomplete', function($parse, TabService) {
 	return {
 		restrict: 'A',
-		scope: {
-		    autocomplete: '@', //band | song
-			band: '=' //optional parameter that is used when autocompleting the 'song' field 
-		},
+		require: 'ngModel',
 		link: function(scope, element, attrs) {
+			//attrs.autocomplete: band|song
+			//atrtrs.band: optional parameter that is used when autocompleting the 'song' field 
+			
+			//model accesor used to modify the ng-model manually
+			var modelAccessor = $parse(attrs.ngModel);
+			
 			element.autocomplete({
 				minLength: 1,
 				delay: 300,
 				source: function(request, responseCallback) {
-					TabService.autocomplete(scope.autocomplete, request.term, scope.band).then(function (result){
+					TabService.autocomplete(attrs.autocomplete, request.term, attrs.band).then(function (result){
 						//pass the data to the jqueryUI responseCallback function
 						responseCallback(result.data.data);
 					});
+				},
+				//on autocomplete item focus - change the ng-model value manually via magic 
+				focus: function (event, ui){
+					scope.$apply(function (scope) {
+                        modelAccessor.assign(scope, ui.item.value);
+                    });
 				}
 			});
 		}
 	};
 });
+   
 app.directive('clickableEmoticon', function() {
 	return {
 		restrict: 'C',
@@ -1707,10 +1717,14 @@ app.directive('comment', function() {
 app.directive('enterClick', function() {
 	return {
 		restrict: 'A',
-		link: function(scope, element, attrs) {
-			element.on('keypress', function(e) {
+		scope: {
+			enterClick: '&'
+		},
+		link: function(scope, element) {
+			element.on('keyup', function(e) {				
 				if (e.which === 13){
-					$(attrs.enterClick).click();					
+					scope.enterClick();
+					scope.$apply();
 				}
 			});
 		}

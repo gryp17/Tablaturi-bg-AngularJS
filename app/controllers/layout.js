@@ -37,13 +37,13 @@ app.controller('layoutController', function($scope, $rootScope, $location, $rout
 	 * Callback function that is called when the search button is pressed
 	 * It redirects to the search page
 	 */
-	$scope.search = function (){
+	$scope.redirectSearch = function (){
 		var url = '/search/'; 
 		var regexp = '\/search\/';
 		var type = $scope.searchParams.type;
 		var band = $scope.searchParams.band || '';
 		var song = $scope.searchParams.song || '';
-		
+				
 		if(band !== '' || song !== ''){
 			//if the search type is bt (backing tracks) redirect to the backing tracks search page
 			if(type === 'bt'){
