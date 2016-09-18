@@ -238,7 +238,7 @@ class Tab extends Controller {
 
 			$this->sendFileResponse('text/plain', $filename, $header.$tab['content']);
 		}else{
-			$this->sendResponse(0, Controller::NOT_FOUND);
+			$this->sendResponse(0, ErrorCodes::NOT_FOUND);
 		}
 	}
 	
@@ -263,7 +263,7 @@ class Tab extends Controller {
 
 			$this->sendFileResponse('application/octet-stream', $filename, $content);
 		}else{
-			$this->sendResponse(0, Controller::NOT_FOUND);
+			$this->sendResponse(0, ErrorCodes::NOT_FOUND);
 		}
 	}
 	
@@ -301,7 +301,7 @@ class Tab extends Controller {
 			$user_model->giveReputation($_SESSION['user']['ID'], 10);
 			$this->sendResponse(1, array('tab_id' => $tab_id));
 		}else{
-			$this->sendResponse(0, Controller::DB_ERROR);
+			$this->sendResponse(0, ErrorCodes::DB_ERROR);
 		}
 	}
 	
@@ -318,14 +318,14 @@ class Tab extends Controller {
 		
 		//check if there is such tab
 		if($old_tab_data === null){
-			$this->sendResponse(0, Controller::NOT_FOUND);
+			$this->sendResponse(0, ErrorCodes::NOT_FOUND);
 		}else{
 			$filename = $old_tab_data['path'];
 		}
 		
 		//check if the tab is uploaded  by the user trying to update it
 		if($old_tab_data['uploader_ID'] !== $_SESSION['user']['ID']){
-			$this->sendResponse(0, Controller::ACCESS_DENIED);
+			$this->sendResponse(0, ErrorCodes::ACCESS_DENIED);
 		}
 		
 		//guitar pro tab
@@ -366,7 +366,7 @@ class Tab extends Controller {
 		if($tab_model->updateTab($this->params['tab_id'], $this->params['type'], $this->params['band'], $this->params['song'], $this->params['tab_type'], $content, $filename, $this->params['tunning'], $this->params['difficulty'])){
 			$this->sendResponse(1, true);
 		}else{
-			$this->sendResponse(1, Controller::DB_ERROR);
+			$this->sendResponse(1, ErrorCodes::DB_ERROR);
 		}
 	}
 	

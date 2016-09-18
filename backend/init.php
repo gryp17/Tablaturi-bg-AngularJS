@@ -1,6 +1,7 @@
 <?php
 
 require_once 'config/Config.php';
+require_once 'core/ErrorCodes.php';
 require_once 'core/App.php';
 require_once 'core/Validator.php';
 require_once 'core/Controller.php';

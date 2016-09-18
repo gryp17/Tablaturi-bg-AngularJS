@@ -70,7 +70,7 @@ class BackingTrack extends Controller {
 			$data = $results[1];
 			$this->sendResponse(1, $data);
 		} else {
-			$this->sendResponse(0, Controller::NOT_FOUND);
+			$this->sendResponse(0, ErrorCodes::NOT_FOUND);
 		}
 	}
 

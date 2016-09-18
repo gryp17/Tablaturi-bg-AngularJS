@@ -6,11 +6,6 @@ class Controller {
 	const PUBLIC_ACCESS = 1;
 	const LOGGED_IN_USER = 2;
 	const ADMIN_USER = 3;
-	const INVALID_REQUEST = 'invalid_request';
-	const ACCESS_DENIED = 'access_denied';
-	const NOT_FOUND = 'not_found';
-	const DB_ERROR = 'query_failed';
-	const EMAIL_ERROR = 'send_email_failed';
 
 	public $endpoints;
 	public $params;
@@ -53,7 +48,7 @@ class Controller {
 		}
 
 		if (!isset($params['url'])) {
-			$this->sendResponse(0, self::INVALID_REQUEST);
+			$this->sendResponse(0, ErrorCodes::INVALID_REQUEST);
 		}
 
 		return $params;
@@ -86,7 +81,7 @@ class Controller {
 				}
 			}
 		} else {
-			$this->sendResponse(0, self::NOT_FOUND);
+			$this->sendResponse(0, ErrorCodes::NOT_FOUND);
 		}
 	}
 
@@ -120,9 +115,9 @@ class Controller {
 					break;
 			}
 		}
-
+		
 		if (!$result) {
-			$this->sendResponse(0, self::ACCESS_DENIED);
+			$this->sendResponse(0, ErrorCodes::ACCESS_DENIED);
 		}
 	}
 

@@ -83,7 +83,7 @@ class UserComment extends Controller {
 			
 			$this->sendResponse(1, $result);
 		} else {
-			$this->sendResponse(0, Controller::DB_ERROR);
+			$this->sendResponse(0, ErrorCodes::DB_ERROR);
 		}
 	}
 

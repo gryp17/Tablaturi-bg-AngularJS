@@ -6,31 +6,7 @@ require_once 'backend/models/UserModel.php';
  * Validator class used for user input validations
  */
 class Validator {
-	
-	/**
-	 * Error codes:
-	 * 
-	 * empty_field
-	 * at_least_one_field_required
-	 * invalid_int
-	 * invalid_date
-	 * exceeds_characters_(\d+)
-	 * below_characters_(\d+)
-	 * (field)_in_use
-	 * invalid_email
-	 * invalid_url
-	 * weak_password
-	 * invalid_characters
-	 * no_match
-	 * not_in_list
-	 * invalid_captcha
-	 * exceeds_max_file_size
-	 * invalid_file_extension
-	 * email_not_found
-	 * invalid_login
-	 * invalid_or_expired_token
-	 */
-	
+		
 	/**
 	 * Checks if the passed value meets matches the rule's requirements
 	 * @param string $field
@@ -49,7 +25,7 @@ class Validator {
 			#also checks for submitted files
 			if ($rule == 'required') {
 				if ((!isset($value) || strlen($value) === 0) && (!isset($_FILES[$field]) || $_FILES[$field]['error'] === 4)) {
-					return array('field' => $field, 'error_code' => 'empty_field');
+					return array('field' => $field, 'error_code' => ErrorCodes::EMPTY_FIELD);
 				}
 			}
 			#optional rule (used together with other rules. if the field is not set all other rules will be skipped. however if the field is set the rest of the validations will be run)
@@ -74,39 +50,39 @@ class Validator {
 				}
 
 				if (!$valid) {
-					return array('field' => $field, 'error_code' => 'at_least_one_field_required');
+					return array('field' => $field, 'error_code' => ErrorCodes::AT_LEAST_ONE_FIELD_REQUIRED);
 				}
 			}
 			#integer rule
 			elseif ($rule == 'int') {
 				if (!ctype_digit($value)) {
-					return array('field' => $field, 'error_code' => 'invalid_int');
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_INT);
 				}
 			}
 			#date rule
 			elseif ($rule == 'date') {
 				if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
-					return array('field' => $field, 'error_code' => 'invalid_date');
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_DATE);
 				}
 			}
 			#datetime rule
 			elseif ($rule == 'datetime') {
 				if (!preg_match('/^\d{4}-\d{2}-\d{2}\s\d{2}\:\d{2}:\d{2}$/', $value)) {
-					return array('field' => $field, 'error_code' => 'invalid_date');
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_DATE);
 				}
 			}
 			#max-characters rule
 			elseif (preg_match('/max-(\d+)/i', $rule, $matches)) {
 				$max_length = $matches[1];
 				if (strlen($value) > $max_length) {
-					return array('field' => $field, 'error_code' => 'exceeds_characters_' . $max_length);
+					return array('field' => $field, 'error_code' => ErrorCodes::EXCEEDS_CHARACTERS_ . $max_length);
 				}
 			}
 			#min-characters rule
 			elseif (preg_match('/min-(\d+)/i', $rule, $matches)) {
 				$min_length = $matches[1];
 				if (strlen($value) < $min_length) {
-					return array('field' => $field, 'error_code' => 'below_characters_' . $min_length);
+					return array('field' => $field, 'error_code' => ErrorCodes::BELOW_CHARACTERS_ . $min_length);
 				}
 			}
 			#unique[] field rule
@@ -117,29 +93,29 @@ class Validator {
 				$result = $user_model->isUnique($unique_field, $value);
 
 				if ($user_model->isUnique($unique_field, $value) === false) {
-					return array('field' => $field, 'error_code' => $unique_field . '_in_use');
+					return array('field' => $field, 'error_code' => $unique_field . ErrorCodes::_IN_USE);
 				}
 			}
 			#valid-email rule
 			elseif ($rule == 'valid-email') {
 				if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-					return array('field' => $field, 'error_code' => 'invalid_email');
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_EMAIL);
 				}
 			} elseif ($rule == 'valid-url') {
 				if (!filter_var($value, FILTER_VALIDATE_URL)) {
-					return array('field' => $field, 'error_code' => 'invalid_url');
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_URL);
 				}
 			}
 			#strong-passworld rule (at least 6 characters with 1 or more numbers)
 			elseif ($rule == 'strong-password') {
 				if (strlen($value) < 6 || preg_match('/\d+/', $value) == false || preg_match('/[a-z]+/i', $value) == false) {
-					return array('field' => $field, 'error_code' => 'weak_password');
+					return array('field' => $field, 'error_code' => ErrorCodes::WEAK_PASSWORD);
 				}
 			}
 			#valid-characters rule (can contain only letters, digits, underscores and dashes)
 			elseif ($rule == 'valid-characters') {
 				if (preg_match('/[^\w\d_-]/', $value)) {
-					return array('field' => $field, 'error_code' => 'invalid_characters');
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_CHARACTERS);
 				}
 			}
 			#checks if the two fields are equal
@@ -147,7 +123,7 @@ class Validator {
 				$match_field = $matches[1];
 
 				if ((isset($params[$match_field]) && $value !== $params[$match_field])) {
-					return array('field' => $field, 'error_code' => 'no_match');
+					return array('field' => $field, 'error_code' => ErrorCodes::NO_MATCH);
 				}
 			}
 			#in[] rule
@@ -156,13 +132,13 @@ class Validator {
 				$list = explode(',', $list);
 
 				if (in_array($value, $list) === false) {
-					return array('field' => $field, 'error_code' => 'not_in_list');
+					return array('field' => $field, 'error_code' => ErrorCodes::NOT_IN_LIST);
 				}
 			}
 			#matches-captcha rule
 			elseif ($rule == 'matches-captcha') {
 				if (strtolower($value) !== strtolower($_SESSION['captcha']['code'])) {
-					return array('field' => $field, 'error_code' => 'invalid_captcha');
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_CAPTCHA);
 				}
 			}
 			#max-file-size-kilobytes rule (checks if the uploaded file exceeds the max file size specified in kilobytes)
@@ -171,7 +147,7 @@ class Validator {
 				
 				$post_size = (int) $_SERVER['CONTENT_LENGTH'];
 				if ((($post_size / 1024) > $max_size + 800) || ($_FILES[$field]['size'] / 1024) > $max_size) {
-					return array('field' => $field, 'error_code' => 'exceeds_max_file_size');
+					return array('field' => $field, 'error_code' => ErrorCodes::EXCEEDS_MAX_FILE_SIZE);
 				}
 				
 			}
@@ -184,7 +160,7 @@ class Validator {
 				$extension = strtolower($matches[1]);
 				
 				if (in_array($extension, $list) === false) {
-					return array('field' => $field, 'error_code' => 'invalid_file_extension');
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_FILE_EXTENSION);
 				}
 				
 			}

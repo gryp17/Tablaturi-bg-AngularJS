@@ -48,11 +48,11 @@ class PasswordReset extends Controller {
 			if(Utils::sendPasswordResetEmail($this->params['forgotten_password_email'], $password_reset['link'])){
 				$this->sendResponse(1, true);
 			} else {
-				$this->sendResponse(0, Controller::EMAIL_ERROR);
+				$this->sendResponse(0, ErrorCodes::EMAIL_ERROR);
 			}
 			
 		}else{
-			$this->sendResponse(0, array('field' => 'forgotten_password_email', 'error_code' => 'email_not_found'));
+			$this->sendResponse(0, array('field' => 'forgotten_password_email', 'error_code' => ErrorCodes::EMAIL_NOT_FOUND));
 		}
 	}
 	

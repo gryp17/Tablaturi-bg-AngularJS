@@ -50,7 +50,7 @@ class Misc extends Controller {
 		if (Utils::sendContactUsEmail($this->params['username'], $this->params['email'], $this->params['message'])) {
 			$this->sendResponse(1, true);
 		} else {
-			$this->sendResponse(0, Controller::EMAIL_ERROR);
+			$this->sendResponse(0, ErrorCodes::EMAIL_ERROR);
 		}
 	}
 

@@ -96,7 +96,7 @@ class User extends Controller {
 		$data = $user_model->checkLogin($this->params['login_username'], $this->params['login_password']);
 
 		if ($data === false) {
-			$this->sendResponse(0, array('field' => 'login_password', 'error_code' => 'invalid_login'));
+			$this->sendResponse(0, array('field' => 'login_password', 'error_code' => ErrorCodes::INVALID_LOGIN));
 		} else {
 
 			//if the remember me option is set to true - keep the user session for 90 days	
@@ -128,10 +128,10 @@ class User extends Controller {
 				$password_reset_model->deleteHash($this->params['user_id']);
 				$this->sendResponse(1, true);
 			}else{
-				$this->sendResponse(0, Controller::DB_ERROR);
+				$this->sendResponse(0, ErrorCodes::DB_ERROR);
 			}
 		}else{
-			$this->sendResponse(0, array('field' => 'hash', 'error_code' => 'invalid_or_expired_token'));
+			$this->sendResponse(0, array('field' => 'hash', 'error_code' => ErrorCodes::INVALID_OR_EXPIRED_TOKEN));
 		}
 	}
 
@@ -176,10 +176,10 @@ class User extends Controller {
 			if (Utils::sendConfirmationEmail($this->params['signup_username'], $this->params['signup_email'], $activation['link'])) {
 				$this->sendResponse(1, true);
 			} else {
-				$this->sendResponse(0, Controller::EMAIL_ERROR);
+				$this->sendResponse(0, ErrorCodes::EMAIL_ERROR);
 			}
 		}else{
-			$this->sendResponse(0, Controller::DB_ERROR);
+			$this->sendResponse(0, ErrorCodes::DB_ERROR);
 		}
 	}
 	
