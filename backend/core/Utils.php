@@ -58,7 +58,7 @@ class Utils {
 	public static function sendContactUsEmail($name, $email, $message) {
 		$from = $email;
 		$to = 'admin@tablaturi-bg.com';
-		$subject = 'Таблатури-BG запитване';
+		$subject = 'Tablaturi-bg запитване';
 
 		$message = htmlspecialchars($message);
 		
@@ -68,7 +68,7 @@ class Utils {
 			'message' => $message
 		);
 		
-		self::loadEmailTemplate('contact-us', $data);
+		$template = self::loadEmailTemplate('contact-us', $data);
 
 		return self::sendEmail($from, $to, $subject, $template);
 	}
@@ -82,7 +82,7 @@ class Utils {
 	public static function sendConfirmationEmail($name, $email, $link){
 		$from = 'admin@tablaturi-bg.com';
 		$to = $email;
-		$subject = 'Таблатури-BG активация';
+		$subject = 'Tablaturi-bg активация на потребител';
 		
 		$data = array(
 			'name' => $name,
@@ -104,7 +104,7 @@ class Utils {
 	public static function sendUserReportEmail($reported_user, $reporter_user, $report){
 		$from = 'reports@tablaturi-bg.com';
 		$to = 'admin@tablaturi-bg.com';
-		$subject = "Таблатури-BG user report";
+		$subject = "Tablaturi-bg user report";
 		
 		$report = htmlspecialchars($report);
 		
@@ -131,7 +131,7 @@ class Utils {
 	public static function sendTabReportEmail($reported_tab, $reporter_user, $report){
 		$from = 'reports@tablaturi-bg.com';
 		$to = 'admin@tablaturi-bg.com';
-		$subject = "Таблатури-BG tab report";
+		$subject = "Tablaturi-bg tab report";
 		
 		$report = htmlspecialchars($report);
 		
@@ -159,7 +159,7 @@ class Utils {
 	public static function sendProfileCommentEmail($recipient, $author, $content){
 		$from = 'admin@tablaturi-bg.com';
 		$to = $recipient['email'];
-		$subject = "Таблатури-BG - нов коментар на профила Ви";
+		$subject = "Tablaturi-bg - нов коментар на профила Ви";
 		
 		$content = htmlspecialchars($content);
 		
@@ -186,7 +186,7 @@ class Utils {
 	public static function sendTabCommentEmail($tab, $recipient, $author, $content){
 		$from = 'admin@tablaturi-bg.com';
 		$to = $recipient['email'];
-		$subject = "Таблатури-BG - нов коментар на таблатура";
+		$subject = "Tablaturi-bg - нов коментар на Ваша таблатура";
 		
 		$content = htmlspecialchars($content);
 		
@@ -211,7 +211,7 @@ class Utils {
 	public static function sendPasswordResetEmail($email, $link){
 		$from = 'admin@tablaturi-bg.com';
 		$to = $email;
-		$subject = "Таблатури-BG - смяна на паролата";
+		$subject = "Tablaturi-bg - смяна на парола";
 				
 		$data = array(
 			'link' => $link

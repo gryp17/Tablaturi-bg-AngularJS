@@ -193,7 +193,7 @@ class User extends Controller {
 		$domain = Config::DOMAIN;
 
 		$hash = Utils::generateRandomToken($email);
-		$link = "http://$domain/activate/$user_id/$hash";
+		$link = "http://$domain/#/activate/$user_id/$hash";
 
 		return array(
 			'link' => $link,
