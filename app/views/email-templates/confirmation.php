@@ -9,7 +9,7 @@
 			<br><br>
 			Линкът ще бъде активен само в следващите 24 часа.
 			<br>
-			В случай на проблем при активацията се <a href="http://<?php echo Config::DOMAIN ?>/#/contact-us" style="color: #F84241;">свържете с нас</a>.
+			В случай на проблем при активацията се <a href="http://<?php echo Config::DOMAIN ?>/contact-us" style="color: #F84241;">свържете с нас</a>.
 		</div>
 		<?php include 'common/footer.php' ?>
     </body>

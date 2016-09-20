@@ -3,13 +3,13 @@ app.factory('MiscService', function($http) {
 		generateCaptcha: function (){
 			return $http({
 				method: 'POST',
-				url: 'Misc/generateCaptcha'
+				url: 'API/Misc/generateCaptcha'
 			});
 		},
 		contactUs: function(contactUsData) {
 			return $http({
 				method: 'POST',
-				url: 'Misc/contactUs',
+				url: 'API/Misc/contactUs',
 				data: contactUsData
 			});
 		}

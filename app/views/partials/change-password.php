@@ -21,7 +21,7 @@
 		<p>
 			Линкът е невалиден или е изтекъл.
 			<br/>
-			При проблем със смяната на паролата се <a class="red-link" href="#contact-us">свържете с нас</a>.
+			При проблем със смяната на паролата се <a class="red-link" href="contact-us">свържете с нас</a>.
 		</p>
 	</div>
 	<!-- change password success -->

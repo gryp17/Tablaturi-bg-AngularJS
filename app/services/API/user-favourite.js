@@ -3,7 +3,7 @@ app.factory('UserFavouriteService', function($http) {
 		getUserFavourites: function(userId, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'UserFavourite/getUserFavourites',
+				url: 'API/UserFavourite/getUserFavourites',
 				data: {
 					user_id: userId,
 					limit: limit,
@@ -14,7 +14,7 @@ app.factory('UserFavouriteService', function($http) {
 		getTotalUserFavourites: function(userId) {
 			return $http({
 				method: 'POST',
-				url: 'UserFavourite/getTotalUserFavourites',
+				url: 'API/UserFavourite/getTotalUserFavourites',
 				data: {
 					user_id: userId
 				}
@@ -23,7 +23,7 @@ app.factory('UserFavouriteService', function($http) {
 		deleteFavouriteTab: function(tabId) {
 			return $http({
 				method: 'POST',
-				url: 'UserFavourite/deleteFavouriteTab',
+				url: 'API/UserFavourite/deleteFavouriteTab',
 				data: {
 					tab_id: tabId
 				}
@@ -32,7 +32,7 @@ app.factory('UserFavouriteService', function($http) {
 		addFavouriteTab: function(tabId) {
 			return $http({
 				method: 'POST',
-				url: 'UserFavourite/addFavouriteTab',
+				url: 'API/UserFavourite/addFavouriteTab',
 				data: {
 					tab_id: tabId
 				}

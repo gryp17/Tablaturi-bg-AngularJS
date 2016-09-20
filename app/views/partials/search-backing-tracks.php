@@ -24,7 +24,7 @@
 			<tbody>
 				<tr ng-repeat="track in backingTracks">
 					<td>
-						<a class="red-link" href="#search-backing-tracks/bt/{{track.band}}//" ng-attr-title="Всичко от {{track.band}}">
+						<a class="red-link" href="search-backing-tracks/bt/{{track.band}}//" ng-attr-title="Всичко от {{track.band}}">
 							{{track.band}}
 						</a>
 					</td>

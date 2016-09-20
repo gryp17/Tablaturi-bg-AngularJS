@@ -3,7 +3,7 @@ app.factory('PasswordResetService', function($http) {
 		sendPasswordResetRequest: function (email){
 			return $http({
 				method: 'POST',
-				url: 'PasswordReset/sendPasswordResetRequest',
+				url: 'API/PasswordReset/sendPasswordResetRequest',
 				data: {
 					forgotten_password_email: email
 				}
@@ -12,7 +12,7 @@ app.factory('PasswordResetService', function($http) {
 		checkPasswordResetHash: function (userId, hash){
 			return $http({
 				method: 'POST',
-				url: 'PasswordReset/checkPasswordResetHash',
+				url: 'API/PasswordReset/checkPasswordResetHash',
 				data: {
 					user_id: userId,
 					hash: hash

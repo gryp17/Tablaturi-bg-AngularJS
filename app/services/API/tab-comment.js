@@ -3,7 +3,7 @@ app.factory('TabCommentService', function($http) {
 		getTabComments: function(tabId, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'TabComment/getTabComments',
+				url: 'API/TabComment/getTabComments',
 				data: {
 					tab_id: tabId,
 					limit: limit,
@@ -14,7 +14,7 @@ app.factory('TabCommentService', function($http) {
 		getTotalTabComments: function(tabId) {
 			return $http({
 				method: 'POST',
-				url: 'TabComment/getTotalTabComments',
+				url: 'API/TabComment/getTotalTabComments',
 				data: {
 					tab_id: tabId
 				}
@@ -23,7 +23,7 @@ app.factory('TabCommentService', function($http) {
 		addTabComment: function(tabId, content) {
 			return $http({
 				method: 'POST',
-				url: 'TabComment/addTabComment',
+				url: 'API/TabComment/addTabComment',
 				data: {
 					tab_id: tabId,
 					content: content

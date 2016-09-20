@@ -3,7 +3,7 @@ app.factory('ArticleCommentService', function($http) {
 		getArticleComments: function(articleId, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'ArticleComment/getArticleComments',
+				url: 'API/ArticleComment/getArticleComments',
 				data: {
 					article_id: articleId,
 					limit: limit,
@@ -14,7 +14,7 @@ app.factory('ArticleCommentService', function($http) {
 		getTotalArticleComments: function(articleId) {
 			return $http({
 				method: 'POST',
-				url: 'ArticleComment/getTotalArticleComments',
+				url: 'API/ArticleComment/getTotalArticleComments',
 				data: {
 					article_id: articleId
 				}
@@ -23,7 +23,7 @@ app.factory('ArticleCommentService', function($http) {
 		addArticleComment: function(articleId, content) {
 			return $http({
 				method: 'POST',
-				url: 'ArticleComment/addArticleComment',
+				url: 'API/ArticleComment/addArticleComment',
 				data: {
 					article_id: articleId,
 					content: content

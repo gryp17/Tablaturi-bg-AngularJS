@@ -3,40 +3,40 @@ app.factory('UserService', function($http) {
 		login: function(loginData) {
 			return $http({
 				method: 'POST',
-				url: 'User/login',
+				url: 'API/User/login',
 				data: loginData
 			});
 		},
 		updatePassword: function(formData) {
 			return $http({
 				method: 'POST',
-				url: 'User/updatePassword',
+				url: 'API/User/updatePassword',
 				data: formData
 			});
 		},
 		logout: function (){
 			return $http({
 				method: 'POST',
-				url: 'User/logout'
+				url: 'API/User/logout'
 			});
 		},
 		isLoggedIn: function (){
 			return $http({
 				method: 'POST',
-				url: 'User/isLoggedIn'
+				url: 'API/User/isLoggedIn'
 			});
 		},
 		signup: function (userData){
 			return $http({
 				method: 'POST',
-				url: 'User/signup',
+				url: 'API/User/signup',
 				data: userData
 			});
 		},
 		getUser: function (id){
 			return $http({
 				method: 'POST',
-				url: 'User/getUser',
+				url: 'API/User/getUser',
 				data: {
 					id: id
 				}
@@ -45,7 +45,7 @@ app.factory('UserService', function($http) {
 		updateUser: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'User/updateUser',
+				url: 'API/User/updateUser',
 				headers: {
 					'Content-Type': undefined 
 				},
@@ -55,7 +55,7 @@ app.factory('UserService', function($http) {
 		search: function(keyword, limit, offset){
 			return $http({
 				method: 'POST',
-				url: 'User/search',
+				url: 'API/User/search',
 				data: {
 					keyword: keyword,
 					limit: limit,
@@ -66,7 +66,7 @@ app.factory('UserService', function($http) {
 		getTotalSearchResults: function(keyword){
 			return $http({
 				method: 'POST',
-				url: 'User/getTotalSearchResults',
+				url: 'API/User/getTotalSearchResults',
 				data: {
 					keyword: keyword
 				}

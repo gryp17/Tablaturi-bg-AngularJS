@@ -3,7 +3,7 @@ app.factory('ArticleService', function($http) {
 		getArticles: function(limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'Article/getArticles',
+				url: 'API/Article/getArticles',
 				data: {
 					limit: limit,
 					offset: offset
@@ -13,7 +13,7 @@ app.factory('ArticleService', function($http) {
 		getArticle: function(id) {
 			return $http({
 				method: 'POST',
-				url: 'Article/getArticle',
+				url: 'API/Article/getArticle',
 				data: {
 					id: id
 				}
@@ -22,7 +22,7 @@ app.factory('ArticleService', function($http) {
 		addArticle: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'Article/addArticle',
+				url: 'API/Article/addArticle',
 				headers: {
 					'Content-Type': undefined 
 				},
@@ -32,7 +32,7 @@ app.factory('ArticleService', function($http) {
 		updateArticle: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'Article/updateArticle',
+				url: 'API/Article/updateArticle',
 				headers: {
 					'Content-Type': undefined 
 				},

@@ -14,15 +14,15 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 			$location.path('/not-found');
 		}else{
 			$scope.tab = results[0].data.data;
-		
-			//tab share link
-			$scope.$parent.shareLink = '#/tab/'+$scope.tab.ID;
-		
+				
 			//tab comments
 			$scope.tabComments = results[1].data.data;
 
 			//total number of tab comments
 			$scope.totalTabComments = results[2].data.data;
+			
+			//render the share buttons manually
+			stButtons.makeButtons();
 			
 			LoadingService.doneLoading();
 		}

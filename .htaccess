@@ -3,7 +3,15 @@ RewriteEngine On
 
 #change this when moving to another domain
 RewriteBase /Tablaturi-bg-angular
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
 
-RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+#redirect all API calls to the index.php
+RewriteRule ^API/(.*)$ index.php?url=$1 [QSA,NC,L]
+
+#social networks share hack (redirect all social network bots to the generateOpenGraphTags controller)
+RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit/[0-9]|Twitterbot|Pinterest|Google.*snippet)
+RewriteRule (article|tab)/(.+)$ index.php?url=Social/generateOpenGraphTags&type=$1&id=$2 [QSA,NC,L]
+
+#let angular do it's thing
+RewriteCond %{REQUEST_FILENAME} !-f      
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [NC,L]

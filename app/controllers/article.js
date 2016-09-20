@@ -53,16 +53,16 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 			$scope.rawArticle = angular.copy(result[0].data.data);
 			$scope.article = result[0].data.data;
 			$scope.article.content = $scope.sanitizeArticleContent($scope.article.content);
-			
-			//article share link
-			$scope.$parent.shareLink = '#/article/'+$scope.article.ID;
-			
+						
 			//article comments
 			$scope.articleComments = result[1].data.data;
 			
 			//total number of article comments
 			$scope.totalArticleComments = result[2].data.data;
 
+			//render the share buttons manually
+			stButtons.makeButtons();
+			
 			LoadingService.doneLoading();
 		}
 	});

@@ -20,12 +20,12 @@
 			<tbody>
 				<tr ng-repeat="tab in userFavourites">
 					<td>
-						<a class="red-link" href="#search/all/{{tab.band}}//" ng-attr-title="Всичко от {{tab.band}}">
+						<a class="red-link" href="search/all/{{tab.band}}//" ng-attr-title="Всичко от {{tab.band}}">
 							{{tab.band}}
 						</a>
 					</td>
 					<td>
-						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+						<a class="red-link" href="tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
 							{{tab.song}}
 							<span ng-show="tab.tab_type !== 'full song'">({{tab.tab_type | tabContentType}})</span>
 						</a>

@@ -3,7 +3,7 @@ app.factory('BackingTrackService', function($http) {
 		search: function(band, song) {
 			return $http({
 				method: 'POST',
-				url: 'BackingTrack/search',
+				url: 'API/BackingTrack/search',
 				data: {
 					band: band,
 					song: song
@@ -13,7 +13,7 @@ app.factory('BackingTrackService', function($http) {
 		getMP3: function (link){
 			return $http({
 				method: 'POST',
-				url: 'BackingTrack/getMP3',
+				url: 'API/BackingTrack/getMP3',
 				data: {
 					link: link
 				}

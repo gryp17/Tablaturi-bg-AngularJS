@@ -3,6 +3,6 @@
 	<div class="text">
 		<h1>404</h1>
 		<span>Упс! Търсената страница не може<br/> да бъде намерена.</span>
-		<a href="#/home" class="btn btn-red">Върни ме в началото</a>
+		<a href="home" class="btn btn-red">Върни ме в началото</a>
 	</div>
 </div>

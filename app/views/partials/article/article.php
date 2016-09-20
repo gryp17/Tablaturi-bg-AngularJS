@@ -5,7 +5,7 @@
 		<div class="views" ng-bind="'Преглеждания: ' +article.views"></div>
 		<div class="author">
 			от 
-			<a class="red-link" title="Виж профила на {{article.username}}" href="#profile/{{article.author_ID}}" ng-bind="article.username"></a>
+			<a class="red-link" title="Виж профила на {{article.username}}" href="profile/{{article.author_ID}}" ng-bind="article.username"></a>
 		</div>
 		<div class="clearfix"></div>
 		<button class="btn btn-red edit-article" ng-if="loggedInUser.type === 'admin'" ng-click="openEditModal()">
@@ -19,10 +19,10 @@
 		<div class="share">
 			Сподели в: 
 			<div class="red-line"></div>
-			<span class='st_fblike_hcount' displayText='Facebook Like'></span>
-			<span class='st_facebook_hcount' displayText='Facebook'></span>
-			<span class='st_twitter_hcount' displayText='Tweet'></span>
-			<span class='st_googleplus_hcount' displayText='Google +'></span>
+			<span class="st_fblike_hcount" displayText="Facebook Like"></span>
+			<span class="st_facebook_hcount" displayText="Facebook"></span>
+			<span class="st_twitter_hcount" displayText="Tweet"></span>
+			<span class="st_googleplus_hcount" displayText="Google +"></span>
 		</div>
 	</div>
 
@@ -63,6 +63,6 @@
 		</div>
 	</div>
 
-	<?php include './_edit-article.php' ?>
+	<?php include '_edit-article.php' ?>
 	
 </div>

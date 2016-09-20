@@ -5,10 +5,10 @@
 	</div>
 	<div class="content">
 		<h3>
-			<a href="#article/{{articleData.ID}}" ng-attr-title="{{articleData.title}}">{{articleData.title}}</a>
+			<a href="article/{{articleData.ID}}" ng-attr-title="{{articleData.title}}">{{articleData.title}}</a>
 		</h3>
 		<div class="short" ng-bind-html="articleData.content">
 		</div>
-		<a href="#article/{{articleData.ID}}" class="btn btn-red" type="button">Прочети още</a>
+		<a href="article/{{articleData.ID}}" class="btn btn-red" type="button">Прочети още</a>
 	</div>
 </article>

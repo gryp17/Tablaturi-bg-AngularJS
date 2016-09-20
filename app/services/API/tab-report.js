@@ -3,7 +3,7 @@ app.factory('TabReportService', function($http) {
 		reportTab: function(tabId, report) {
 			return $http({
 				method: 'POST',
-				url: 'TabReport/reportTab',
+				url: 'API/TabReport/reportTab',
 				data: {
 					tab_id: tabId,
 					report: report

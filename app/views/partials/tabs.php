@@ -20,7 +20,7 @@
 			<tbody>
 				<tr ng-repeat="tab in mostPopular">
 					<td>
-						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+						<a class="red-link" href="tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
 							{{tab.band}} - {{tab.song}}
 						</a>
 					</td>
@@ -51,7 +51,7 @@
 			<tbody>
 				<tr ng-repeat="tab in mostLiked">
 					<td>
-						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+						<a class="red-link" href="tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
 							{{tab.band}} - {{tab.song}}
 						</a>
 					</td>
@@ -85,7 +85,7 @@
 			<tbody>
 				<tr ng-repeat="tab in mostRecent">
 					<td>
-						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+						<a class="red-link" href="tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
 							{{tab.band}} - {{tab.song}}
 						</a>
 					</td>
@@ -116,7 +116,7 @@
 			<tbody>
 				<tr ng-repeat="tab in mostCommented">
 					<td>
-						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+						<a class="red-link" href="tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
 							{{tab.band}} - {{tab.song}}
 						</a>
 					</td>

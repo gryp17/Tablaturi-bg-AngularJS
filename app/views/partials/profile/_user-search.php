@@ -34,7 +34,7 @@
 			<tbody>
 				<tr ng-repeat="user in users">
 					<td>
-						<a class="red-link" href="#profile/{{user.ID}}">
+						<a class="red-link" href="profile/{{user.ID}}">
 							{{user.username}}
 						</a>
 					</td>

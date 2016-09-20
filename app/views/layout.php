@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html ng-app="tablaturi-bg" ng-controller="layoutController">
     <head>
-        <title>Tablaturi-BG</title>
+        <title>Tablaturi-bg - Най-големият български сайт за таблатури</title>
+		
+		<base href="/Tablaturi-bg-angular/" />
+		
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano" >
-        <meta property="og:url" content="http://tablaturi-bg.com/{{shareLink}}"/>
-        <meta property="og:site_name" content="Tablaturi-bg.com" />
-		
+				
 		<meta name="description" content="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи." /> 
         <meta name="dc.language" CONTENT="BG">
         <meta name="dc.source" CONTENT="http://www.tablaturi-bg.com">
@@ -129,6 +130,6 @@
 
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
 		<!-- End Cookie Consent plugin -->
-	
+			
 	</body>
 </html>

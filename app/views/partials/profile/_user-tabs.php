@@ -21,12 +21,12 @@
 			<tbody>
 				<tr ng-repeat="tab in userTabs">
 					<td>
-						<a class="red-link" href="#search/all/{{tab.band}}//" ng-attr-title="Всичко от {{tab.band}}">
+						<a class="red-link" href="search/all/{{tab.band}}//" ng-attr-title="Всичко от {{tab.band}}">
 							{{tab.band}}
 						</a>
 					</td>
 					<td>
-						<a class="red-link" href="#tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
+						<a class="red-link" href="tab/{{tab.ID}}" ng-attr-title="{{tab.band}} - {{tab.song}}">
 							{{tab.song}}
 							<span ng-show="tab.tab_type !== 'full song'">({{tab.tab_type | tabContentType}})</span>
 						</a>
@@ -37,7 +37,7 @@
 							  ng-class="{'star': star === 1, 'empty-star': star === 0}"></span>
 					</td>
 					<td ng-if="loggedInUser.ID === profileId" class="edit-tab">
-						<a href="#edit-tab/{{tab.ID}}">
+						<a href="edit-tab/{{tab.ID}}">
 							<span title="Редактирай таблатурата" class="glyphicon glyphicon-pencil"></span>
 						</a>
 					</td>

@@ -3,13 +3,13 @@ app.factory('TabService', function($http) {
 		getTabsCount: function() {
 			return $http({
 				method: 'GET',
-				url: 'Tab/getTabsCount'
+				url: 'API/Tab/getTabsCount'
 			});
 		},
 		getMost: function(type, limit) {
 			return $http({
 				method: 'POST',
-				url: 'Tab/getMost',
+				url: 'API/Tab/getMost',
 				data: {
 					type: type,
 					limit: limit
@@ -19,7 +19,7 @@ app.factory('TabService', function($http) {
 		autocomplete: function(type, term, band) {
 			return $http({
 				method: 'POST',
-				url: 'Tab/autocomplete',
+				url: 'API/Tab/autocomplete',
 				data: {
 					type: type,
 					term: term,
@@ -30,7 +30,7 @@ app.factory('TabService', function($http) {
 		search: function(type, band, song, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'Tab/search',
+				url: 'API/Tab/search',
 				data: {
 					type: type,
 					band: band,
@@ -43,7 +43,7 @@ app.factory('TabService', function($http) {
 		getSearchTotal: function (type, band, song){
 			return $http({
 				method: 'POST',
-				url: 'Tab/getSearchTotal',
+				url: 'API/Tab/getSearchTotal',
 				data: {
 					type: type,
 					band: band,
@@ -54,7 +54,7 @@ app.factory('TabService', function($http) {
 		getTabsByUploader: function (uploaderId, limit, offset){
 			return $http({
 				method: 'POST',
-				url: 'Tab/getTabsByUploader',
+				url: 'API/Tab/getTabsByUploader',
 				data: {
 					uploader_id: uploaderId,
 					limit: limit,
@@ -65,7 +65,7 @@ app.factory('TabService', function($http) {
 		getTotalTabsByUploader: function (uploaderId){
 			return $http({
 				method: 'POST',
-				url: 'Tab/getTotalTabsByUploader',
+				url: 'API/Tab/getTotalTabsByUploader',
 				data: {
 					uploader_id: uploaderId
 				}
@@ -74,7 +74,7 @@ app.factory('TabService', function($http) {
 		getTab: function (id){
 			return $http({
 				method: 'POST',
-				url: 'Tab/getTab',
+				url: 'API/Tab/getTab',
 				data: {
 					id: id
 				}
@@ -83,7 +83,7 @@ app.factory('TabService', function($http) {
 		rateTab: function (tabId, rating){
 			return $http({
 				method: 'POST',
-				url: 'Tab/rateTab',
+				url: 'API/Tab/rateTab',
 				data: {
 					tab_id: tabId,
 					rating: rating
@@ -93,7 +93,7 @@ app.factory('TabService', function($http) {
 		addTab: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'Tab/addTab',
+				url: 'API/Tab/addTab',
 				headers: {
 					'Content-Type': undefined 
 				},
@@ -103,7 +103,7 @@ app.factory('TabService', function($http) {
 		updateTab: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'Tab/updateTab',
+				url: 'API/Tab/updateTab',
 				headers: {
 					'Content-Type': undefined 
 				},

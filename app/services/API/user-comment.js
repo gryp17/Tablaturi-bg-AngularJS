@@ -3,7 +3,7 @@ app.factory('UserCommentService', function($http) {
 		getUserComments: function(userId, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'UserComment/getUserComments',
+				url: 'API/UserComment/getUserComments',
 				data: {
 					user_id: userId,
 					limit: limit,
@@ -14,7 +14,7 @@ app.factory('UserCommentService', function($http) {
 		getTotalUserComments: function(userId) {
 			return $http({
 				method: 'POST',
-				url: 'UserComment/getTotalUserComments',
+				url: 'API/UserComment/getTotalUserComments',
 				data: {
 					user_id: userId
 				}
@@ -23,7 +23,7 @@ app.factory('UserCommentService', function($http) {
 		addUserComment: function(userId, content) {
 			return $http({
 				method: 'POST',
-				url: 'UserComment/addUserComment',
+				url: 'API/UserComment/addUserComment',
 				data: {
 					user_id: userId,
 					content: content

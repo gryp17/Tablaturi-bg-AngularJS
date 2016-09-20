@@ -548,6 +548,9 @@ app.config(['$routeProvider', function($routeProvider) {
 	});
 }]);
 
+app.config(['$locationProvider', function($locationProvider) {
+	$locationProvider.html5Mode(true);
+}]);
 
 /**
  * Checks if the user is logged in.
@@ -757,16 +760,16 @@ app.controller('articleController', function($scope, $rootScope, $routeParams, $
 			$scope.rawArticle = angular.copy(result[0].data.data);
 			$scope.article = result[0].data.data;
 			$scope.article.content = $scope.sanitizeArticleContent($scope.article.content);
-			
-			//article share link
-			$scope.$parent.shareLink = '#/article/'+$scope.article.ID;
-			
+						
 			//article comments
 			$scope.articleComments = result[1].data.data;
 			
 			//total number of article comments
 			$scope.totalArticleComments = result[2].data.data;
 
+			//render the share buttons manually
+			stButtons.makeButtons();
+			
 			LoadingService.doneLoading();
 		}
 	});
@@ -1406,15 +1409,15 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 			$location.path('/not-found');
 		}else{
 			$scope.tab = results[0].data.data;
-		
-			//tab share link
-			$scope.$parent.shareLink = '#/tab/'+$scope.tab.ID;
-		
+				
 			//tab comments
 			$scope.tabComments = results[1].data.data;
 
 			//total number of tab comments
 			$scope.totalTabComments = results[2].data.data;
+			
+			//render the share buttons manually
+			stButtons.makeButtons();
 			
 			LoadingService.doneLoading();
 		}
@@ -2528,7 +2531,7 @@ app.factory('ArticleCommentService', function($http) {
 		getArticleComments: function(articleId, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'ArticleComment/getArticleComments',
+				url: 'API/ArticleComment/getArticleComments',
 				data: {
 					article_id: articleId,
 					limit: limit,
@@ -2539,7 +2542,7 @@ app.factory('ArticleCommentService', function($http) {
 		getTotalArticleComments: function(articleId) {
 			return $http({
 				method: 'POST',
-				url: 'ArticleComment/getTotalArticleComments',
+				url: 'API/ArticleComment/getTotalArticleComments',
 				data: {
 					article_id: articleId
 				}
@@ -2548,7 +2551,7 @@ app.factory('ArticleCommentService', function($http) {
 		addArticleComment: function(articleId, content) {
 			return $http({
 				method: 'POST',
-				url: 'ArticleComment/addArticleComment',
+				url: 'API/ArticleComment/addArticleComment',
 				data: {
 					article_id: articleId,
 					content: content
@@ -2562,7 +2565,7 @@ app.factory('ArticleService', function($http) {
 		getArticles: function(limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'Article/getArticles',
+				url: 'API/Article/getArticles',
 				data: {
 					limit: limit,
 					offset: offset
@@ -2572,7 +2575,7 @@ app.factory('ArticleService', function($http) {
 		getArticle: function(id) {
 			return $http({
 				method: 'POST',
-				url: 'Article/getArticle',
+				url: 'API/Article/getArticle',
 				data: {
 					id: id
 				}
@@ -2581,7 +2584,7 @@ app.factory('ArticleService', function($http) {
 		addArticle: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'Article/addArticle',
+				url: 'API/Article/addArticle',
 				headers: {
 					'Content-Type': undefined 
 				},
@@ -2591,7 +2594,7 @@ app.factory('ArticleService', function($http) {
 		updateArticle: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'Article/updateArticle',
+				url: 'API/Article/updateArticle',
 				headers: {
 					'Content-Type': undefined 
 				},
@@ -2605,7 +2608,7 @@ app.factory('BackingTrackService', function($http) {
 		search: function(band, song) {
 			return $http({
 				method: 'POST',
-				url: 'BackingTrack/search',
+				url: 'API/BackingTrack/search',
 				data: {
 					band: band,
 					song: song
@@ -2615,7 +2618,7 @@ app.factory('BackingTrackService', function($http) {
 		getMP3: function (link){
 			return $http({
 				method: 'POST',
-				url: 'BackingTrack/getMP3',
+				url: 'API/BackingTrack/getMP3',
 				data: {
 					link: link
 				}
@@ -2628,13 +2631,13 @@ app.factory('MiscService', function($http) {
 		generateCaptcha: function (){
 			return $http({
 				method: 'POST',
-				url: 'Misc/generateCaptcha'
+				url: 'API/Misc/generateCaptcha'
 			});
 		},
 		contactUs: function(contactUsData) {
 			return $http({
 				method: 'POST',
-				url: 'Misc/contactUs',
+				url: 'API/Misc/contactUs',
 				data: contactUsData
 			});
 		}
@@ -2645,7 +2648,7 @@ app.factory('PasswordResetService', function($http) {
 		sendPasswordResetRequest: function (email){
 			return $http({
 				method: 'POST',
-				url: 'PasswordReset/sendPasswordResetRequest',
+				url: 'API/PasswordReset/sendPasswordResetRequest',
 				data: {
 					forgotten_password_email: email
 				}
@@ -2654,7 +2657,7 @@ app.factory('PasswordResetService', function($http) {
 		checkPasswordResetHash: function (userId, hash){
 			return $http({
 				method: 'POST',
-				url: 'PasswordReset/checkPasswordResetHash',
+				url: 'API/PasswordReset/checkPasswordResetHash',
 				data: {
 					user_id: userId,
 					hash: hash
@@ -2668,7 +2671,7 @@ app.factory('TabCommentService', function($http) {
 		getTabComments: function(tabId, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'TabComment/getTabComments',
+				url: 'API/TabComment/getTabComments',
 				data: {
 					tab_id: tabId,
 					limit: limit,
@@ -2679,7 +2682,7 @@ app.factory('TabCommentService', function($http) {
 		getTotalTabComments: function(tabId) {
 			return $http({
 				method: 'POST',
-				url: 'TabComment/getTotalTabComments',
+				url: 'API/TabComment/getTotalTabComments',
 				data: {
 					tab_id: tabId
 				}
@@ -2688,7 +2691,7 @@ app.factory('TabCommentService', function($http) {
 		addTabComment: function(tabId, content) {
 			return $http({
 				method: 'POST',
-				url: 'TabComment/addTabComment',
+				url: 'API/TabComment/addTabComment',
 				data: {
 					tab_id: tabId,
 					content: content
@@ -2702,7 +2705,7 @@ app.factory('TabReportService', function($http) {
 		reportTab: function(tabId, report) {
 			return $http({
 				method: 'POST',
-				url: 'TabReport/reportTab',
+				url: 'API/TabReport/reportTab',
 				data: {
 					tab_id: tabId,
 					report: report
@@ -2716,13 +2719,13 @@ app.factory('TabService', function($http) {
 		getTabsCount: function() {
 			return $http({
 				method: 'GET',
-				url: 'Tab/getTabsCount'
+				url: 'API/Tab/getTabsCount'
 			});
 		},
 		getMost: function(type, limit) {
 			return $http({
 				method: 'POST',
-				url: 'Tab/getMost',
+				url: 'API/Tab/getMost',
 				data: {
 					type: type,
 					limit: limit
@@ -2732,7 +2735,7 @@ app.factory('TabService', function($http) {
 		autocomplete: function(type, term, band) {
 			return $http({
 				method: 'POST',
-				url: 'Tab/autocomplete',
+				url: 'API/Tab/autocomplete',
 				data: {
 					type: type,
 					term: term,
@@ -2743,7 +2746,7 @@ app.factory('TabService', function($http) {
 		search: function(type, band, song, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'Tab/search',
+				url: 'API/Tab/search',
 				data: {
 					type: type,
 					band: band,
@@ -2756,7 +2759,7 @@ app.factory('TabService', function($http) {
 		getSearchTotal: function (type, band, song){
 			return $http({
 				method: 'POST',
-				url: 'Tab/getSearchTotal',
+				url: 'API/Tab/getSearchTotal',
 				data: {
 					type: type,
 					band: band,
@@ -2767,7 +2770,7 @@ app.factory('TabService', function($http) {
 		getTabsByUploader: function (uploaderId, limit, offset){
 			return $http({
 				method: 'POST',
-				url: 'Tab/getTabsByUploader',
+				url: 'API/Tab/getTabsByUploader',
 				data: {
 					uploader_id: uploaderId,
 					limit: limit,
@@ -2778,7 +2781,7 @@ app.factory('TabService', function($http) {
 		getTotalTabsByUploader: function (uploaderId){
 			return $http({
 				method: 'POST',
-				url: 'Tab/getTotalTabsByUploader',
+				url: 'API/Tab/getTotalTabsByUploader',
 				data: {
 					uploader_id: uploaderId
 				}
@@ -2787,7 +2790,7 @@ app.factory('TabService', function($http) {
 		getTab: function (id){
 			return $http({
 				method: 'POST',
-				url: 'Tab/getTab',
+				url: 'API/Tab/getTab',
 				data: {
 					id: id
 				}
@@ -2796,7 +2799,7 @@ app.factory('TabService', function($http) {
 		rateTab: function (tabId, rating){
 			return $http({
 				method: 'POST',
-				url: 'Tab/rateTab',
+				url: 'API/Tab/rateTab',
 				data: {
 					tab_id: tabId,
 					rating: rating
@@ -2806,7 +2809,7 @@ app.factory('TabService', function($http) {
 		addTab: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'Tab/addTab',
+				url: 'API/Tab/addTab',
 				headers: {
 					'Content-Type': undefined 
 				},
@@ -2816,7 +2819,7 @@ app.factory('TabService', function($http) {
 		updateTab: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'Tab/updateTab',
+				url: 'API/Tab/updateTab',
 				headers: {
 					'Content-Type': undefined 
 				},
@@ -2830,7 +2833,7 @@ app.factory('UserActivationService', function($http) {
 		activateUser: function(userId, hash) {
 			return $http({
 				method: 'POST',
-				url: 'UserActivation/activateUser',
+				url: 'API/UserActivation/activateUser',
 				data: {
 					user_id: userId,
 					hash: hash
@@ -2844,7 +2847,7 @@ app.factory('UserCommentService', function($http) {
 		getUserComments: function(userId, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'UserComment/getUserComments',
+				url: 'API/UserComment/getUserComments',
 				data: {
 					user_id: userId,
 					limit: limit,
@@ -2855,7 +2858,7 @@ app.factory('UserCommentService', function($http) {
 		getTotalUserComments: function(userId) {
 			return $http({
 				method: 'POST',
-				url: 'UserComment/getTotalUserComments',
+				url: 'API/UserComment/getTotalUserComments',
 				data: {
 					user_id: userId
 				}
@@ -2864,7 +2867,7 @@ app.factory('UserCommentService', function($http) {
 		addUserComment: function(userId, content) {
 			return $http({
 				method: 'POST',
-				url: 'UserComment/addUserComment',
+				url: 'API/UserComment/addUserComment',
 				data: {
 					user_id: userId,
 					content: content
@@ -2878,7 +2881,7 @@ app.factory('UserFavouriteService', function($http) {
 		getUserFavourites: function(userId, limit, offset) {
 			return $http({
 				method: 'POST',
-				url: 'UserFavourite/getUserFavourites',
+				url: 'API/UserFavourite/getUserFavourites',
 				data: {
 					user_id: userId,
 					limit: limit,
@@ -2889,7 +2892,7 @@ app.factory('UserFavouriteService', function($http) {
 		getTotalUserFavourites: function(userId) {
 			return $http({
 				method: 'POST',
-				url: 'UserFavourite/getTotalUserFavourites',
+				url: 'API/UserFavourite/getTotalUserFavourites',
 				data: {
 					user_id: userId
 				}
@@ -2898,7 +2901,7 @@ app.factory('UserFavouriteService', function($http) {
 		deleteFavouriteTab: function(tabId) {
 			return $http({
 				method: 'POST',
-				url: 'UserFavourite/deleteFavouriteTab',
+				url: 'API/UserFavourite/deleteFavouriteTab',
 				data: {
 					tab_id: tabId
 				}
@@ -2907,7 +2910,7 @@ app.factory('UserFavouriteService', function($http) {
 		addFavouriteTab: function(tabId) {
 			return $http({
 				method: 'POST',
-				url: 'UserFavourite/addFavouriteTab',
+				url: 'API/UserFavourite/addFavouriteTab',
 				data: {
 					tab_id: tabId
 				}
@@ -2920,7 +2923,7 @@ app.factory('UserReportService', function($http) {
 		reportUser: function(userId, report) {
 			return $http({
 				method: 'POST',
-				url: 'UserReport/reportUser',
+				url: 'API/UserReport/reportUser',
 				data: {
 					user_id: userId,
 					report: report
@@ -2934,40 +2937,40 @@ app.factory('UserService', function($http) {
 		login: function(loginData) {
 			return $http({
 				method: 'POST',
-				url: 'User/login',
+				url: 'API/User/login',
 				data: loginData
 			});
 		},
 		updatePassword: function(formData) {
 			return $http({
 				method: 'POST',
-				url: 'User/updatePassword',
+				url: 'API/User/updatePassword',
 				data: formData
 			});
 		},
 		logout: function (){
 			return $http({
 				method: 'POST',
-				url: 'User/logout'
+				url: 'API/User/logout'
 			});
 		},
 		isLoggedIn: function (){
 			return $http({
 				method: 'POST',
-				url: 'User/isLoggedIn'
+				url: 'API/User/isLoggedIn'
 			});
 		},
 		signup: function (userData){
 			return $http({
 				method: 'POST',
-				url: 'User/signup',
+				url: 'API/User/signup',
 				data: userData
 			});
 		},
 		getUser: function (id){
 			return $http({
 				method: 'POST',
-				url: 'User/getUser',
+				url: 'API/User/getUser',
 				data: {
 					id: id
 				}
@@ -2976,7 +2979,7 @@ app.factory('UserService', function($http) {
 		updateUser: function (formData){
 			return $http({
 				method: 'POST',
-				url: 'User/updateUser',
+				url: 'API/User/updateUser',
 				headers: {
 					'Content-Type': undefined 
 				},
@@ -2986,7 +2989,7 @@ app.factory('UserService', function($http) {
 		search: function(keyword, limit, offset){
 			return $http({
 				method: 'POST',
-				url: 'User/search',
+				url: 'API/User/search',
 				data: {
 					keyword: keyword,
 					limit: limit,
@@ -2997,7 +3000,7 @@ app.factory('UserService', function($http) {
 		getTotalSearchResults: function(keyword){
 			return $http({
 				method: 'POST',
-				url: 'User/getTotalSearchResults',
+				url: 'API/User/getTotalSearchResults',
 				data: {
 					keyword: keyword
 				}

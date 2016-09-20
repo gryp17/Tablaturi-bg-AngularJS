@@ -4,7 +4,7 @@
 		<!-- left -->
 		<div class="left">
 			<div class="title">
-				<a class="red-link" href="#search/all/{{tab.band}}//" ng-attr-title="Всичко от {{tab.band}}">
+				<a class="red-link" href="search/all/{{tab.band}}//" ng-attr-title="Всичко от {{tab.band}}">
 					{{tab.band}}
 				</a>
 				- {{tab.song}}
@@ -18,7 +18,7 @@
 					обновена от 
 				</span>
 
-				<a class="red-link" href="#profile/{{tab.uploader_ID}}">{{tab.username}}</a>
+				<a class="red-link" href="profile/{{tab.uploader_ID}}">{{tab.username}}</a>
 				на 
 				{{tab.modified_date | date: "yyyy-MM-dd 'в' HH:mm"}}
 
@@ -67,7 +67,7 @@
 			</div>
 						
 			<!-- edit tab button -->
-			<a ng-if="loggedInUser.ID === tab.uploader_ID" class="btn btn-red" href="#edit-tab/{{tab.ID}}">
+			<a ng-if="loggedInUser.ID === tab.uploader_ID" class="btn btn-red" href="edit-tab/{{tab.ID}}">
 				<img src="static/img/icons/pencil.png" /> Редактирай
 			</a>
 			
@@ -92,13 +92,13 @@
 		
 		<!-- guitar pro tab -->
 		<div ng-if="tab.type === 'gp'" class="gp">
-			<a class="btn btn-red download-button" href="Tab/getGpTabFile?tab_id={{tab.ID}}" target="_blank">
+			<a class="btn btn-red download-button" href="API/Tab/getGpTabFile?tab_id={{tab.ID}}" target="_blank">
 				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 				Свали Guitar Pro таблатурата
 			</a>
 			
 			<div class="hint">
-				Таблатурата е тип Guitar Pro. За повече информация за програмата кликнете <a class="red-link" href="#guitar-pro">тук</a>.
+				Таблатурата е тип Guitar Pro. За повече информация за програмата кликнете <a class="red-link" href="guitar-pro">тук</a>.
 			</div>
 		</div>
 		
@@ -117,7 +117,7 @@
 			<pre ng-bind="tab.content"></pre>
 			
 			<div class="download-text-wrapper">
-				<a class="btn btn-red download-button" href="Tab/getTextTabFile?tab_id={{tab.ID}}" target="_blank">
+				<a class="btn btn-red download-button" href="API/Tab/getTextTabFile?tab_id={{tab.ID}}" target="_blank">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 					Свали като .txt
 				</a>

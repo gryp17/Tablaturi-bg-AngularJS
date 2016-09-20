@@ -120,6 +120,9 @@ app.config(['$routeProvider', function($routeProvider) {
 	});
 }]);
 
+app.config(['$locationProvider', function($locationProvider) {
+	$locationProvider.html5Mode(true);
+}]);
 
 /**
  * Checks if the user is logged in.
