@@ -1,7 +1,7 @@
 Options -MultiViews
 RewriteEngine On
 
-#change this when moving to another domain
+#change the base when moving to another domain
 RewriteBase /Tablaturi-bg-angular
 
 #redirect all API calls to the index.php
@@ -10,6 +10,10 @@ RewriteRule ^API/(.*)$ index.php?url=$1 [QSA,NC,L]
 #social networks share hack (redirect all social network bots to the generateOpenGraphTags controller)
 RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit/[0-9]|Twitterbot|Pinterest|Google.*snippet)
 RewriteRule (article|tab)/(.+)$ index.php?url=Social/generateOpenGraphTags&type=$1&id=$2 [QSA,NC,L]
+
+#redirect all old article/tab links to the new article/tab links (/tab.php?id=1234 into /tab/1234)
+RewriteCond %{THE_REQUEST} (article|tab)\.php\?id=(\d+)
+RewriteRule ^.+$ %1/%2? [L,R=301]
 
 #let angular do it's thing
 RewriteCond %{REQUEST_FILENAME} !-f      
