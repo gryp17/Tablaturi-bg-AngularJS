@@ -64,7 +64,7 @@ class Social extends Controller {
 			}
 
 			$open_graph_data['description'] = htmlentities(strip_tags($data['content']));
-			$open_graph_data['image'] = 'http://'.Config::DOMAIN.'/static/img/logo-tablaturi-bg.png';
+			$open_graph_data['image'] = 'http://'.Config::DOMAIN.'/static/img/logo-tablaturi-bg-small.png';
 		}
 		
 		$this->load_view('social/open-graph', $open_graph_data);

@@ -17,7 +17,8 @@
         <meta name="dc.description" CONTENT="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи.">
         <meta name="geo.placename" content="Bulgaria" />
 		
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600" rel="stylesheet" type="text/css">
+		<link href="static/img/favicon.ico" rel="icon"/>
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600" rel="stylesheet" type="text/css"/>
         <link href="static/stylesheets/css/style.min.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="ng-cloak" ng-cloak>
