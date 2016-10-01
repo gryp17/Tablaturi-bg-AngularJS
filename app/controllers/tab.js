@@ -144,6 +144,9 @@ app.controller('tabController', function ($scope, $rootScope, $routeParams, $loc
 				reason: 'invalid tab/format',
 				other: ''
 			};
+			
+			//hide all errors in the report tab modal
+			ValidationService.hideError('#report-tab-modal');
 
 			$scope.$watch('reportedTab', function() {
 				if($scope.reportedTab.reason !== 'other') {

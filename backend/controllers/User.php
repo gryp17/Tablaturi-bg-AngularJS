@@ -163,7 +163,15 @@ class User extends Controller {
 	 */
 	public function signup() {
 		$user_model = $this->load_model('UserModel');
-		$user_id = $user_model->insertUser($this->params['signup_username'], $this->params['signup_password'], $this->params['signup_email'], $this->params['signup_birthday'], $this->params['signup_gender'], null, 'user');
+		
+		//set the correct default avatar
+		if($this->params['signup_gender'] === 'M'){
+			$avatar = 'default-m.jpg';
+		}else{
+			$avatar = 'default-f.jpg';
+		}
+		
+		$user_id = $user_model->insertUser($this->params['signup_username'], $this->params['signup_password'], $this->params['signup_email'], $this->params['signup_birthday'], $this->params['signup_gender'], $avatar, 'user');
 
 		if($user_id !== null){
 			$activation = $this->generateActivationLink($user_id, $this->params['signup_email']);

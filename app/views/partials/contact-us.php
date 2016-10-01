@@ -1,6 +1,7 @@
 <div class="contact-us">
-	<h2 class="title">Свържете се с нас:</h2>
 	<div ng-show="!sendEmailSuccess">
+		<h2 class="title">Свържете се с нас:</h2>
+		
 		<div class="content">За всякакви препоръки, похвали, оплаквания или въпроси можете да се свържете с нас чрез формуляра.</div>
 		<div class="contact-form">
 			<div class="field-box">
@@ -33,7 +34,7 @@
 		<img class="success" src="static/img/icons/success-icon.png"/>
 		<div class="success-msg">
 			<h4>Съобщението беше изпратено успешно.</h4>
-			Ще се свържем с Вас на посочения email възможно най-скоро.
+			Ще се свържем с Вас на посочения имейл възможно най-скоро.
 		</div>
 	</div>
 	

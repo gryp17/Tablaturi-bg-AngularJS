@@ -22,9 +22,9 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 					if($route.current.$$route.originalPath === '/forbidden'){
 						$window.history.back();
 					}
-					//if the user is on the "/change-password" page redirect to the home page
+					//if the user is on the "/change-password" or "/activate" page redirect to the home page
 					else{
-						if($route.current.$$route.originalPath === '/change-password/:userId/:hash'){
+						if($route.current.$$route.originalPath === '/change-password/:userId/:hash' || $route.current.$$route.originalPath === '/activate/:userId/:hash'){
 							$location.path('/home');
 						}
 					}
@@ -58,9 +58,14 @@ app.controller('loginController', function($scope, $rootScope, $window, $route, 
 	};
 	
 	/**
-	 * Before opening the modal reset the visible view and the forgotten password input
+	 * Before opening the modal reset the loginData, all errors and the visible view and the forgotten password input
 	 */
 	$('#login-modal').on('show.bs.modal', function() {
+		$scope.loginData = {};
+		
+		//hide all errors in the login modal
+		ValidationService.hideError('#login-modal');
+		
 		$scope.view = 'login';
 		$scope.forgottenPasswordEmail = '';
 		$scope.$apply();

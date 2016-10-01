@@ -32,7 +32,6 @@ app.controller('signupController', function($scope, UserService, MiscService, Va
 
 	/**
 	 * Resets the form
-	 * @returns {undefined}
 	 */
 	$scope.resetForm = function() {
 		$scope.userData = {
@@ -41,8 +40,8 @@ app.controller('signupController', function($scope, UserService, MiscService, Va
 		
 		$scope.signupSuccess = false;
 		
-		$('#signup-modal .field-box').removeClass('error');
-		$('#signup-modal .error-msg').html('');
+		//hide all errors in the signup modal
+		ValidationService.hideError('#signup-modal');
 	};
 	
 	/**

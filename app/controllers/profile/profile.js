@@ -80,6 +80,9 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 			other: ''
 		};
 		
+		//hide all errors in the report profile modal
+		ValidationService.hideError('#report-profile-modal');
+		
 		$scope.$watch('reportedUser', function() {
 			if($scope.reportedUser.reason !== 'other') {
 				$scope.reportedUser.other = '';
@@ -123,9 +126,9 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 	};
 	
 	/**
-	 * Opens the edit profile modal
+	 * Resets the form
 	 */
-	$scope.openEditModal = function() {
+	$scope.resetEditForm = function() {
 		$scope.editData = {
 			password: '',
 			repeat_password: '',
@@ -138,9 +141,18 @@ app.controller('profileController', function ($rootScope, $scope, $routeParams, 
 			favourite_bands: $scope.userData.favourite_bands
 		};
 		
-		$('#edit-profile-modal').modal('show');
+		//hide all errors in the edit profile modal
+		ValidationService.hideError('#edit-profile-modal');
 	};
 	
+	/**
+	 * Opens the edit profile modal
+	 */
+	$scope.openEditModal = function() {
+		$scope.resetEditForm();
+		$('#edit-profile-modal').modal('show');
+	};
+		
 	/**
 	 * Callback function that is called when the save button is pressed
 	 */
