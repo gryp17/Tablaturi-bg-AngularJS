@@ -176,6 +176,32 @@ class Utils {
 	}
 	
 	/**
+	 * Sends an article comment notification to the article author
+	 * @param array $recipient
+	 * @param array $author
+	 * @param string $content
+	 * @return boolean
+	 */
+	public static function sendArticleCommentEmail($recipient, $author, $article_id, $content){
+		$from = 'admin@tablaturi-bg.com';
+		$to = $recipient['email'];
+		$subject = "Tablaturi-bg - нов коментар на Ваша новина";
+		
+		$content = htmlspecialchars($content);
+		
+		$data = array(
+			'author_username' => $author['username'],
+			'author_id' => $author['ID'],
+			'article_id' => $article_id,
+			'content' => $content
+		);
+		
+		$template = self::loadEmailTemplate('article-comment-notification', $data);
+		
+		return self::sendEmail($from, $to, $subject, $template);
+	}
+	
+	/**
 	 * Sends a tab comment notification to the user
 	 * @param array $tab
 	 * @param array $recipient
