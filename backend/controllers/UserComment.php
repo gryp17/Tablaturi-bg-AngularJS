@@ -74,7 +74,7 @@ class UserComment extends Controller {
 			$user_model->giveReputation($_SESSION['user']['ID'], 1);
 			
 			//send notification email
-			if($this->params['user_id'] !== $_SESSION['user']['ID']){
+			if((int) $this->params['user_id'] !== $_SESSION['user']['ID']){
 				$recipient = $user_model->getUser($this->params['user_id']);			
 				if($recipient !== null){
 					Utils::sendProfileCommentEmail($recipient, $_SESSION['user'], $this->params['content']);

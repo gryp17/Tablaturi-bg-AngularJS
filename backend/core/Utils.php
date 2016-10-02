@@ -278,13 +278,57 @@ class Utils {
 	 * @param array $params
 	 * @return string
 	 */
-	public static function getPageHtml($url, $params = array()) {
-		$ch = curl_init($url);
+	public static function getPageHtml($url, $params = array(), $authenticate = false) {
+		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		
+		//if the authenticate flag is raised - authenticate before requesting the url
+		if($authenticate === true){
+			$ch = Utils::authenticate($ch);
+		}
+		
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
 
+		return curl_exec($ch);
+	}
+	
+	/**
+	 * Authenticates in the guitarbackingtrack site
+	 * @param object $ch
+	 * @return object
+	 */
+	private static function authenticate($ch) {
+		curl_setopt($ch, CURLOPT_URL, 'http://www.guitarbackingtrack.com/member.php');
+		curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array('username' => Config::BT_NAME, 'password' => Config::BT_PASS));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_exec($ch);
+		
+		return $ch;
+	}
+
+	/**
+	 * Returns the response headers
+	 * @param string $url
+	 * @return string
+	 */
+	public static function getHeaders($url, $params = array(), $authenticate = false){
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		
+		//if the authenticate flag is raised - authenticate before requesting the url
+		if($authenticate === true){
+			$ch = Utils::authenticate($ch);
+		}
+		
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+		curl_setopt($ch, CURLOPT_HEADER, true);
+		
 		return curl_exec($ch);
 	}
 

@@ -33,7 +33,7 @@
 					left ad
 				</div>
 				<!-- additional ad -->
-				<div ng-if="contentWrapperHeight > 1250" class="additional">
+				<div ng-show="contentWrapperHeight > 1250" class="additional">
 					additional left ad
 				</div>
 			</div>
@@ -100,7 +100,7 @@
 					right ad
 				</div>
 				<!-- additional ad -->
-				<div ng-if="contentWrapperHeight > 1250" class="additional">
+				<div ng-show="contentWrapperHeight > 1250" class="additional">
 					additional right ad
 				</div>
 			</div>

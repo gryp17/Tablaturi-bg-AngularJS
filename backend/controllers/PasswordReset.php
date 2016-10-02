@@ -66,7 +66,7 @@ class PasswordReset extends Controller {
 		$domain = Config::DOMAIN;
 
 		$hash = Utils::generateRandomToken($email);
-		$link = "http://$domain/#/change-password/$user_id/$hash";
+		$link = "http://$domain/change-password/$user_id/$hash";
 
 		return array(
 			'link' => $link,

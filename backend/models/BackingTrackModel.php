@@ -129,5 +129,32 @@ class BackingTrackModel {
 
 		return $songs;
 	}
+	
+	/**
+	 * Returns the mp3 link for the specified backing track link
+	 * @param string $link
+	 * @return string
+	 */
+	public function getMP3($link){
+		$mp3_file = null;
+		
+		$html = Utils::getPageHtml($link, array(), true);
+		
+		//find the download link
+		if (preg_match('/href="([^"]+?)"\s+rel="nofollow">Download/is', $html, $results)) {
+			$redirect_link = $results[1];
+			$redirect_link = 'http://www.guitarbackingtrack.com'.$redirect_link;
+						
+			//get the response headers for that link
+			$headers = Utils::getHeaders($redirect_link, array(), true);
+			
+			//find the Location: header and return it
+			if(preg_match('/Location:\s*(.+?)\n/i', $headers, $results)){
+				$mp3_file = $results[1];
+			}
+		}
+		
+		return $mp3_file;
+	}
 
 }

@@ -65,10 +65,12 @@ class BackingTrack extends Controller {
 	 * Extracts the MP3 link from the provided backing track link
 	 */
 	public function getMP3() {
-		$html = Utils::getPageHtml($this->params['link']);
-		if (preg_match('/href="([^"]+?)"\s+rel="nofollow">Download/is', $html, $results)) {
-			$data = $results[1];
-			$this->sendResponse(1, $data);
+		$bt_model = $this->load_model('BackingTrackModel');
+		
+		$mp3_file = $bt_model->getMP3($this->params['link']);
+		
+		if ($mp3_file !== null) {
+			$this->sendResponse(1, $mp3_file);
 		} else {
 			$this->sendResponse(0, ErrorCodes::NOT_FOUND);
 		}

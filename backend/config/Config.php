@@ -7,6 +7,10 @@ class Config {
 	const DB_USER = 'root';
 	const DB_PASS = 1234;
 	
+	#backing tracks authentication
+	const BT_NAME = 'tablatur';
+	const BT_PASS = '1234';
+	
 	#directories
 	const ARTICLES_DIR = 'content/articles/';
 	const AVATARS_DIR = 'content/avatars/';
