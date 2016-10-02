@@ -5,6 +5,7 @@
 
 CREATE TABLE IF NOT EXISTS `article` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `author_ID` int(11) DEFAULT NULL,
   `title` varchar(250) DEFAULT NULL,
   `summary` varchar(500) DEFAULT NULL,
   `content` longtext,
