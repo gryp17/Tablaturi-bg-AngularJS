@@ -1,6 +1,6 @@
 # Tablaturi-bg-AngularJS
 AngularJS application for [Tablaturi-BG](http://tablaturi-bg.com) - the biggest website for guitar tabs in Bulgaria.
-The application uses custom MVC PHP backend with MySQL database and AngularJS v1.5 as front end. The dependencies are managed using [bower](https://bower.io) and the build process is done with [gulp](http://gulpjs.com/).
+The application uses custom MVC PHP backend with MySQL database, AngularJS v1.5 as front end and [SASS](http://sass-lang.com) as css preprocessor. The dependencies are managed using [bower](https://bower.io) and the build process is done with [gulp](http://gulpjs.com/).
 
 ## Installation
 
@@ -14,6 +14,20 @@ The application uses custom MVC PHP backend with MySQL database and AngularJS v1
 
   ```
   gulp build-dev
+  ```
+
+3. Import the database schema
+
+  There are two database schemas that you can choose from:
+
+  InnoDB
+  ```
+  /db/innodb_schema.sql
+  ```
+  
+  myISAM
+  ```
+  /db/myISAM_schema.sql
   ```
 
 ## Configuration
