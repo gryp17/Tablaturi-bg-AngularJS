@@ -25,20 +25,42 @@ The application uses custom MVC PHP backend with MySQL database and AngularJS v1
     ```
     /backend/config/Config.php
     ```
-  It contains the database credentials, backing tracks authentication and the default directories paths.
+  It contains the default database credentials , backing tracks authentication and the default directories paths.
 
 2. .htaccess
 
   Change the RewriteBase rule based on your domain path.
+  
   Examples:
 
-  ```
+  ```apache
   #http://tablaturi-bg.com
   RewriteBase /
   ```
   
-  ```
+  ```apache
   #localhost/Tablaturi-bg-angular
   RewriteBase /Tablaturi-bg-angular
   ```
   
+3. AngularJS html5 mode
+
+  Change the ```<base>``` tag content based on your domain path.
+  
+  The tag is in the ```<head>``` of the main layout file
+    
+  ```
+  /app/views/layout.php
+  ```
+    
+  Examples:
+  
+  ```html
+  <!-- http://tablaturi-bg.com -->
+  <base href="/" />
+  ```
+  
+  ```html
+  <!-- localhost/Tablaturi-bg-angular -->
+  <base href="/Tablaturi-bg-angular/" />
+  ```
