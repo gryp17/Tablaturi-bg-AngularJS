@@ -21,14 +21,14 @@ The application uses custom MVC PHP backend with MySQL database, AngularJS v1.5 
   There are two database schemas that you can choose from:
 
   InnoDB
-  ```
-  /db/innodb_schema.sql
-  ```
+  
+  > [/db/innodb_schema.sql](https://github.com/gryp17/Tablaturi-bg-AngularJS/blob/master/db/innodb_schema.sql)
+  
   
   myISAM
-  ```
-  /db/myISAM_schema.sql
-  ```
+  
+  > [/db/myISAM_schema.sql](https://github.com/gryp17/Tablaturi-bg-AngularJS/blob/master/db/myISAM_schema.sql)
+
 
 ## Configuration
 
@@ -36,14 +36,18 @@ The application uses custom MVC PHP backend with MySQL database, AngularJS v1.5 
 
   The backend configuration file is located in
 
-    ```
-    /backend/config/Config.php
-    ```
+  > [/backend/config/Config.php](https://github.com/gryp17/Tablaturi-bg-AngularJS/blob/master/backend/config/Config.php)
+
+
   It contains the default database credentials , backing tracks authentication and the default directories paths.
 
 2. .htaccess
 
   Change the RewriteBase rule based on your domain path.
+  
+  The .htaccess file is located in the root directory of the project
+  
+  > [/.htaccess](https://github.com/gryp17/Tablaturi-bg-AngularJS/blob/master/.htaccess)
   
   Examples:
 
@@ -62,10 +66,8 @@ The application uses custom MVC PHP backend with MySQL database, AngularJS v1.5 
   Change the ```<base>``` tag content based on your domain path.
   
   The tag is in the ```<head>``` of the main layout file
-    
-  ```
-  /app/views/layout.php
-  ```
+  
+  > [/app/views/layout.php](https://github.com/gryp17/Tablaturi-bg-AngularJS/blob/master/app/views/layout.php)
     
   Examples:
   
