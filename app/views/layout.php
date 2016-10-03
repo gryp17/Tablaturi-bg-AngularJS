@@ -3,7 +3,7 @@
     <head>
         <title>Tablaturi-bg - Най-големият български сайт за таблатури</title>
 		
-		<base href="/Tablaturi-bg-angular/" />
+	<base href="/Tablaturi-bg-angular/" />
 		
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
