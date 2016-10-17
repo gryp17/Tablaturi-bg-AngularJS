@@ -2,13 +2,13 @@
 <html ng-app="tablaturi-bg" ng-controller="layoutController">
     <head>
         <title>Tablaturi-bg - Най-големият български сайт за таблатури</title>
-		
+
 		<base href="/Tablaturi-bg-angular/" />
-		
+
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano" >
-				
+
 		<meta name="description" content="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи." /> 
 		<meta name="dc.language" CONTENT="BG">
 		<meta name="dc.source" CONTENT="http://www.tablaturi-bg.com">
@@ -16,7 +16,7 @@
 		<meta name="dc.keywords" CONTENT="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano">
 		<meta name="dc.description" CONTENT="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи.">
 		<meta name="geo.placename" content="Bulgaria" />
-		
+
 		<link href="static/img/favicon.ico" rel="icon"/>
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600" rel="stylesheet" type="text/css"/>
 		<link href="static/stylesheets/css/style.min.css" rel="stylesheet" type="text/css"/>
@@ -114,23 +114,23 @@
 
 		<?php include "_login.php" ?>
 		<?php include "_signup.php" ?>
-		
+
 		<script type="text/javascript" src="static/scripts/app.js"></script>
 		<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
 		<script type="text/javascript">stLight.options({publisher: "d810d696-98a7-44a2-abcf-4604f3730c9f", doNotHash: true, doNotCopy: true, hashAddressBar: false});</script>
-    
+
 		<!-- Begin Cookie Consent plugin -->
 		<script type="text/javascript">
-			window.cookieconsent_options = new Object();
-			window.cookieconsent_options.message = "Този сайт използва бисквитки (cookies).";
-			window.cookieconsent_options.dismiss = "Разбрах";
-			window.cookieconsent_options.learnMore = "";
-			window.cookieconsent_options.link = null;
-			window.cookieconsent_options.theme = "light-bottom";
+					window.cookieconsent_options = new Object();
+					window.cookieconsent_options.message = "Този сайт използва бисквитки (cookies).";
+					window.cookieconsent_options.dismiss = "Разбрах";
+					window.cookieconsent_options.learnMore = "";
+					window.cookieconsent_options.link = null;
+					window.cookieconsent_options.theme = "light-bottom";
 		</script>
 
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
 		<!-- End Cookie Consent plugin -->
-			
+
 	</body>
 </html>
