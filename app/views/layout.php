@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="tablaturi-bg" ng-controller="layoutController">
     <head>
-        <title>Tablaturi-bg - Най-големият български сайт за таблатури</title>
+		<title>Tablaturi-bg - Най-големият български сайт за таблатури</title>
 
 		<base href="/Tablaturi-bg-angular/" />
 
