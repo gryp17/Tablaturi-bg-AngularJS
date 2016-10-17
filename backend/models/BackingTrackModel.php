@@ -9,24 +9,23 @@ class BackingTrackModel {
 	 */
 	public function getBandTracks($band) {
 		$tracks = array();
-
-		$params = 'query=' . $band . '&searchtype=Artist';
-		$html = Utils::getPageHtml('http://www.guitarbackingtrack.com/search.php', $params);
-
+		
+		$html = Utils::getPageHtml('http://www.guitarbackingtrack.com/search.php?query=' . $band . '&searchtype=Artist');
+				
 		#if there are results
 		if (!preg_match('/No\s*matches,\s*please\s*check/is', $html) && !preg_match('/Please\s*enter\s*a\s*search\s*term/is', $html)) {
 
 			#get the results table
 			if (preg_match('/(<table\s+class="list".+?<\/table>)/is', $html, $matches)) {
 				$table = $matches[0];
-
+				
 				#get each band result
-				if (preg_match_all('/<td\s+class="list"><a\s+href="(.+?)">(.+?)<\//is', $table, $matches)) {
+				if (preg_match_all('/<td\s+class="list\d?">\s*<a\s+href="(.+?)">(.+?)<\//is', $table, $matches)) {
 					#for each band - get all songs
 					for ($i = 0; $i < count($matches[1]); $i++) {
 						$link = 'http://www.guitarbackingtrack.com' . $matches[1][$i];
 						$band = $matches[2][$i];
-
+						
 						$songs = $this->getSongsPerBand($link);
 						foreach ($songs as $item) {
 							$tracks[] = array(
@@ -52,8 +51,7 @@ class BackingTrackModel {
 	public function getSongTracks($song) {
 		$tracks = array();
 
-		$params = 'query=' . $song . '&searchtype=Song';
-		$html = Utils::getPageHtml('http://www.guitarbackingtrack.com/search.php', $params);
+		$html = Utils::getPageHtml('http://www.guitarbackingtrack.com/search.php?query=' . $song . '&searchtype=Song');
 
 		#get the results table
 		if (preg_match('/(<table\s+class="list".+?<\/table>)/is', $html, $matches)) {
@@ -97,18 +95,18 @@ class BackingTrackModel {
 	private function getSongsPerBand($band_link) {
 		$songs = array();
 		$band_html = Utils::getPageHtml($band_link);
-
+		
 		#get the results table
 		if (preg_match('/(<table\s+class="list".+?<\/table>)/is', $band_html, $matches)) {
 			$table = $matches[0];
-
+			
 			#get all songs
-			if (preg_match_all('/(href=.+?)<\/td>/is', $table, $matches)) {
+			if (preg_match_all('/(href=.+?)<\/td>/is', $table, $matches)) {				
 				foreach ($matches[0] as $cell) {
 					$vocals = false;
 
 					#get the song link and name
-					if (preg_match('/href="(.+?)">(.+?)<\//is', $cell, $matches)) {
+					if (preg_match('/href="(.+?)">\s*(.+?)\s*<\//is', $cell, $matches)) {
 						$link = 'http://www.guitarbackingtrack.com' . $matches[1];
 						$song = $matches[2];
 
@@ -137,21 +135,13 @@ class BackingTrackModel {
 	 */
 	public function getMP3($link){
 		$mp3_file = null;
-		
-		$html = Utils::getPageHtml($link, array(), true);
-		
+						
+		$html = Utils::getPageHtml($link, 'GET', array(), true);
+			
 		//find the download link
 		if (preg_match('/href="([^"]+?)"\s+rel="nofollow">Download/is', $html, $results)) {
-			$redirect_link = $results[1];
-			$redirect_link = 'http://www.guitarbackingtrack.com'.$redirect_link;
-						
-			//get the response headers for that link
-			$headers = Utils::getHeaders($redirect_link, array(), true);
-			
-			//find the Location: header and return it
-			if(preg_match('/Location:\s*(.+?)\n/i', $headers, $results)){
-				$mp3_file = $results[1];
-			}
+			$mp3_file = $results[1];
+			$mp3_file = 'http://www.guitarbackingtrack.com'.$mp3_file;
 		}
 		
 		return $mp3_file;
