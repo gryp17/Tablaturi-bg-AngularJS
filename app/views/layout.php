@@ -5,21 +5,21 @@
 		
 		<base href="/Tablaturi-bg-angular/" />
 		
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano" >
 				
 		<meta name="description" content="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи." /> 
-        <meta name="dc.language" CONTENT="BG">
-        <meta name="dc.source" CONTENT="http://www.tablaturi-bg.com">
-        <meta name="dc.title" CONTENT="Най-големият български сайт за таблатури">
-        <meta name="dc.keywords" CONTENT="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano">
-        <meta name="dc.description" CONTENT="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи.">
-        <meta name="geo.placename" content="Bulgaria" />
+		<meta name="dc.language" CONTENT="BG">
+		<meta name="dc.source" CONTENT="http://www.tablaturi-bg.com">
+		<meta name="dc.title" CONTENT="Най-големият български сайт за таблатури">
+		<meta name="dc.keywords" CONTENT="таблатури,новини,уроци,китара,партитури,пиано,бас китара,tabs,news,lessons,piano">
+		<meta name="dc.description" CONTENT="Най-големият български сайт за таблатури, новини, уроци и полезни програми за начинаещи и напреднали китаристи.">
+		<meta name="geo.placename" content="Bulgaria" />
 		
 		<link href="static/img/favicon.ico" rel="icon"/>
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600" rel="stylesheet" type="text/css"/>
-        <link href="static/stylesheets/css/style.min.css" rel="stylesheet" type="text/css"/>
+		<link href="static/stylesheets/css/style.min.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="ng-cloak" ng-cloak>
         <div id="main-wrapper">
