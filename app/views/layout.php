@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html ng-app="tablaturi-bg" ng-controller="layoutController">
-    <head>
+	<head>
 		<title>Tablaturi-bg - Най-големият български сайт за таблатури</title>
 
 		<base href="/Tablaturi-bg-angular/" />
@@ -20,9 +20,9 @@
 		<link href="static/img/favicon.ico" rel="icon"/>
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600" rel="stylesheet" type="text/css"/>
 		<link href="static/stylesheets/css/style.min.css" rel="stylesheet" type="text/css"/>
-    </head>
-    <body class="ng-cloak" ng-cloak>
-        <div id="main-wrapper">
+	</head>
+	<body class="ng-cloak" ng-cloak>
+		<div id="main-wrapper">
 
 			<?php include "_header.php" ?>
 			<?php include "_search.php" ?>
@@ -110,7 +110,7 @@
 			</div>
 
 			<?php include "_footer.php" ?>
-        </div>
+		</div>
 
 		<?php include "_login.php" ?>
 		<?php include "_signup.php" ?>
