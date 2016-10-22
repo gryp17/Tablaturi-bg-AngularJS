@@ -199,7 +199,7 @@ class UserModel {
 		);
 		
 		#add the avatar part of the query if an avatar has been provided
-		if(isset($avatar) && strlen($avatar) > 0){
+		if(isset($avatar) && mb_strlen($avatar) > 0){
 			#add the updated get param in order to prevent caching
 			$params['photo'] = $avatar.'?updated='.time();
 			$avatar_query = 'photo = :photo, ';
@@ -208,7 +208,7 @@ class UserModel {
 		}
 		
 		#add the password part of the query if a password has been provided
-		if(isset($password) && strlen($password) > 0){
+		if(isset($password) && mb_strlen($password) > 0){
 			$password = md5($password);
 			$params['password'] = $password;
 			$password_query = 'password = :password, ';

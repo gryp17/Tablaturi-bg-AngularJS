@@ -86,7 +86,7 @@ class TabModel {
 			$query = $this->connection->prepare('SELECT DISTINCT(band) AS term FROM tab WHERE band LIKE :term LIMIT 10');
 		} else {
 			#if the band is set search only for songs from that band
-			if(isset($band) && strlen($band) > 0){
+			if(isset($band) && mb_strlen($band) > 0){
 				$query = 'SELECT DISTINCT(song) AS term FROM tab WHERE band = :band AND song LIKE :term LIMIT 10';
 				$params['band'] = $band;
 			}else{
@@ -170,7 +170,7 @@ class TabModel {
 		}
 
 		#band and song search
-		if (strlen($band) > 0 && strlen($song) > 0) {
+		if (mb_strlen($band) > 0 && mb_strlen($song) > 0) {
 
 			#search query
 			$result['query'] = 'SELECT * FROM tab '
@@ -197,7 +197,7 @@ class TabModel {
 			);
 		}
 		#band search
-		elseif(strlen($band) > 0){
+		elseif(mb_strlen($band) > 0){
 			
 			$result['query'] = 'SELECT * FROM tab '
 				. 'WHERE type LIKE :type AND band LIKE :band '

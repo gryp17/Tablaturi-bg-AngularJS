@@ -10,6 +10,7 @@ app.filter('errors', function () {
 			weak_password: 'Паролата не съдържа поне едно число и буква',
 			no_match: 'Полетата не съвпадат',
 			username_in_use: 'Потребителското име е заето',
+			invalid_characters: 'Полето съдържа непозволени символи',
 			email_in_use: 'Имейлът е зает',
 			email_not_found: 'Несъществуващ имейл',
 			not_in_list: 'Невалидно поле',

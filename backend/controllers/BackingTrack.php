@@ -39,11 +39,11 @@ class BackingTrack extends Controller {
 		$bt_model = $this->load_model('BackingTrackModel');
 
 		#if the band is set
-		if (strlen($this->params['band']) > 0) {
+		if (mb_strlen($this->params['band']) > 0) {
 			$data = $bt_model->getBandTracks($this->params['band']);
 
 			#if the song is set as well
-			if (strlen($this->params['song']) > 0) {
+			if (mb_strlen($this->params['song']) > 0) {
 				#filter out the songs that don't match the song param
 				$data = array_filter($data, function ($item) {
 					return (strpos(strtolower($item['song']), strtolower($this->params['song'])) !== false);
@@ -54,7 +54,7 @@ class BackingTrack extends Controller {
 			}
 		}
 		#if only the song is set
-		else if (strlen($this->params['song']) > 0) {
+		else if (mb_strlen($this->params['song']) > 0) {
 			$data = $bt_model->getSongTracks($this->params['song']);
 		}
 

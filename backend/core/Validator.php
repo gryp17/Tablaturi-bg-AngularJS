@@ -24,7 +24,7 @@ class Validator {
 			#required rule
 			#also checks for submitted files
 			if ($rule == 'required') {
-				if ((!isset($value) || strlen($value) === 0) && (!isset($_FILES[$field]) || $_FILES[$field]['error'] === 4)) {
+				if ((!isset($value) || mb_strlen($value) === 0) && (!isset($_FILES[$field]) || $_FILES[$field]['error'] === 4)) {
 					return array('field' => $field, 'error_code' => ErrorCodes::EMPTY_FIELD);
 				}
 			}
@@ -32,7 +32,7 @@ class Validator {
 			#it also checks for submitted files
 			#example: optional, max-10 (the field is not required, but if its set it must be less than 10 characters long) 
 			elseif ($rule == 'optional') {
-				if ((!isset($value) || strlen($value) === 0) && (!isset($_FILES[$field]) || $_FILES[$field]['error'] === 4)) {
+				if ((!isset($value) || mb_strlen($value) === 0) && (!isset($_FILES[$field]) || $_FILES[$field]['error'] === 4)) {
 					break;
 				}
 			}
@@ -43,7 +43,7 @@ class Validator {
 				$list = explode(',', $list);
 
 				foreach ($list as $param) {
-					if (isset($params[$param]) && strlen($params[$param]) > 0) {
+					if (isset($params[$param]) && mb_strlen($params[$param]) > 0) {
 						$valid = true;
 						break;
 					}
@@ -74,14 +74,14 @@ class Validator {
 			#max-characters rule
 			elseif (preg_match('/max-(\d+)/i', $rule, $matches)) {
 				$max_length = $matches[1];
-				if (strlen($value) > $max_length) {
+				if (mb_strlen($value) > $max_length) {
 					return array('field' => $field, 'error_code' => ErrorCodes::EXCEEDS_CHARACTERS_ . $max_length);
 				}
 			}
 			#min-characters rule
 			elseif (preg_match('/min-(\d+)/i', $rule, $matches)) {
 				$min_length = $matches[1];
-				if (strlen($value) < $min_length) {
+				if (mb_strlen($value) < $min_length) {
 					return array('field' => $field, 'error_code' => ErrorCodes::BELOW_CHARACTERS_ . $min_length);
 				}
 			}
@@ -108,7 +108,7 @@ class Validator {
 			}
 			#strong-passworld rule (at least 6 characters with 1 or more numbers)
 			elseif ($rule == 'strong-password') {
-				if (strlen($value) < 6 || preg_match('/\d+/', $value) == false || preg_match('/[a-z]+/i', $value) == false) {
+				if (mb_strlen($value) < 6 || preg_match('/\d+/', $value) == false || preg_match('/[a-z]+/i', $value) == false) {
 					return array('field' => $field, 'error_code' => ErrorCodes::WEAK_PASSWORD);
 				}
 			}

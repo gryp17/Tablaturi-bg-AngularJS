@@ -1615,180 +1615,6 @@ app.controller('userActivationController', function ($scope, $routeParams, UserA
 	});
 		
 });
-app.filter('age', function() {
-	return function(dateString) {
-		if (angular.isDefined(dateString)) {
-			var today = new Date();
-			var birthDate = new Date(dateString);
-			var age = today.getFullYear() - birthDate.getFullYear();
-			var m = today.getMonth() - birthDate.getMonth();
-			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-				age--;
-			}
-			return age;
-		}
-	};
-});
-app.filter('emoticons', function() {
-	return function(content) {
-		
-		var emoticonsPath = "static/img/emoticons/";
-		var emoticonsClass = "emoticon";
-
-		var emoticons = [
-			{
-				regexp: /:\)/,
-				title: ':)',
-				img: 'smile.png'
-			},
-			{
-				regexp: /:\(/,
-				title: ':(',
-				img: 'undecided.png'
-			},
-			{
-				regexp: /:D/,
-				title: ':D',
-				img: 'laugh.png'
-			},
-			{
-				regexp: /:P/,
-				title: ':P',
-				img: 'stickingout.png'
-			},
-			{
-				regexp: /8-\)/,
-				title: '8-)',
-				img: 'hot.png'
-			},
-			{
-				regexp: /\|-\(/,
-				title: '|-(',
-				img: 'ambivalent.png'
-			},
-			{
-				regexp: /:O/,
-				title: ':O',
-				img: 'largegasp.png'
-			},
-			{
-				regexp: /\(up\)/,
-				title: '(up)',
-				img: 'thumbsup.png'
-			},
-			{
-				regexp: /\(down\)/,
-				title: '(down)',
-				img: 'thumbsdown.png'
-			},
-			{
-				regexp: /:\@/,
-				title: ':@',
-				img: 'veryangry.png'
-			}
-		];
-		
-		//replace all emoticons with their images
-		emoticons.forEach(function (emoticon){
-			var regexp = new RegExp(emoticon.regexp, "ig");
-			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
-		});
-
-		return content;
-	};
-});
-app.filter('errors', function () {
-	return function (errorCode) {
-
-		var errors = {
-			invalid_login: 'Грешно име или парола',
-			empty_field: 'Празно поле',
-			invalid_int: 'Невалидно число',
-			invalid_date: 'Невалидна дата',
-			invalid_email: 'Невалиден имейл',
-			weak_password: 'Паролата не съдържа поне едно число и буква',
-			no_match: 'Полетата не съвпадат',
-			username_in_use: 'Потребителското име е заето',
-			email_in_use: 'Имейлът е зает',
-			email_not_found: 'Несъществуващ имейл',
-			not_in_list: 'Невалидно поле',
-			invalid_captcha: 'Captcha-та не съвпада',
-			invalid_file_extension: 'Невалиден формат',
-			exceeds_max_file_size: 'Файлът надвишава максималния размер'
-		};
-		
-		if(angular.isUndefined(errors[errorCode])){
-			//max-\d+ rule
-			if(/exceeds_characters_(\d+)/.exec(errorCode)){
-				var results = /exceeds_characters_(\d+)/.exec(errorCode);
-				return 'Полето надвишава '+results[1]+' символа';
-			}
-			
-			//min-\d+ rule
-			if(/below_characters_(\d+)/.exec(errorCode)){
-				var results = /below_characters_(\d+)/.exec(errorCode);
-				return 'Полето е под '+results[1]+' символа';
-			}
-		}
-
-		return errors[errorCode];
-	};
-});
-app.filter('ratingStars', function() {
-	return function(rating) {
-		var result = [];
-		var stars = Math.floor(rating);
-
-		//generates an array of integers based on the tab rating
-		//1 - star
-		//0 - empty star
-		for (var i = 1; i <= 5; i++) {
-			if (i <= stars) {
-				result.push(1);
-			} else {
-				result.push(0);
-			}
-		}
-
-		return result;
-	};
-});
-app.filter('tabContentType', function () {
-	return function (tabType) {
-
-		var tabContentTypes = {
-			'full song': 'Цяла песен',
-			intro: 'интро',
-			solo: 'соло'
-		};
-		
-		if(angular.isUndefined(tabContentTypes[tabType])){
-			return tabType;
-		}else{
-			return tabContentTypes[tabType];
-		}
-
-	};
-});
-app.filter('tabType', function () {
-	return function (tabType) {
-
-		var tabTypes = {
-			tab: "Tab",
-			gp: "Guitar Pro",
-			chord: "Акорди",
-			bt: "Backing Track",
-			bass: "Bass"
-		};
-		
-		if(angular.isUndefined(tabTypes[tabType])){
-			return tabType;
-		}else{
-			return tabTypes[tabType];
-		}
-
-	};
-});
 app.directive('article', function($filter, $location) {
 	return {
 		restrict: 'A',
@@ -2072,6 +1898,181 @@ app.directive('validation', function() {
 				element.closest('.field-box').removeClass('error');
 			});
 		}
+	};
+});
+app.filter('age', function() {
+	return function(dateString) {
+		if (angular.isDefined(dateString)) {
+			var today = new Date();
+			var birthDate = new Date(dateString);
+			var age = today.getFullYear() - birthDate.getFullYear();
+			var m = today.getMonth() - birthDate.getMonth();
+			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+				age--;
+			}
+			return age;
+		}
+	};
+});
+app.filter('emoticons', function() {
+	return function(content) {
+		
+		var emoticonsPath = "static/img/emoticons/";
+		var emoticonsClass = "emoticon";
+
+		var emoticons = [
+			{
+				regexp: /:\)/,
+				title: ':)',
+				img: 'smile.png'
+			},
+			{
+				regexp: /:\(/,
+				title: ':(',
+				img: 'undecided.png'
+			},
+			{
+				regexp: /:D/,
+				title: ':D',
+				img: 'laugh.png'
+			},
+			{
+				regexp: /:P/,
+				title: ':P',
+				img: 'stickingout.png'
+			},
+			{
+				regexp: /8-\)/,
+				title: '8-)',
+				img: 'hot.png'
+			},
+			{
+				regexp: /\|-\(/,
+				title: '|-(',
+				img: 'ambivalent.png'
+			},
+			{
+				regexp: /:O/,
+				title: ':O',
+				img: 'largegasp.png'
+			},
+			{
+				regexp: /\(up\)/,
+				title: '(up)',
+				img: 'thumbsup.png'
+			},
+			{
+				regexp: /\(down\)/,
+				title: '(down)',
+				img: 'thumbsdown.png'
+			},
+			{
+				regexp: /:\@/,
+				title: ':@',
+				img: 'veryangry.png'
+			}
+		];
+		
+		//replace all emoticons with their images
+		emoticons.forEach(function (emoticon){
+			var regexp = new RegExp(emoticon.regexp, "ig");
+			content = content.replace(regexp, "<img title='"+emoticon.title+"' class='" + emoticonsClass + "' src='" + emoticonsPath + emoticon.img+"'>");
+		});
+
+		return content;
+	};
+});
+app.filter('errors', function () {
+	return function (errorCode) {
+
+		var errors = {
+			invalid_login: 'Грешно име или парола',
+			empty_field: 'Празно поле',
+			invalid_int: 'Невалидно число',
+			invalid_date: 'Невалидна дата',
+			invalid_email: 'Невалиден имейл',
+			weak_password: 'Паролата не съдържа поне едно число и буква',
+			no_match: 'Полетата не съвпадат',
+			username_in_use: 'Потребителското име е заето',
+			invalid_characters: 'Полето съдържа непозволени символи',
+			email_in_use: 'Имейлът е зает',
+			email_not_found: 'Несъществуващ имейл',
+			not_in_list: 'Невалидно поле',
+			invalid_captcha: 'Captcha-та не съвпада',
+			invalid_file_extension: 'Невалиден формат',
+			exceeds_max_file_size: 'Файлът надвишава максималния размер'
+		};
+		
+		if(angular.isUndefined(errors[errorCode])){
+			//max-\d+ rule
+			if(/exceeds_characters_(\d+)/.exec(errorCode)){
+				var results = /exceeds_characters_(\d+)/.exec(errorCode);
+				return 'Полето надвишава '+results[1]+' символа';
+			}
+			
+			//min-\d+ rule
+			if(/below_characters_(\d+)/.exec(errorCode)){
+				var results = /below_characters_(\d+)/.exec(errorCode);
+				return 'Полето е под '+results[1]+' символа';
+			}
+		}
+
+		return errors[errorCode];
+	};
+});
+app.filter('ratingStars', function() {
+	return function(rating) {
+		var result = [];
+		var stars = Math.floor(rating);
+
+		//generates an array of integers based on the tab rating
+		//1 - star
+		//0 - empty star
+		for (var i = 1; i <= 5; i++) {
+			if (i <= stars) {
+				result.push(1);
+			} else {
+				result.push(0);
+			}
+		}
+
+		return result;
+	};
+});
+app.filter('tabContentType', function () {
+	return function (tabType) {
+
+		var tabContentTypes = {
+			'full song': 'Цяла песен',
+			intro: 'интро',
+			solo: 'соло'
+		};
+		
+		if(angular.isUndefined(tabContentTypes[tabType])){
+			return tabType;
+		}else{
+			return tabContentTypes[tabType];
+		}
+
+	};
+});
+app.filter('tabType', function () {
+	return function (tabType) {
+
+		var tabTypes = {
+			tab: "Tab",
+			gp: "Guitar Pro",
+			chord: "Акорди",
+			bt: "Backing Track",
+			bass: "Bass"
+		};
+		
+		if(angular.isUndefined(tabTypes[tabType])){
+			return tabType;
+		}else{
+			return tabTypes[tabType];
+		}
+
 	};
 });
 app.factory('LoadingService', function() {
