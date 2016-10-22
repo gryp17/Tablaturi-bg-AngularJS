@@ -1,5 +1,8 @@
 <?php
 
+#mbstring encoding
+mb_internal_encoding('UTF-8');
+
 require_once 'config/Config.php';
 require_once 'core/ErrorCodes.php';
 require_once 'core/App.php';
