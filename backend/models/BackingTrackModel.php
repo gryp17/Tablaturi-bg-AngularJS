@@ -54,11 +54,11 @@ class BackingTrackModel {
 		$html = Utils::getPageHtml('http://www.guitarbackingtrack.com/search.php?query=' . $song . '&searchtype=Song');
 
 		#get the results table
-		if (preg_match('/(<table\s+class="list".+?<\/table>)/is', $html, $matches)) {
+		if (preg_match('/(<table\s+class="list\d*".+?<div\s+id="bottom")/is', $html, $matches)) {
 			$table = $matches[0];
 
 			#get all songs
-			if (preg_match_all('/(href=.+?)<\/td>/is', $table, $matches)) {
+			if (preg_match_all('/(class="list\d*".+?<\/tr>)/is', $table, $matches)) {
 				foreach ($matches[0] as $cell) {
 					$vocals = false;
 
@@ -97,19 +97,19 @@ class BackingTrackModel {
 		$band_html = Utils::getPageHtml($band_link);
 		
 		#get the results table
-		if (preg_match('/(<table\s+class="list".+?<\/table>)/is', $band_html, $matches)) {
+		if (preg_match('/(<table\s+class="list\d*".+?<div\s+id="bottom")/is', $band_html, $matches)) {
 			$table = $matches[0];
 			
 			#get all songs
-			if (preg_match_all('/(href=.+?)<\/td>/is', $table, $matches)) {				
+			if (preg_match_all('/(class="list\d*".+?<\/tr>)/is', $table, $matches)) {				
 				foreach ($matches[0] as $cell) {
 					$vocals = false;
-
+					
 					#get the song link and name
 					if (preg_match('/href="(.+?)">\s*(.+?)\s*<\//is', $cell, $matches)) {
 						$link = 'http://www.guitarbackingtrack.com' . $matches[1];
 						$song = $matches[2];
-
+												
 						#check for the vocals indicator
 						if (preg_match('/<img\s+/is', $cell, $matches)) {
 							$vocals = true;

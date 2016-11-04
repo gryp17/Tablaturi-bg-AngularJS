@@ -1242,10 +1242,13 @@ app.controller('searchBackingTracksController', function ($scope, $routeParams, 
 	 */
 	$scope.getMP3 = function (link){
 		BackingTrackService.getMP3(link).then(function (response){
+			//if the mp3 has been found download it
 			if(response.data.status === 1){
 				$window.open(response.data.data, "_self");
-			}else{
-				console.log(response.data);
+			}
+			//otherwise redirect to the backing track page
+			else{
+				$window.open(link, "_blank");
 			}
 		});
 	};

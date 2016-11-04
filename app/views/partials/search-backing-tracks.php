@@ -29,7 +29,13 @@
 						</a>
 					</td>
 					<td>
+						<!-- mp3's no longer work... 
 						<a class="red-link" href="javascript:void(0)" ng-click="getMP3(track.link)" ng-attr-title="{{track.band}} - {{track.song}}">
+							{{track.song}}
+						</a>
+						-->
+						<!-- redirect to the backing tracks website... -->
+						<a class="red-link" href="{{track.link}}" ng-attr-title="{{track.band}} - {{track.song}}" target="_blank">
 							{{track.song}}
 						</a>
 					</td>
