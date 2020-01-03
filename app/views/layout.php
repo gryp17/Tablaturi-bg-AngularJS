@@ -3,7 +3,7 @@
 	<head>
 		<title>Tablaturi-bg - Най-големият български сайт за таблатури</title>
 
-		<base href="/Tablaturi-bg-angular/" />
+		<base href="/MISC/Tablaturi-bg-angular/" />
 
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,12 +29,11 @@
 
 			<div class="left-wrapper">
 				<!-- default ad -->
-				<div>
-					left ad
-				</div>
+				<img src="static/img/ad-placeholder.png"/>
+				
 				<!-- additional ad -->
 				<div ng-show="contentWrapperHeight > 1250" class="additional">
-					additional left ad
+					<img src="static/img/ad-placeholder.png"/>
 				</div>
 			</div>
 
@@ -96,17 +95,17 @@
 			</div>
 
 			<div class="right-wrapper">
-				<div>
-					right ad
-				</div>
+				<!-- right ad -->
+				<img src="static/img/ad-placeholder.png"/>
+				
 				<!-- additional ad -->
 				<div ng-show="contentWrapperHeight > 1250" class="additional">
-					additional right ad
+					<img src="static/img/ad-placeholder.png"/>
 				</div>
 			</div>
 
 			<div class="bottom-wrapper">
-				bottom ad
+				<img src="static/img/ad-placeholder-horizontal.png"/>
 			</div>
 
 			<?php include "_footer.php" ?>

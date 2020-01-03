@@ -2,7 +2,7 @@ Options -MultiViews
 RewriteEngine On
 
 #change the base when moving to another domain
-RewriteBase /Tablaturi-bg-angular
+RewriteBase /MISC/Tablaturi-bg-angular
 
 #redirect all API calls to the index.php
 RewriteRule ^API/(.*)$ index.php?url=$1 [QSA,NC,L]

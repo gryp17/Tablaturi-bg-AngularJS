@@ -4,19 +4,25 @@ The application uses custom MVC PHP backend with MySQL database, AngularJS v1.5 
 
 ## Installation
 
-1. Install all bower dependencies:
+1. Install all npm dependencies:
+
+  ```
+  npm install
+  ```
+
+2. Install all bower dependencies:
 
   ```
   bower install
   ```
 
-2. Build the javascript and css files:
+3. Build the javascript and css files:
 
   ```
   gulp build-dev
   ```
 
-3. Import the database schema
+4. Import the database schema
 
   There are two database schemas that you can choose from:
 
