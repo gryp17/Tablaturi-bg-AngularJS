@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>
+	<head>
+		<title>
 			<?= $data['title'] ?>
 		</title>
-        <meta charset="UTF-8">
+		<meta charset="UTF-8">
 		<meta property="og:url" content="<?= $data['url'] ?>"/>
 		<meta property="og:title" content="<?= $data['title'] ?>"/>
 		<meta property="og:description" content="<?= $data['description'] ?>"/>
@@ -20,8 +20,8 @@
 		<meta name="twitter:description" content="<?= $data['description'] ?>" />
 		<meta name="twitter:image" content="<?= $data['image'] ?>" />
 		<meta name="twitter:image:src" content="<?= $data['image'] ?>" />
-    </head>
-    <body>
+	</head>
+	<body>
 		<?= $data['description'] ?>
 	</body>
 </html>
