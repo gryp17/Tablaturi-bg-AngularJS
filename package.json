@@ -5,7 +5,7 @@
   "main": "index.php",
   "devDependencies": {
     "del": "^2.2.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-concat": "^2.6.0",
     "gulp-debug": "^2.1.2",
